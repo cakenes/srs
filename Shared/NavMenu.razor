@@ -1,0 +1,90 @@
+﻿<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-sm border-bottom fixed-top">
+    <div class="container mx-auto">
+        <!-- Logo -->
+        <a class="navbar-brand" aria-label="To index" asp-area="" asp-page="/Index">
+            <h2>Srs</h2></a>
+
+        <div class="nav-item">
+            <button class="btn" type="button">
+                <span class="bi bi-layers-fill"> Decks</span>
+            </button>
+        </div>
+
+        <div class="nav-item dropdown show">
+            <button class="btn" @onclick="() => expandSubNavSettings = !expandSubNavSettings" type="button">
+                <span class="bi bi-person-fill"> User</span>
+            </button>
+            
+            @if (expandSubNavSettings)
+                {
+                    <li class="dropdown-menu dropdown-menu-right show">
+                        <li class="nav-item">
+                            <div class="input-group input-group-sm justify-content-center">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bi bi-person-fill"></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+                            </div>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <div class="input-group input-group-sm justify-content-center">
+                                <div class="input-group-prepend">
+                                        <span class="input-group-text bi bi-key-fill"></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Username" aria-label="Password">
+                            </div>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <div class="btn-group btn-group-sm d-flex">
+                                <button class="btn" @onclick="() => expandSubNavSettings = !expandSubNavSettings" type="button">Login</button>
+                                <button class="btn" @onclick="() => expandSubNavSettings = !expandSubNavSettings" type="button">Register</button>
+                            </div>
+                        </li>
+                    </li>
+                }
+        </div>
+    </div>
+</nav>
+
+@code {
+    bool collapseUserMenu = true;
+    bool collapseDeckMenu = true;
+    bool collapseNavMenu = true;
+    private bool expandSubNavSettings;
+    string NavMenuCssClass => collapseNavMenu ? " collapse" : null;
+    string userMenuCssClass => collapseUserMenu ? "collapse" : null;
+    string deckMenuCssClass => collapseDeckMenu ? "collapse" : null;
+
+
+    void ToggleUserMenu()
+    {
+        collapseUserMenu = !collapseUserMenu;
+    }
+
+    void ToggleDeckMenu()
+    {
+        collapseDeckMenu = !collapseDeckMenu;
+    }
+
+    void CollapseUserMenu()
+    {
+        collapseUserMenu = true;
+    }
+
+    void CollapseDeckMenu()
+    {
+        collapseDeckMenu = true;
+    }
+
+void ToggleNavMenu()
+{
+    if(!expandSubNavSettings)
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+
+}
+
+}
