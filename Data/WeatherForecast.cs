@@ -1,6 +1,6 @@
 using System;
 
-namespace Blazor_Top_Menu.Data
+namespace Srs.Data
 {
     public class WeatherForecast
     {

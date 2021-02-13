@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Blazor_Top_Menu.Data;
+using Srs.Data;
 
-namespace Blazor_Top_Menu
+namespace Srs
 {
     public class Startup
     {
