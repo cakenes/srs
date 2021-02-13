@@ -13,10 +13,26 @@
     <link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
-    <app>
-        @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
-    </app>
-
-    <script src="_framework/blazor.server.js"></script>
+    <div id="components-reconnect-modal" class="reconnect-modal components-reconnect-hide">
+    <div class="show">
+        <p>
+            Connection lost, attempting to reconnect to server.
+        </p>
+    </div>
+    <div class="failed">
+        <p>
+            Connection failed, please refresh the page.
+        </p>
+    </div>
+    <div class="rejected">
+        <p>
+            Connection refused, please refresh the page.
+        </p>
+    </div>
+</div>
+<app>
+    @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+</app>
+<script src="_framework/blazor.server.js"></script>
 </body>
 </html>
