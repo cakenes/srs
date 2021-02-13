@@ -1,12 +1,7 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
 html {
     overflow-y: scroll;
-}
-
-.li::marker {
-    color: #26b050;
 }
 
 .dropdown-menu {
