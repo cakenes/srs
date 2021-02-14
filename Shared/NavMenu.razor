@@ -1,31 +1,51 @@
 ﻿<!-- Navigation Bar -->
 <nav class="navbar navbar-expand-sm border-bottom fixed-top">
     <div class="container mx-auto">
+
         <!-- Logo -->
         <a class="navbar-brand" aria-label="To index" asp-area="" asp-page="/Index">
             <h2>Srs</h2></a>
 
-        <!-- Deck dropdown -->
+        <!-- Deck dropdown button -->
         <div class="nav-item dropdown">
             <button class="btn btn-nav" type="button">
                 <span class="bi bi-layers-fill"> Decks</span>
             </button>
+
+            <!-- Deck dropdown menu -->
             <li class="dropdown-menu dropdown-menu-decks">
+
+                <!-- Notification -->
+                @if (deckMsgTitle != null)
+                {
+                    <li class="nav-item">
+                        <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
+                            <strong>@deckMsgTitle</strong><br>@deckMsg
+                            <button type="button" class="close btn-xs" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                        </div>
+                    </li>
+                }
+
+                <!-- Search -->
                 <li class="nav-item">
                     <div class="input-group input-group-sm justify-content-center">
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-search"></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Search" aria-label="Search" @onclick="() => expandSubNavSettings = !expandSubNavSettings">
+                        <input type="search" class="form-control" placeholder="Search" @bind="search" @onkeydown="@EnterDeck" aria-label="Search">
                     </div>
                 </li>
+
+                <!-- List -->
                 <li class="nav-item mt-2">
                     <div class="btn-group btn-group-sm d-flex">        
                         <a href="fetchdata" class="btn" type="button">List</a>                            
                     </div>
                 </li>
-                <div class="dropdown-divider"></div>
-                <li class="nav-item mt-2">
+
+                <!-- Create -->
+                <li class="nav-item">
+                    <div class="dropdown-divider"></div>
                     <div class="btn-group btn-group-sm d-flex">        
                         <a href="fetchdata" class="btn" type="button">Create / Modify</a>                            
                     </div>
@@ -33,33 +53,52 @@
             </li>    
         </div>
 
-        <!-- User dropdown -->
+        <!-- User dropdown button -->
         <div class="nav-item dropdown">
             <button class="btn btn-nav" type="button">
                 <span class="bi bi-person-fill"> User</span>
             </button>
+
+            <!-- User dropdown menu -->
             <li class="dropdown-menu dropdown-menu-user">
+
+                <!-- Notification -->
+                @if (userMsgTitle != null)
+                {
+                    <li class="nav-item">
+                        <div class="alert @userMsgType alert-dismissible fade show" role="alert">
+                            <strong>@userMsgTitle</strong><br>@userMsg
+                            <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
+                        </div>
+                    </li>
+                }
+
+                <!-- Username input -->
                 <li class="nav-item">
                     <div class="input-group input-group-sm justify-content-center">
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-person-fill"></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+                        <input type="text" class="form-control" placeholder="Username" @bind="username" aria-label="Username">
                     </div>
                 </li>
-                <li class="nav-item mt-2">
+
+                <!-- Password input -->
+                <li class="nav-item mt-2">                  
                     <div class="input-group input-group-sm justify-content-center">
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-key-fill"></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Password">
+                        <input type="password" class="form-control" placeholder="Username" @bind="password" @onkeydown="@EnterUser" aria-label="Password">
                     </div>
                 </li>
-                <div class="dropdown-divider"></div>
+
+                <!-- Control buttons -->
                 <li class="nav-item">
+                    <div class="dropdown-divider"></div>
                     <div class="btn-group btn-group-sm d-flex">
-                        <button class="btn" @onclick="() => expandSubNavSettings = !expandSubNavSettings" type="button">Login</button>
-                        <button class="btn" @onclick="() => expandSubNavSettings = !expandSubNavSettings" type="button">Register</button>
+                        <button class="btn" @onclick="(() => TryUserLogin())" type="button">Login</button>
+                        <button class="btn" @onclick="(() => TryUserRegister())" type="button">Register</button>
                     </div>
                 </li>
             </li>    
@@ -68,8 +107,47 @@
 </nav>
 
 @code {
+    private string username, password, search;
+    private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
-    //@onclick="() => expandSubNavSettings = !expandSubNavSettings"
-    private bool expandSubNavSettings;
+    private void EnterDeck(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            SetDeckNotification("Title", "this is the message, i need it to be a bit longer!!!", "success");
+        }
+    }
+
+    private void EnterUser(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            SetUserNotification("Title", "User created successfully!", "success");
+        }
+    }
+
+    private void SetDeckNotification(string title = null, string msg = null, string type = "warning")
+    {
+        deckMsgTitle = title;
+        deckMsg = type;
+        deckMsgType = "alert-" + type;
+    }
+
+    private void SetUserNotification(string title = null, string msg = null, string type = "warning")
+    {
+        userMsgTitle = title;
+        userMsg = msg;
+        userMsgType = "alert-" + type;
+    }
+
+    private void TryUserLogin()
+    {
+
+    }
+
+    private void TryUserRegister()
+    {
+
+    }
  
 }

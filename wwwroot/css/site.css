@@ -4,34 +4,15 @@ html {
     overflow-y: scroll;
 }
 
-.dropdown-menu-user {
-    margin-top: -3px;
-    display: none;
-    padding: 20px;
-    width: 300px;
-}
-
-.dropdown-menu-decks {
-    right: 0;
-    left: 50%;
-    padding: 20px;
-    width: 250px;
-    margin-top: -3px;
-    display: none;
-    -webkit-transform: translate(-50%, 0);
-    -o-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
-}
-
-.dropdown:hover .dropdown-menu {display: block;}
-
 body {
     padding-top: 50px;
     padding-bottom: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .content {
-    padding-top: 1.1rem;
+    padding-top: 1rem;
 }
 
 /* Input */
@@ -69,6 +50,11 @@ body {
     box-shadow: none;
 }
 
+.close:focus, .close:active {
+    outline: none;
+    box-shadow: none;
+}
+
 /* Navigation */
 
 .navbar {
@@ -88,6 +74,35 @@ body {
 .nav-link:active {
     color: rgb(17, 146, 0);
 }
+
+.navbar-brand {
+    padding: 0;
+}
+
+/* Navigation dropdown */
+
+.dropdown-menu-user {
+    right: 0;
+    left: auto;
+    padding: 20px;
+    width: 300px;
+    display: none;
+    margin-top: -3px;
+}
+
+.dropdown-menu-decks {
+    right: 0;
+    left: 50%;
+    padding: 20px;
+    width: 300px;
+    display: none;
+    margin-top: -3px;
+    -webkit-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+.dropdown:hover .dropdown-menu {display: block;}
 
 /* Footer */
 
