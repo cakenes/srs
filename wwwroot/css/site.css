@@ -19,18 +19,22 @@ body {
 
 .form-control:focus {
     box-shadow: none;
+    border-color: rgb(54, 103, 150);
+    outline-color: rgb(54, 103, 150);
 }
 
 /* Button */
 
 .btn {
     color: rgb(90, 90, 90);
-    border-color: rgb(206, 212, 218)
+    border-color: rgb(206, 212, 218);
+    text-transform: uppercase;
+    font-family: Arista;
 }
 
 .btn:hover {
-    color: rgb(128, 189, 255);
-    border-color: rgb(128, 189, 255);
+    color: rgb(54, 103, 150);
+    border-color: rgb(54, 103, 150);
 }
 
 .btn:focus {
@@ -39,11 +43,18 @@ body {
 
 .btn-nav {
     color: rgb(90, 90, 90);
+    text-transform: uppercase;
+    font-family: Arista, sans-serif;
+    font-size: 24px;
     border-width: 0px;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
 }
 
 .btn-nav:hover {
-    color: rgb(128, 189, 255);
+    color: rgb(54, 103, 150);
+    -webkit-filter: grayscale(0);
+    filter: none;
 }
 
 .btn-nav:focus {
@@ -71,12 +82,16 @@ body {
     color: rgb(0, 0, 0);
 }
 
-.nav-link:active {
-    color: rgb(17, 146, 0);
-}
-
 .navbar-brand {
     padding: 0;
+    text-transform: uppercase;
+    color: rgb(54, 103, 150);
+    font-family: Arista, sans-serif;
+    font-size: 24px;
+}
+
+.navbar-text {
+    color: rgb(54, 103, 150);
 }
 
 /* Navigation dropdown */
@@ -102,22 +117,25 @@ body {
     transform: translate(-50%, 0);
 }
 
-.dropdown:hover .dropdown-menu {display: block;}
+.dropdown:hover .dropdown-menu
+{
+    display: block;
+}
 
 /* Footer */
 
-.footer {
+.footer
+{
     background-color: rgba(255, 255, 255, 0.9);
     color: rgb(90, 90, 90);
+    font-family: Arista, sans-serif;
+    font-size: 16px;
 }
 
-/* Phone */
-
-@media (min-width: 768px) {
-
-    .navbar-toggler {
-        display: none;
-    }
+.footer-copyright 
+{
+    font-family: sans-serif;
+    font-weight: bold;
 }
 
 /* Connection lost, failed, rejected */
@@ -166,6 +184,16 @@ body {
 
 /* Common */
 
+@font-face {
+    font-family: Arista;
+    src: url('Arista.ttf');
+}
+
+@media (min-width: 768px) {
+    .navbar-toggler {
+        display: none;
+    }
+}
 
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
