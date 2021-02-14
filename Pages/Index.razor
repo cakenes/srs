@@ -1,24 +1,37 @@
 ﻿@page "/"
 
 <div class="form-group pull-right">
-<input type="text" class="search form-control" placeholder="What you looking for?">
+	<input type="text" class="search form-control" placeholder="What you looking for?">
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-1 bg-primary">
-      1 of 3
-    </div>
-    <div class="col-6 bg-warning">
-      2 of 3 (wider)
-    </div>
-    <div class="col-4 bg-primary">
-      3 of 3
-    </div>
-    <div class="col-1 bg-warning">
-      3 of 3
-    </div>
-  </div>
+	<div class="row">
+    	<div class="col-auto">
+      		<button class="btn btn-deck-sort">
+      			Action <span class="bi bi-sort-down"></span>
+      		</button>
+    	</div>
+    	<div class="col-5">
+    		<button class="btn btn-deck-sort">
+        		Name <span class="bi bi-sort-down"></span>
+    		</button>
+    	</div>
+    	<div class="col">
+    		<button class="btn btn-deck-sort">
+				Author <span class="bi bi-sort-down"></span>
+			</button>
+    	</div>
+    	<div class="col-auto">
+    		<button class="btn btn-deck-sort">
+				Created <span class="bi bi-sort-down"></span>
+			</button>
+    	</div>
+    	<div class="col-auto">
+    		<button class="btn btn-deck-sort">
+				Modified <span class="bi bi-sort-down"></span>
+			</button>
+    	</div>
+	</div>
 </div>
 
 @code
