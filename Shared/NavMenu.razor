@@ -8,7 +8,7 @@
         <!-- Deck dropdown button -->
         <div class="nav-item dropdown">
             <button class="btn btn-nav" type="button">
-                <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-top"> Decks
+                <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-center"> Decks
             </button>
 
             <!-- Deck dropdown menu -->
@@ -31,7 +31,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-search"></span>
                         </div>
-                        <input type="search" class="form-control" placeholder="Search" @bind="search" @onkeydown="@EnterDeck" aria-label="Search">
+                        <input type="search" class="form-control" placeholder="Search" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
                     </div>
                 </li>
 
@@ -88,7 +88,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-key-fill"></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="Username" @bind="password" @onkeydown="@EnterUser" aria-label="Password">
+                        <input type="password" class="form-control" placeholder="Username" @bind="password" @onkeydown="@LoginUser" aria-label="Password">
                     </div>
                 </li>
 
@@ -106,10 +106,10 @@
 </nav>
 
 @code {
-    private string username, password, search;
+    private string username, password, deckSearch;
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
-    private void EnterDeck(KeyboardEventArgs e)
+    private void SearchDeck(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
@@ -117,7 +117,7 @@
         }
     }
 
-    private void EnterUser(KeyboardEventArgs e)
+    private void LoginUser(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {

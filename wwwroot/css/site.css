@@ -1,23 +1,32 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
-html {
+html
+{
     overflow-y: scroll;
 }
 
-body {
+body
+{
     padding-top: 50px;
     padding-bottom: 50px;
     padding-left: 10px;
     padding-right: 10px;
 }
 
-.content {
+.content
+{
     padding-top: 1rem;
 }
 
 /* Input */
 
-.form-control:focus {
+.form-control
+{
+    max-width: 900px;
+}
+
+.form-control:focus
+{
     box-shadow: none;
     border-color: rgb(54, 103, 150);
     outline-color: rgb(54, 103, 150);
@@ -25,28 +34,32 @@ body {
 
 /* Button */
 
-.btn {
+.btn
+{
     color: rgb(90, 90, 90);
     border-color: rgb(206, 212, 218);
     text-transform: uppercase;
     font-family: Arista;
 }
 
-.btn:hover {
+.btn:hover
+{
     color: rgb(54, 103, 150);
     border-color: rgb(54, 103, 150);
 }
 
-.btn:focus {
+.btn:focus
+{
     box-shadow: none;
 }
 
-.btn-nav {
-    color: rgb(90, 90, 90);
+.btn-nav
+{
     text-transform: uppercase;
     font-family: Arista, sans-serif;
     font-size: 24px;
     border-width: 0px;
+    color: rgb(90, 90, 90);
     -webkit-filter: grayscale(1);
     filter: grayscale(1);
 }
@@ -63,13 +76,39 @@ body {
     box-shadow: none;
 }
 
+.btn-fav
+{
+    margin-top: -15px;
+    margin-bottom: -10px;
+    font-size: 16px;
+    border-width: 0px;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+}
+
+.btn-fav:hover
+{
+    -webkit-filter: grayscale(0);
+    filter: none;
+}
+
+.btn-fav:focus
+{
+    box-shadow: none;
+}
+
+.btn-fav-active
+{
+
+}
+
 .btn-deck-sort
 {
-    text-align: center;
     text-transform: uppercase;
-    color: rgb(90, 90, 90);
     font-family: Arista, sans-serif;
-    font-size: 24px;
+    font-size-adjust: 16px;
+    border-width: 0px;
+    color: rgb(90, 90, 90);
 }
 
 .btn-deck-sort:hover
@@ -77,28 +116,50 @@ body {
     color: rgb(54, 103, 150);
 }
 
-.close:focus, .close:active {
+.btn-deck-sort-active
+{
+    color: rgb(54, 103, 150);
+}
+
+.btn-deck-sort-inactive
+{
+    color: rgba(0, 0, 0, 0);
+}
+
+.close:focus, .close:active
+{
     outline: none;
     box-shadow: none;
 }
 
+.btn-group
+{
+    flex: 1;
+    max-width: 1000px;
+    justify-content: space-evenly;
+}
+
 /* Navigation */
 
-.navbar {
+.navbar
+{
     color: rgb(90, 90, 90);
     background-color: rgba(255, 255, 255, 0.9);
 }
 
-.nav-link {
+.nav-link
+{
     font-size: larger;
     color: rgb(90, 90, 90);
 }
 
-.nav-link:hover {
+.nav-link:hover
+{
     color: rgb(0, 0, 0);
 }
 
-.navbar-brand {
+.navbar-brand
+{
     padding: 0;
     text-transform: uppercase;
     color: rgb(54, 103, 150);
@@ -106,13 +167,15 @@ body {
     font-size: 24px;
 }
 
-.navbar-text {
+.navbar-text
+{
     color: rgb(54, 103, 150);
 }
 
 /* Navigation dropdown */
 
-.dropdown-menu-user {
+.dropdown-menu-user
+{
     right: 0;
     left: auto;
     padding: 20px;
@@ -121,7 +184,8 @@ body {
     margin-top: -3px;
 }
 
-.dropdown-menu-decks {
+.dropdown-menu-decks
+{
     right: 0;
     left: 50%;
     padding: 20px;
@@ -133,9 +197,38 @@ body {
     transform: translate(-50%, 0);
 }
 
+.dropdown-menu-filter
+{
+    right: auto;
+    left: 0;
+    padding: 10px;
+    width: 200;
+    display: none;
+    margin-top: -3px;
+}
+
+.dropdown-header
+{
+    text-transform: uppercase;
+    font-family: Arista, sans-serif;
+    font-size-adjust: 16px;
+    border-width: 0px;
+    color: rgb(90, 90, 90);
+}
+
 .dropdown:hover .dropdown-menu
 {
     display: block;
+}
+
+/* Talbe */
+
+.table
+{
+    max-width: 1000px;
+    color: rgb(90, 90, 90);
+    font-family: sans-serif;
+    font-size: calc(50% + 0.2vw + 0.2vh);
 }
 
 /* Footer */
@@ -156,14 +249,16 @@ body {
 
 /* Connection lost, failed, rejected */
 
-.reconnect-modal > div {
+.reconnect-modal > div
+{
     position: absolute;
-    top: 80px;
+    top: 70px;
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 9999;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.80);
     text-align: center;
 }
 .components-reconnect-hide > div
@@ -200,25 +295,31 @@ body {
 
 /* Common */
 
-@font-face {
+@font-face
+{
     font-family: Arista;
-    src: url('Arista.ttf');
+
+    src: url('font/Arista.ttf');
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px)
+{
     .navbar-toggler {
         display: none;
     }
 }
 
-.valid.modified:not([type=checkbox]) {
+.valid.modified:not([type=checkbox])
+{
     outline: 1px solid #26b050;
 }
 
-.invalid {
+.invalid
+{
     outline: 1px solid red;
 }
 
-.validation-message {
+.validation-message
+{
     color: red;
 }

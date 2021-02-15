@@ -1,40 +1,117 @@
 ﻿@page "/"
 
-<div class="form-group pull-right">
-	<input type="text" class="search form-control" placeholder="What you looking for?">
-</div>
-
-<div class="container">
-	<div class="row">
-    	<div class="col-auto">
-      		<button class="btn btn-deck-sort">
-      			Action <span class="bi bi-sort-down"></span>
-      		</button>
-    	</div>
-    	<div class="col-5">
-    		<button class="btn btn-deck-sort">
-        		Name <span class="bi bi-sort-down"></span>
-    		</button>
-    	</div>
-    	<div class="col">
-    		<button class="btn btn-deck-sort">
-				Author <span class="bi bi-sort-down"></span>
-			</button>
-    	</div>
-    	<div class="col-auto">
-    		<button class="btn btn-deck-sort">
-				Created <span class="bi bi-sort-down"></span>
-			</button>
-    	</div>
-    	<div class="col-auto">
-    		<button class="btn btn-deck-sort">
-				Modified <span class="bi bi-sort-down"></span>
-			</button>
-    	</div>
+<!-- Search -->
+<div class="row">
+	<div class="input-group input-group-sm justify-content-center">
+		<input type="search" class="form-control rounded-left" placeholder="What are you looking for?" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
+		<div class="input-group-append">
+			<button class="btn" @onclick="(() => SearchDeck())" type="button">Search</button>
+  		</div>
 	</div>
 </div>
 
+<!-- Sort -->
+<div class="row justify-content-center">
+	<div class="btn-group btn-group-sm" role="group" aria-label="Sort">
+		<!-- Sort by popularity active -->
+		@if (listSort == 0 || listSort == 1)
+		{
+			<button class="btn btn-deck-sort btn-deck-sort-active" @onclick="(() => ToggleSort(0,1))" type="button">Popularity
+				@if (listSort == 0) { <span class="bi bi-sort-down"></span> }
+				else if (listSort == 1) { <span class="bi bi-sort-up"></span> }
+			</button>
+		}
+		else
+		{
+			<button class="btn btn-deck-sort" @onclick="(() => ToggleSort(0,1))" type="button">Popularity
+				<span class="bi bi-sort-up btn-deck-sort-inactive"></span>
+			</button>
+		}
+		<!-- Sort by name -->
+		@if (listSort == 2 || listSort == 3)
+		{
+			<button class="btn btn-deck-sort btn-deck-sort-active" @onclick="(() => ToggleSort(2,3))" type="button">Name
+				@if (listSort == 2) { <span class="bi bi-sort-alpha-down"></span> }
+				else if (listSort == 3) { <span class="bi bi-sort-alpha-up"></span> }
+			</button>
+		}
+		else
+		{
+			<button class="btn btn-deck-sort" @onclick="(() => ToggleSort(2,3))" type="button">Name
+				<span class="bi bi-sort-alpha-up btn-deck-sort-inactive"></span>
+			</button>
+		}
+		<!-- Sort by author -->
+		@if (listSort == 4 || listSort == 5)
+		{
+			<button class="btn btn-deck-sort btn-deck-sort-active" @onclick="(() => ToggleSort(4,5))" type="button">
+				@if (listSort == 4) { <span class="bi bi-sort-alpha-down"></span> }
+				else if (listSort == 5) { <span class="bi bi-sort-alpha-up"></span> } Author
+			</button>
+		}
+		else
+		{
+			<button class="btn btn-deck-sort" @onclick="(() => ToggleSort(4,5))" type="button">
+				<span class="bi bi-sort-alpha-up btn-deck-sort-inactive"></span> Author
+			</button>
+		}
+		<!-- Sort by last modified -->
+		@if (listSort == 6 || listSort == 7)
+		{
+			<button class="btn btn-deck-sort btn-deck-sort-active" @onclick="(() => ToggleSort(6,7))" type="button">
+				@if (listSort == 6) { <span class="bi bi-sort-numeric-down"></span> }
+				else if (listSort == 7) { <span class="bi bi-sort-numeric-up"></span> } Modified
+			</button>
+		}
+		else
+		{
+			<button class="btn btn-deck-sort" @onclick="(() => ToggleSort(6,7))" type="button">
+				<span class="bi bi-sort-numeric-up btn-deck-sort-inactive"></span> Modified
+			</button>
+		}
+	</div>
+</div>
+
+<div class="row justify-content-center">
+<table class="table table-sm mt-4">
+	<colgroup>
+		<col span="1" style="width: 10%;">
+       	<col span="1" style="width: 60%;">
+		<col span="1" style="width: 20%;"> 
+       	<col span="1" style="width: 10%;">
+	</colgroup>
+	<tbody>
+		<tr>
+	    	<td>
+				<button class="btn btn-sm btn-fav" type="button">
+					<img src="svg/Star.svg" alt="" width="16" height="16" title="Decks" class="align-center">
+				</button>
+	  		</td>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>sdfgsdfg</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 @code
 {
+	private int listSort = 2;
+	private string deckSearch;
+
+	private void ToggleSort(int indexOne, int indexTwo)
+	{
+		if (listSort == indexOne) listSort = indexTwo;
+		else listSort = indexOne;
+	}
+   private void SearchDeck(KeyboardEventArgs e = null)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            
+        }
+    }
 
 }
