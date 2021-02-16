@@ -37,6 +37,17 @@ body {
     filter: none;
 }
 
+.btn-active
+{
+    color: rgb(54, 103, 150);
+    -webkit-filter: grayscale(0);
+    filter: none;
+}
+
+.btn-inactive {
+    color: rgba(0, 0, 0, 0);
+}
+
 .btn-search
 {
     font-size: 16px;
@@ -66,16 +77,6 @@ body {
     text-transform: uppercase;
     font-family: Arista, sans-serif;
     white-space: nowrap;
-}
-
-.btn-sort-active
-{
-    color: rgb(54, 103, 150);
-}
-
-.btn-sort-inactive
-{
-    color: rgba(0, 0, 0, 0);
 }
 
 .btn-nav-small
@@ -177,7 +178,7 @@ body {
     font-weight: bold;
 }
 
-/* Connection lost, failed, rejected */
+/* Connection lost, failed, rejected, error */
 
 .reconnect-modal > div {
     top: 0;
@@ -218,6 +219,14 @@ body {
 }
 .components-reconnect-rejected > .rejected {
     display: block;
+}
+
+.error-text {
+    flex: 1;
+    font-size: 24px;
+    text-transform: uppercase;
+    font-family: Arista, sans-serif;
+    justify-content: center;
 }
 
 /* Common & resize */
