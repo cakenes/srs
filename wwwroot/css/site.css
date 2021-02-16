@@ -178,6 +178,20 @@ body {
     font-weight: bold;
 }
 
+/* Text */
+
+.text-24 {
+    font-size: 24px;
+    text-transform: uppercase;
+    font-family: Arista, sans-serif;
+}
+
+.text-16 {
+    font-size: 24px;
+    text-transform: uppercase;
+    font-family: Arista, sans-serif;
+}
+
 /* Connection lost, failed, rejected, error */
 
 .reconnect-modal > div {
@@ -221,26 +235,11 @@ body {
     display: block;
 }
 
-.error-text {
-    flex: 1;
-    font-size: 24px;
-    text-transform: uppercase;
-    font-family: Arista, sans-serif;
-    justify-content: center;
-}
-
-/* Common & resize */
+/* Common */
 
 @font-face {
     font-family: Arista;
     src: url('font/Arista.ttf');
-}
-
-@media screen and (max-width: 600px) {
-    .btn-sort { font-size: 11px; }
-    .btn-select { font-size: 11px; }
-    .table .footer { font-size: 11px; }
-    .footer { font-size: 11px; }
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -253,4 +252,33 @@ body {
 
 .validation-message {
     color: red;
+}
+
+/* Font resize */
+
+@media screen and (max-width: 600px) {
+
+    .btn-sort {
+        font-size: 11px;
+    }
+
+    .btn-select {
+        font-size: 11px;
+    }
+
+    .table .footer {
+        font-size: 11px;
+    }
+
+    .footer {
+        font-size: 11px;
+    }
+
+    .text-24 {
+        font-size: 14px
+    }
+
+    .text-16 {
+        font-size: 11px;
+    }
 }

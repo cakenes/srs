@@ -4,50 +4,81 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Srs.Data;
 
-public class DataAccess
+namespace Srs
 {
-    public static Dictionary<int, User> UserList;
-    public static Dictionary<int, Deck> DeckList;
-    public static Dictionary<int, DeckList> ClientDeckList;
+    public class DataAccess
+    {
+        public static DataAccess Current = new DataAccess();
+    
+        public Dictionary<int, User> UserList;
+        public Dictionary<int, Deck> DeckList;
+        public  Dictionary<int, DeckInfo> DeckInfoList;
 
-    public static void LoadDeckList() {
-        // Directory missing
-        if (!Directory.Exists("Decks/")) return;
-        if (!Directory.Exists("Users/"))
+        // Load files into dictionarys
+        public void LoadDeckList() {
 
-        // Reset lists
-        DeckList = new Dictionary<int, Deck>();
-        UserList = new Dictionary<int, User>();
+            // Directory missing
+            if (!Directory.Exists("Decks/")) return;
+            if (!Directory.Exists("Users/")) return;
 
-        string[] DeckPaths = Directory.GetFiles("Decks/", "*.*");
-        string[] UserPaths = Directory.GetFiles("Users/", "*.*");
+            // Reset lists
+            DeckList = new Dictionary<int, Deck>();
+            UserList = new Dictionary<int, User>();
 
-        for (int i = 0; i < DeckPaths.Length; i++)
-        {
-            string jsonArray = File.ReadAllText(DeckPaths[i]);
-            Deck fromJson = JsonConvert.DeserializeObject<Deck>(jsonArray);
-            DeckList.Add(fromJson.Id, fromJson);
+            // Read files
+            string[] DeckPaths = Directory.GetFiles("Decks/", "*.*");
+            string[] UserPaths = Directory.GetFiles("Users/", "*.*");
+
+            // Deserialize file into Deck
+            for (int i = 0; i < DeckPaths.Length; i++)
+            {
+                string jsonArray = File.ReadAllText(DeckPaths[i]);
+                Deck fromJson = JsonConvert.DeserializeObject<Deck>(jsonArray);
+                DeckList.Add(fromJson.Id, fromJson);
+            }
+
+            // Deserialize file into User
+            for (int i = 0; i < UserPaths.Length; i++)
+            {
+                string jsonArray = File.ReadAllText(UserPaths[i]);
+                User fromJson = JsonConvert.DeserializeObject<User>(jsonArray);
+                UserList.Add(fromJson.Id, fromJson);
+            }
         }
 
-        for (int i = 0; i < UserPaths.Length; i++)
-        {
-            string jsonArray = File.ReadAllText(UserPaths[i]);
-            User fromJson = JsonConvert.DeserializeObject<User>(jsonArray);
-            UserList.Add(fromJson.Id, fromJson);
+        // Add new or modify Deck
+        public void SaveDeck(Deck deck) {
+            // Serialize Deck into file
+            string toJson = JsonConvert.SerializeObject(deck);
+            File.WriteAllText("Decks/" + deck.Name, toJson);
+
+            // If editing, remove old entries first
+            if (DeckList.ContainsKey(deck.Id)) DeckList.Remove(deck.Id);
+            if (DeckInfoList.ContainsKey(deck.Id)) DeckInfoList.Remove(deck.Id);
+
+            // Add Deck and DeckInfo to dictionary
+            DeckList.Add(deck.Id, deck);
+            DeckInfoList.Add(deck.Id, CreateDeckInfo(deck));
         }
 
-    }
+        // Add new or modify User
+        public void SaveUser(User user) {
+            // Serialize User into file
+            string toJson = JsonConvert.SerializeObject(user);
+            File.WriteAllText("Users/" + user.Name, toJson);
 
-    public static void SaveDeck(Deck deck) {
-        // Save to file
-        string toJson = JsonConvert.SerializeObject(deck);
-        File.WriteAllText("Decks/" + deck.Name, toJson);
-        
-        // Editing
-        if (DeckList.ContainsKey(deck.Id)) DeckList.Remove(deck.Id);
-        if (ClientDeckList.ContainsKey(deck.Id)) ClientDeckList.Remove(deck.Id);
+            // If editing, remove old user first
+            if (UserList.ContainsKey(user.Id)) UserList.Remove(user.Id);
 
-        // Add
-        DeckList.Add(deck.Id, deck);
-    }
+            // Add User to dictionary
+            UserList.Add(user.Id, user);
+        }        
+
+        // Create DeckInfo from Deck
+        public DeckInfo CreateDeckInfo(Deck deck) {
+            return new DeckInfo { 
+                Id = deck.Id, Name = deck.Name, Auhors = deck.Auhors, Cards = deck.Cards.Count, Favorites = deck.Favorites
+            };
+        }
+    }   
 }

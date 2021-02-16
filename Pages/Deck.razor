@@ -1,16 +1,15 @@
-﻿@page "/"
+﻿@page "/Deck"
 
 @using Srs.Data
 @inject DataService Service
 
-<!-- Search -->
-<div class="row">
-	<div class="input-group justify-content-center">
-		<input type="search" class="form-control rounded-left" placeholder="What are you looking for?" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
-		<div class="input-group-append">
-			<button class="btn btn-search" @onclick="(() => SearchDeck())" type="button">Search</button>
-  		</div>
-	</div>
+<!-- Deck information -->
+<div class="row justify-content-center">
+	<span class="text-24">Deck information</span>
+</div>
+
+<div class="row justify-content-center">
+	<span class>Testi</span>
 </div>
 
 <!-- List from server -->

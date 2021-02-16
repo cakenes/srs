@@ -13,15 +13,15 @@ namespace Srs.Data {
         public string Email;
 
         // Decks
-        public List<Deck> Own;
-        public List<Deck> Favorite;
-        public List<Deck> InProgress;
+        public List<DeckStats> Decks;
 
         // Statistics
         public DateTime Created;
     }
 
     public struct Card {
+
+        public int Id;
 
         // Generic
         public string Front;
@@ -44,12 +44,12 @@ namespace Srs.Data {
     }
 
     public struct Deck {
-
+        // Unique Id
         public int Id;
 
         // Generic
         public string Name;
-        public string Auhors;
+        public User Auhors;
 
         // Cards
         public Dictionary<int, Card> Cards;
@@ -57,19 +57,40 @@ namespace Srs.Data {
         // Statistics
         public DateTime Created;
         public DateTime Modified;
+        public int Favorites;
     }
 
-    public struct DeckList {
-
+    public struct DeckInfo {
+        // Id used in Deck
         public int Id;
 
         // Generic
         public string Name;
-        public string Auhors;
+        public User Auhors;
 
         // Statistics
         public int Cards;
         public int Favorites;
+    }
+
+    public struct DeckStats {
+        // Id used in Deck
+        public int Id;
+
+        // 
+        public bool Own;
+        public bool Favorite;
+        public int Tries;
+        public int Correct;
+        List<CardStats> Cards;
+    }
+
+    // Tracking card progress inside of deck progress
+    public struct CardStats {
+        public int Id;
+        public int Level;
+        public int Tries;
+        public int Correct;
     }
 
 }

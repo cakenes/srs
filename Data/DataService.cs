@@ -10,8 +10,8 @@ namespace Srs.Data {
             return Task.FromResult(new User());
         }
 
-        public Task<List<DeckList>> LoadDeckList() {
-            return Task.FromResult(new List<DeckList>());
+        public Task<List<DeckInfo>> LoadDeckList() {
+            return Task.FromResult(new List<DeckInfo>());
         }
 
     }
