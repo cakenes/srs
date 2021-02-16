@@ -7,7 +7,7 @@
 
         <!-- Deck dropdown button -->
         <div class="nav-item dropdown">
-            <button class="btn btn-nav" type="button">
+            <button class="btn btn-nav-big" type="button">
                 <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-center"> Decks
             </button>
 
@@ -20,7 +20,7 @@
                     <li class="nav-item">
                         <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
                             <strong>@deckMsgTitle</strong><br>@deckMsg
-                            <button type="button" class="close btn-xs" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                            <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
                         </div>
                     </li>
                 }
@@ -36,25 +36,21 @@
                 </li>
 
                 <!-- List -->
-                <li class="nav-item mt-2">
-                    <div class="btn-group btn-group-sm d-flex">        
-                        <a href="fetchdata" class="btn" type="button">List</a>                            
-                    </div>
+                <li class="nav-item mt-2">       
+                    <a href="fetchdata" class="btn btn-nav-small" type="button">List</a>                            
                 </li>
 
                 <!-- Create -->
                 <li class="nav-item">
-                    <div class="dropdown-divider"></div>
-                    <div class="btn-group btn-group-sm d-flex">        
-                        <a href="fetchdata" class="btn" type="button">Create / Modify</a>                            
-                    </div>
+                    <div class="dropdown-divider"></div>      
+                    <a href="fetchdata" class="btn btn-nav-small" type="button">Create / Modify</a>                            
                 </li>
             </li>    
         </div>
 
         <!-- User dropdown button -->
         <div class="nav-item dropdown">
-            <button class="btn btn-nav" type="button">
+            <button class="btn btn-nav-big" type="button">
                 <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top"> User
             </button>
 
@@ -95,9 +91,9 @@
                 <!-- Control buttons -->
                 <li class="nav-item">
                     <div class="dropdown-divider"></div>
-                    <div class="btn-group btn-group-sm d-flex">
-                        <button class="btn" @onclick="(() => TryUserLogin())" type="button">Login</button>
-                        <button class="btn" @onclick="(() => TryUserRegister())" type="button">Register</button>
+                    <div class="btn-group">
+                        <button class="btn btn-nav-small" @onclick="(() => TryUserLogin())" type="button">Login</button>
+                        <button class="btn btn-nav-small" @onclick="(() => TryUserRegister())" type="button">Register</button>
                     </div>
                 </li>
             </li>    
