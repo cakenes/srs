@@ -3,47 +3,110 @@
 @using Srs.Data
 @inject DataService Service
 
-<!-- Deck header -->
-<div class="row justify-content-center">
-	<span class="text-header">Deck</span>
-</div>
+<!-- Container -->
+<div class="container">
+	<div class="row justify-content-center">
 
-<!-- Deck group -->
-<div class="input-group input-group-sm">
+		<!-- Deck -->
+		<div class="col" align="center">
+			<span class="text-header">Deck</span>
 
-	<!-- Name -->
- 	<div class="input-group-prepend">
-    	<span class="input-group-text bi bi-stack"></span>
-    </div>
-	<input type="text" class="form-control rounded-right" placeholder="Name" aria-label="Deck name">
+			<!-- Name -->
+			<div class="input-group input-group-sm mt-2">
+	 			<div class="input-group-prepend">
+    				<span class="input-group-text bi bi-stack"></span>
+    			</div>
+				<input type="text" class="form-control rounded-right" placeholder="Name" aria-label="Deck name">
+			</div>
 
-	<!-- User -->
-	<div class="input-group-prepend ml-2">
-    	<span class="input-group-text bi bi-people-fill rounded-left"></span>
-    </div>
-	<input type="text" class="form-control rounded-right" placeholder="Users" aria-label="Deck name">
+			<!-- User -->
+			<div class="input-group input-group-sm mt-2">
+				<div class="input-group-prepend">
+			    	<span class="input-group-text bi bi-people-fill rounded-left"></span>
+			    </div>
+				<input type="text" class="form-control rounded-right" placeholder="Users" aria-label="Deck users">
 
-	<!-- User tooltip -->
-	<div class="dropdown">
-  		<button class="btn btn-sm btn-tooltip">
-			<span class="dropdown bi bi-question-circle"></span>
-		</button>
-  		<div class="dropdown-menu dropdown-menu-tooltip-left">
-			<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma.</span>
-			<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+				<!-- User tooltip -->
+				<div class="dropdown">
+	  				<button class="btn btn-sm btn-tooltip">
+						<span class="dropdown bi bi-question-circle"></span>
+					</button>
+  					<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma.</span>
+						<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Name -->
+			<div class="input-group input-group-sm mt-2">
+	 			<div class="input-group-prepend">
+    				<span class="input-group-text bi bi-lock-fill"></span>
+    			</div>
+				<input type="text" class="form-control rounded-right" placeholder="Password" aria-label="Deck password">
+			</div>
+			
+		</div>
+
+		<!-- Card -->
+		<div class="col" align="center">
+			<span class="text-header">Card</span>
+
+			<!-- Card front -->
+			<div class="input-group input-group-sm mt-2">
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card"></textarea>
+
+				<!-- Front tooltip -->
+				<div class="dropdown">
+  					<button class="btn btn-sm btn-tooltip">
+						<span class="dropdown bi bi-question-circle"></span>
+					</button>
+  					<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<span class="dropdown-item text-tooltip disabled">Limited currently to 5rows, 50chars</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card back -->
+			<div class="input-group  input-group-sm mt-2">
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card"></textarea>
+
+				<!-- Back tooltip -->
+				<div class="dropdown">
+  					<button class="btn btn-sm btn-tooltip">
+						<span class="dropdown bi bi-question-circle"></span>
+					</button>
+  					<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<span class="dropdown-item text-tooltip disabled">Limited currently to 5rows, 50chars</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card actions -->
+			<div class="row justify-content-end">
+				<div class="btn-group">
+					<button class="btn btn-clear" type="button">Clear</button>
+					<button class="btn btn-accept" type="button">Accept</button>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
 
-<div class="h-divider"></div>
+	<!-- Card list header -->
+	<div class="row justify-content-center mt-2">
+		<span class="text-header">Card list</span>
+	</div>
 
-<!-- Cards -->
-<div class="row justify-content-center mt-2">
-	<span class="text-header">Card information</span>
-</div>
-
-<div class="row justify-content-center mt-2">
-	<span class="text-header">Cards</span>
+	<!-- Table -->
+	<div class="row justify-content-center mt-2">
+		<table class="table table-new table-sm">
+			<colgroup>
+				<col span="1" style="width: 45%;">
+       			<col span="1" style="width: 45%;">
+				<col span="1" style="width: 10%;"> 
+			</colgroup>
+		</table>
+	</div>
 </div>
 
 @code

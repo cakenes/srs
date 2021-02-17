@@ -1,120 +1,122 @@
 ﻿<!-- Navigation Bar -->
-<nav class="navbar border-bottom fixed-top">
+<div class="container-fluid">
+    <nav class="navbar border-bottom fixed-top">
 
-    <!-- Logo -->
-    <div class="col" align="center">
-        <span class="navbar-text" align="center" aria-label="To index" asp-area="" asp-page="/Index">Srs</span>
-    </div>
+        <!-- Logo -->
+        <div class="col" align="center">
+            <span class="navbar-text" align="center" aria-label="To index" asp-area="" asp-page="/Index">Srs</span>
+        </div>
 
-    <!-- Deck column -->
-    <div class="col" align="center">
+        <!-- Deck column -->
+        <div class="col" align="center">
 
-        <!-- Deck dropdown button -->
-        <div class="nav-item dropdown">
-            <button class="btn btn-nav-big" type="button">
-                <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-center">
-                <span>Decks</span>
-            </button>
+            <!-- Deck dropdown button -->
+            <div class="nav-item dropdown">
+                <button class="btn btn-nav-big" type="button">
+                    <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-center">
+                    <span>Decks</span>
+                </button>
 
-            <!-- Deck dropdown menu -->
-            <li class="dropdown-menu dropdown-menu-decks">
+                <!-- Deck dropdown menu -->
+                <li class="dropdown-menu dropdown-menu-decks">
 
-                <!-- Notification -->
-                @if (deckMsgTitle != null)
-                {
+                    <!-- Notification -->
+                    @if (deckMsgTitle != null)
+                    {
+                        <li class="nav-item">
+                            <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
+                                <strong>@deckMsgTitle</strong><br>@deckMsg
+                                <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                            </div>
+                        </li>
+                    }
+
+                    <!-- Search -->
                     <li class="nav-item">
-                        <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
-                            <strong>@deckMsgTitle</strong><br>@deckMsg
-                            <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                        <div class="input-group input-group-sm justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bi bi-search"></span>
+                            </div>
+                            <input type="search" class="form-control" placeholder="Search" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
                         </div>
                     </li>
-                }
 
-                <!-- Search -->
-                <li class="nav-item">
-                    <div class="input-group input-group-sm justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bi bi-search"></span>
-                        </div>
-                        <input type="search" class="form-control" placeholder="Search" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
-                    </div>
-                </li>
+                    <!-- List -->
+                    <li class="nav-item mt-2">       
+                        <a href="/" class="btn btn-nav-small" type="button">List</a>
+                    </li>
 
-                <!-- List -->
-                <li class="nav-item mt-2">       
-                    <a href="/" class="btn btn-nav-small" type="button">List</a>
-                </li>
-
-                <!-- Create -->
-                <li class="nav-item">
-                    <div class="dropdown-divider"></div>      
-                    <a href="Deck" class="btn btn-nav-small" type="button">Create</a>
-                </li>
-
-                <!-- Modify -->
-                <li class="nav-item mt-2">
-                    <a href="/" class="btn btn-nav-small" type="button">Modify</a>
-                </li>
-            </li>
-        </div>
-    </div>
-
-    <!-- User column -->
-    <div class="col" align="center">
-
-        <!-- User dropdown button -->
-        <div class="nav-item dropdown">
-            <button class="btn btn-nav-big" type="button">
-                <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
-                <span>User</span>
-            </button>
-
-            <!-- User dropdown menu -->
-            <li class="dropdown-menu dropdown-menu-user">
-
-                <!-- Notification -->
-                @if (userMsgTitle != null)
-                {
+                    <!-- Create -->
                     <li class="nav-item">
-                        <div class="alert @userMsgType alert-dismissible fade show" role="alert">
-                            <strong>@userMsgTitle</strong><br>@userMsg
-                            <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
+                        <div class="dropdown-divider"></div>      
+                        <a href="Deck" class="btn btn-nav-small" type="button">Create</a>
+                    </li>
+
+                    <!-- Modify -->
+                    <li class="nav-item mt-2">
+                        <a href="/" class="btn btn-nav-small" type="button">Modify</a>
+                    </li>
+                </li>
+            </div>
+        </div>
+
+        <!-- User column -->
+        <div class="col" align="center">
+
+            <!-- User dropdown button -->
+            <div class="nav-item dropdown">
+                <button class="btn btn-nav-big" type="button">
+                    <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
+                    <span>User</span>
+                </button>
+
+                <!-- User dropdown menu -->
+                <li class="dropdown-menu dropdown-menu-user">
+
+                    <!-- Notification -->
+                    @if (userMsgTitle != null)
+                    {
+                        <li class="nav-item">
+                            <div class="alert @userMsgType alert-dismissible fade show" role="alert">
+                                <strong>@userMsgTitle</strong><br>@userMsg
+                                <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
+                            </div>
+                        </li>
+                    }
+
+                    <!-- Username input -->
+                    <li class="nav-item">
+                        <div class="input-group input-group-sm justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bi bi-person-fill"></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Username" @bind="username" aria-label="Username">
                         </div>
                     </li>
-                }
 
-                <!-- Username input -->
-                <li class="nav-item">
-                    <div class="input-group input-group-sm justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bi bi-person-fill"></span>
+                    <!-- Password input -->
+                    <li class="nav-item mt-2">                  
+                        <div class="input-group input-group-sm justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bi bi-key-fill"></span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Username" @bind="password" @onkeydown="@LoginUser" aria-label="Password">
                         </div>
-                        <input type="text" class="form-control" placeholder="Username" @bind="username" aria-label="Username">
-                    </div>
-                </li>
+                    </li>
 
-                <!-- Password input -->
-                <li class="nav-item mt-2">                  
-                    <div class="input-group input-group-sm justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bi bi-key-fill"></span>
+                    <!-- Control buttons -->
+                    <li class="nav-item">
+                        <div class="dropdown-divider"></div>
+                        <div class="btn-group btn-nav-group">
+                            <button class="btn btn-nav-small" @onclick="(() => TryUserLogin())" type="button">Login</button>
+                            <button class="btn btn-nav-small" @onclick="(() => TryUserRegister())" type="button">Register</button>
                         </div>
-                        <input type="password" class="form-control" placeholder="Username" @bind="password" @onkeydown="@LoginUser" aria-label="Password">
-                    </div>
-                </li>
-
-                <!-- Control buttons -->
-                <li class="nav-item">
-                    <div class="dropdown-divider"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-nav-small" @onclick="(() => TryUserLogin())" type="button">Login</button>
-                        <button class="btn btn-nav-small" @onclick="(() => TryUserRegister())" type="button">Register</button>
-                    </div>
-                </li>
-            </li>    
+                    </li>
+                </li>    
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</div>
 
 @code {
     private string username, password, deckSearch;
