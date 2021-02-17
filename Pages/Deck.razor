@@ -3,151 +3,57 @@
 @using Srs.Data
 @inject DataService Service
 
-<!-- Deck information -->
+<!-- Deck header -->
 <div class="row justify-content-center">
-	<span class="text-24">Deck information</span>
+	<span class="text-header">Deck</span>
 </div>
 
-<div class="row justify-content-center">
-	<span class>Testi</span>
+<!-- Deck group -->
+<div class="input-group input-group-sm">
+
+	<!-- Name -->
+ 	<div class="input-group-prepend">
+    	<span class="input-group-text bi bi-stack"></span>
+    </div>
+	<input type="text" class="form-control rounded-right" placeholder="Name" aria-label="Deck name">
+
+	<!-- User -->
+	<div class="input-group-prepend ml-2">
+    	<span class="input-group-text bi bi-people-fill rounded-left"></span>
+    </div>
+	<input type="text" class="form-control rounded-right" placeholder="Users" aria-label="Deck name">
+
+	<!-- User tooltip -->
+	<div class="dropdown">
+  		<button class="btn btn-sm btn-tooltip">
+			<span class="dropdown bi bi-question-circle"></span>
+		</button>
+  		<div class="dropdown-menu dropdown-menu-tooltip-left">
+			<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma.</span>
+			<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+		</div>
+	</div>
 </div>
 
-<!-- List from server -->
-@if (deckInfoList == null) LoadDeckList();
+<div class="h-divider"></div>
 
-<!-- Table -->
+<!-- Cards -->
 <div class="row justify-content-center mt-2">
-	<table class="table table-new table-sm">
-		<colgroup>
-			<col span="1" style="width: 1%;">
-       		<col span="1" style="width: 97%">
-			<col span="1" style="width: 1%;"> 
-       		<col span="1" style="width: 1%;">
-		</colgroup>
+	<span class="text-header">Card information</span>
+</div>
 
-		<!-- Sort -->
-  		<thead>
-    		<tr>
-
-				<!-- Sort by popularity -->
-      			<th scope="col">
-					<div class="btn-group" role="group" aria-label="Sort by popularity">
-						@if (listSort == 0 || listSort == 1) {
-							<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(0,1))" type="button">Popularity
-								@if (listSort == 0) { <span class="bi bi-sort-down"></span> }
-								else if (listSort == 1) { <span class="bi bi-sort-up"></span> }
-							</button>
-						}
-						else {
-							<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(0,1))" type="button">Popularity
-								<span class="bi bi-sort-up btn-inactive"></span>
-							</button>
-						}
-					</div>
-				</th>
-
-				<!-- Sort by name -->
-      			<th scope="col">
-					<div class="btn-group" role="group" aria-label="Sort by name">
-						@if (listSort == 2 || listSort == 3) {
-							<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(2,3))" type="button">Name
-								@if (listSort == 2) { <span class="bi bi-sort-alpha-down"></span> }
-								else if (listSort == 3) { <span class="bi bi-sort-alpha-up"></span> }
-							</button>
-						}
-						else {
-							<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(2,3))" type="button">Name
-								<span class="bi bi-sort-alpha-up btn-inactive"></span>
-							</button>
-						}
-					</div>
-				</th>
-
-				<!-- Sort by author -->
-      			<th scope="col justify-content-center">
-					<div class="btn-group" role="group" aria-label="Sort by author">
-						@if (listSort == 4 || listSort == 5) {
-							<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(4,5))" type="button">Author
-								@if (listSort == 4) { <span class="bi bi-sort-alpha-down"></span> }
-								else if (listSort == 5) { <span class="bi bi-sort-alpha-up"></span> }
-							</button>
-						}
-						else {
-							<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(4,5))" type="button">Author
-								<span class="bi bi-sort-alpha-up btn-inactive"></span>
-							</button>
-						}
-					</div>		  
-				</th>
-
-				<!-- Sort by cards -->
-      			<th scope="col">
-					<div class="btn-group" role="group" aria-label="Sort by cards">
-						@if (listSort == 6 || listSort == 7) {
-							<button class="btn btn-sort btn-active text-right" @onclick="(() => ToggleSort(6,7))" type="button">
-								@if (listSort == 6) { <span class="bi bi-sort-numeric-down"></span> }
-								else if (listSort == 7) { <span class="bi bi-sort-numeric-up"></span> }
-							Cards</button>
-						}
-						else {
-							<button class="btn btn-sort text-right" @onclick="(() => ToggleSort(6,7))" type="button">
-								<span class="bi bi-sort-numeric-up btn-inactive"></span>
-							Cards</button>
-						}
-					</div>	
-				</th>
-    		</tr>
-  		</thead>
-
-		<!-- List -->
-		<tbody>
-			@for (int i = 0; i < 100; i++) {
-			<tr>
-	    		<td>
-					<span>16.8 K</span>
-					<button class="btn btn-favorite" type="button">
-						<img src="svg/Star.svg" alt="" width="16" height="16" title="Decks" class="align-center">
-					</button>
-	  			</td>
-    			<td>
-					<button class="btn btn-select" type="button">
-						<img src="svg/Select.svg" alt="" width="16" height="16" title="Decks">
-						<img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks">
-						<span>Spanish most used words 1-1000</span>
-					</button>
-				</td>
-      			<td class="text-center">
-					<span>Cakenes</span>
-				</td>
-     			<td class="text-right">
-					<span>200</span>
-				</td>
-    		</tr>
-			}
-  		</tbody>
-	</table>
+<div class="row justify-content-center mt-2">
+	<span class="text-header">Cards</span>
 </div>
 
 @code
 {
-	private int listSort = 2;
-	private string deckSearch;
-	private List<DeckInfo> deckInfoList;
-
-	private void ToggleSort(int indexOne, int indexTwo) {
-		if (listSort == indexOne) listSort = indexTwo;
-		else listSort = indexOne;
-	}
+	private Deck currentDeck;
 
 	// Accept enter on search
     private void SearchDeck(KeyboardEventArgs e = null) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") {  
         }
     }
-
-	// Run on page load
-	public async void LoadDeckList() {
-		deckInfoList = await Service.LoadDeckList();
-	}
 
 }
