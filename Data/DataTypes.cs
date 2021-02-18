@@ -28,9 +28,10 @@ namespace Srs.Data {
         public string Back;
 
         // Allow small typos
+        // not yet implemented, might move to user settings
         public bool AllowTypos;
 
-        // Multi choice instead of typing
+        // Multi choice instead of typing, not yet implemented
         public bool Choice;
         public bool Random;
         public string FrontOne;
@@ -49,10 +50,11 @@ namespace Srs.Data {
 
         // Generic
         public string Name;
+        public string Password;
         public User Auhors;
 
         // Cards
-        public Dictionary<int, Card> Cards;
+        public List<Card> Cards;
 
         // Statistics
         public DateTime Created;

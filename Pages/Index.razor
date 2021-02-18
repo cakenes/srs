@@ -11,7 +11,7 @@
 		<div class="input-group justify-content-center">
 			<input type="search" class="form-control rounded-left" placeholder="What are you looking for?" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
 			<div class="input-group-append">
-				<button class="btn btn-search" @onclick="(() => SearchDeck())" type="button">Search</button>
+				<button class="btn btn-search" type="button" @onclick="(() => SearchDeck())">Search</button>
   			</div>
 		</div>
 	</div>

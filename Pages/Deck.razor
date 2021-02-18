@@ -7,8 +7,6 @@
 <div class="container">
 	<div class="row justify-content-center">
 
-		@if (currentDeck == null) { currentDeck = new Deck(); }
-
 		<!-- Deck -->
 		<div class="col" align="center">
 			<span class="text-header">Deck</span>
@@ -18,7 +16,7 @@
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-stack"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Name" aria-label="Deck name">
+				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="tempDeck.Name" aria-label="Deck name">
 			</div>
 
 			<!-- User -->
@@ -26,7 +24,7 @@
 				<div class="input-group-prepend">
 			    	<span class="input-group-text bi bi-people-fill rounded-left"></span>
 			    </div>
-				<input type="text" class="form-control rounded-right" placeholder="Users" aria-label="Deck users">
+				<input type="text" class="form-control rounded-right" placeholder="Users" disabled>
 
 				<!-- User tooltip -->
 				<div class="dropdown">
@@ -34,6 +32,7 @@
 						<span class="dropdown bi bi-question-circle"></span>
 					</button>
   					<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
 						<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma.</span>
 						<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
 					</div>
@@ -45,10 +44,23 @@
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-lock-fill"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Password" aria-label="Deck password">
+				<input type="text" class="form-control rounded-right" placeholder="Password" @bind="tempDeck.Password" disabled>
+
+				<!-- Password tooltip -->
+				<div class="dropdown">
+	  				<button class="btn btn-sm btn-tooltip">
+						<span class="dropdown bi bi-question-circle"></span>
+					</button>
+  					<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
+						<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma.</span>
+						<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+					</div>
+				</div>
+
 			</div>
 
-			<div class="row justify-content-end">
+			<div class="row justify-content-center">
 				<button class="btn btn-accept" type="button">Save</button>
 			</div>
 			
@@ -60,7 +72,7 @@
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="tempCard.Front"></textarea>
 
 				<!-- Front tooltip -->
 				<div class="dropdown">
@@ -75,7 +87,7 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="tempCard.Back"></textarea>
 
 				<!-- Back tooltip -->
 				<div class="dropdown">
@@ -89,8 +101,8 @@
 			</div>
 
 			<!-- Card action -->
-			<div class="row justify-content-end">
-				<button class="btn btn-accept" type="button">Save</button>
+			<div class="row justify-content-center">
+				<button class="btn btn-accept" type="button" @onclick="(() => SaveCard())">Save</button>
 			</div>
 		</div>
 	</div>
@@ -156,16 +168,18 @@
 
 			<!-- List -->
 			<tbody>
-				@for (int i = 0; i < 100; i++) {
+				@if (tempDeck.Cards == null) { tempDeck.Cards = new List<Card>(); }
+				@foreach (Card item in sortedList)
+				{
 				<tr>
 		    		<td class="text-left">
-						<span></span>		
+						<span>@item.Front</span>		
 					</td>
       				<td class="text-left overflow-hidden">
-						<span class="overflow-hidden">Backside of the card</span>
+						<span>@item.Back</span>
 					</td>
      				<td class="text-right">
-                        <button class="btn btn-sm btn-select" type="button">
+                        <button class="btn btn-sm btn-select" type="button" @onclick="(() => EditCard(item.Id))">
 							<img src="svg/Edit.svg" alt="" width="16" height="16" title="Edit">
 						</button>
 						<button class="btn btn-sm btn-select" type="button">
@@ -181,12 +195,46 @@
 
 @code
 {
-	private Deck currentDeck;
-	private int listSort = 0;
+	private Data.Deck tempDeck = new Data.Deck();
+	private Data.Card tempCard = new Data.Card { Id = -1 };
+	private List<Card> sortedList = new List<Card>();
+	private int listSort = -1;
 
-	private void ToggleSort(int indexOne, int indexTwo) {
-		if (listSort == indexOne) listSort = indexTwo;
-		else listSort = indexOne;
+	
+
+	private void ToggleSort(int indexOne, int indexTwo, bool refresh = false) {
+
+		if (listSort == -1 && !refresh) listSort = indexOne;
+		else if (listSort == indexOne && !refresh) listSort = indexTwo;
+		else if (listSort == indexTwo && !refresh) listSort = -1;
+		else if (!refresh) listSort = indexOne;
+
+		switch (listSort) {
+			case 0: sortedList = tempDeck.Cards.OrderBy(x => x.Front).ToList(); break;
+			case 1: sortedList = tempDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
+			case 2: sortedList = tempDeck.Cards.OrderBy(x => x.Front).ToList(); break;
+			case 3: sortedList = tempDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
+			default: sortedList = tempDeck.Cards; break;
+		}
+	}
+
+	private void SaveCard() {
+		// Add new card
+		if (tempCard.Id == -1) { tempCard.Id = tempDeck.Cards.Count(); tempDeck.Cards.Add(tempCard); }
+		// Edit old card
+		else { tempDeck.Cards[tempCard.Id] = tempCard; }
+		// Refresh displayed list
+		ToggleSort(0, 0, true);
+		// Reset card
+		tempCard = new Data.Card { Id = -1 };
+	}
+
+	private void EditCard(int index) {
+		tempCard = tempDeck.Cards[index];
+	}
+
+	private void DeleteCard(int index) {
+		tempDeck.Cards.RemoveAt(index);
 	}
 
 	// Accept enter on search
