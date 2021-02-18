@@ -7,6 +7,8 @@
 <div class="container">
 	<div class="row justify-content-center">
 
+		@if (currentDeck == null) { currentDeck = new Deck(); }
+
 		<!-- Deck -->
 		<div class="col" align="center">
 			<span class="text-header">Deck</span>
@@ -38,12 +40,16 @@
 				</div>
 			</div>
 
-			<!-- Name -->
+			<!-- Password -->
 			<div class="input-group input-group-sm mt-2">
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-lock-fill"></span>
     			</div>
 				<input type="text" class="form-control rounded-right" placeholder="Password" aria-label="Deck password">
+			</div>
+
+			<div class="row justify-content-end">
+				<button class="btn btn-accept" type="button">Save</button>
 			</div>
 			
 		</div>
@@ -82,12 +88,9 @@
 				</div>
 			</div>
 
-			<!-- Card actions -->
+			<!-- Card action -->
 			<div class="row justify-content-end">
-				<div class="btn-group">
-					<button class="btn btn-clear" type="button">Clear</button>
-					<button class="btn btn-accept" type="button">Accept</button>
-				</div>
+				<button class="btn btn-accept" type="button">Save</button>
 			</div>
 		</div>
 	</div>
@@ -105,6 +108,73 @@
        			<col span="1" style="width: 45%;">
 				<col span="1" style="width: 10%;"> 
 			</colgroup>
+
+			<!-- Sort -->
+			<thead>
+				<tr>
+
+				<!-- Sort by front -->
+      				<th scope="col">
+						<div class="btn-group" role="group" aria-label="Sort by popularity">
+							@if (listSort == 0 || listSort == 1) {
+								<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(0,1))" type="button">Front
+									@if (listSort == 0) { <span class="bi bi-sort-alpha-down"></span> }
+									else if (listSort == 1) { <span class="bi bi-sort-alpha-up"></span> }
+								</button>
+							}
+							else {
+								<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(0,1))" type="button">Front
+									<span class="bi bi-sort-alpha-up btn-inactive"></span>
+								</button>
+							}
+						</div>
+					</th>
+
+					<!-- Sort by back -->
+      				<th scope="col">
+						<div class="btn-group" role="group" aria-label="Sort by name">
+							@if (listSort == 2 || listSort == 3) {
+								<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(2,3))" type="button">Back
+									@if (listSort == 2) { <span class="bi bi-sort-alpha-down"></span> }
+									else if (listSort == 3) { <span class="bi bi-sort-alpha-up"></span> }
+								</button>
+							}
+							else {
+								<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(2,3))" type="button">Back
+									<span class="bi bi-sort-alpha-up btn-inactive"></span>
+								</button>
+							}
+						</div>
+					</th>
+
+					<!-- Action -->
+					<th scope="col" class="text-center">
+						<span class="btn btn-sort">Action</span>
+					</th>
+				</tr>
+			</thead>
+
+			<!-- List -->
+			<tbody>
+				@for (int i = 0; i < 100; i++) {
+				<tr>
+		    		<td class="text-left">
+						<span></span>		
+					</td>
+      				<td class="text-left overflow-hidden">
+						<span class="overflow-hidden">Backside of the card</span>
+					</td>
+     				<td class="text-right">
+                        <button class="btn btn-sm btn-select" type="button">
+							<img src="svg/Edit.svg" alt="" width="16" height="16" title="Edit">
+						</button>
+						<button class="btn btn-sm btn-select" type="button">
+							<img src="svg/Delete.svg" alt="" width="16" height="16" title="Delete">
+						</button>
+					</td>
+    			</tr>
+				}
+  			</tbody>
 		</table>
 	</div>
 </div>
@@ -112,6 +182,12 @@
 @code
 {
 	private Deck currentDeck;
+	private int listSort = 0;
+
+	private void ToggleSort(int indexOne, int indexTwo) {
+		if (listSort == indexOne) listSort = indexTwo;
+		else listSort = indexOne;
+	}
 
 	// Accept enter on search
     private void SearchDeck(KeyboardEventArgs e = null) {
