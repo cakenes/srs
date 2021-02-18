@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Srs.Data {
 
     public struct User {
 
+        // Index
         public int Id;
 
         // Generic

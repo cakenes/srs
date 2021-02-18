@@ -2,17 +2,16 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Srs.Data;
 
-namespace Srs
+namespace Srs.Access
 {
-    public class DataAccess
+    public class Deck
     {
-        public static DataAccess Current = new DataAccess();
+        public static Deck Current = new Deck();
     
-        public Dictionary<int, User> UserList;
-        public Dictionary<int, Deck> DeckList;
-        public  Dictionary<int, DeckInfo> DeckInfoList;
+        public Dictionary<int, Data.User> UserList;
+        public Dictionary<int, Data.Deck> DeckList;
+        public  Dictionary<int, Data.DeckInfo> DeckInfoList;
 
         // Load files into dictionarys
         public void LoadDeckList() {
@@ -22,8 +21,8 @@ namespace Srs
             if (!Directory.Exists("Users/")) return;
 
             // Reset lists
-            DeckList = new Dictionary<int, Deck>();
-            UserList = new Dictionary<int, User>();
+            DeckList = new Dictionary<int, Data.Deck>();
+            UserList = new Dictionary<int, Data.User>();
 
             // Read files
             string[] DeckPaths = Directory.GetFiles("Decks/", "*.*");
@@ -33,7 +32,7 @@ namespace Srs
             for (int i = 0; i < DeckPaths.Length; i++)
             {
                 string jsonArray = File.ReadAllText(DeckPaths[i]);
-                Deck fromJson = JsonConvert.DeserializeObject<Deck>(jsonArray);
+                Data.Deck fromJson = JsonConvert.DeserializeObject<Data.Deck>(jsonArray);
                 DeckList.Add(fromJson.Id, fromJson);
             }
 
@@ -41,13 +40,13 @@ namespace Srs
             for (int i = 0; i < UserPaths.Length; i++)
             {
                 string jsonArray = File.ReadAllText(UserPaths[i]);
-                User fromJson = JsonConvert.DeserializeObject<User>(jsonArray);
+                Data.User fromJson = JsonConvert.DeserializeObject<Data.User>(jsonArray);
                 UserList.Add(fromJson.Id, fromJson);
             }
         }
 
         // Add new or modify Deck
-        public void SaveDeck(Deck deck) {
+        public void SaveDeck(Data.Deck deck) {
             // Serialize Deck into file
             string toJson = JsonConvert.SerializeObject(deck);
             File.WriteAllText("Decks/" + deck.Name, toJson);
@@ -62,7 +61,7 @@ namespace Srs
         }
 
         // Add new or modify User
-        public void SaveUser(User user) {
+        public void SaveUser(Data.User user) {
             // Serialize User into file
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("Users/" + user.Name, toJson);
@@ -75,8 +74,8 @@ namespace Srs
         }        
 
         // Create DeckInfo from Deck
-        public DeckInfo CreateDeckInfo(Deck deck) {
-            return new DeckInfo { 
+        public Data.DeckInfo CreateDeckInfo(Data.Deck deck) {
+            return new Data.DeckInfo { 
                 Id = deck.Id, Name = deck.Name, Auhors = deck.Auhors, Cards = deck.Cards.Count, Favorites = deck.Favorites
             };
         }

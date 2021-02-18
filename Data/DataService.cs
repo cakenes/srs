@@ -4,14 +4,28 @@ using System.Threading.Tasks;
 
 namespace Srs.Data {
 
-    public class DataService {
+    public class Service {
 
-        public Task<User> GetUserDataAsync() {
-            return Task.FromResult(new User());
+        public string ConnectionId;
+
+        // User related
+        public Task<Data.User> LoginUserAsync(Data.User input) {
+            return Task.FromResult(input);
         }
 
-        public Task<List<DeckInfo>> LoadDeckList() {
-            return Task.FromResult(new List<DeckInfo>());
+        public Task<Data.User> GetUserDataAsync() {
+            return Task.FromResult(new Data.User());
+        }
+
+        public Task<List<Data.DeckInfo>> LoadDeckList() {
+            return Task.FromResult(new List<Data.DeckInfo>());
+        }
+
+        public Task<int> SaveDeck(Data.Deck deck) {
+            //Access.Deck.Current
+
+            
+            return Task.FromResult(0);
         }
 
     }
