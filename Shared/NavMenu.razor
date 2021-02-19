@@ -51,12 +51,8 @@
                     <!-- Create -->
                     <li class="nav-item">
                         <div class="dropdown-divider"></div>
-                        @if (Service.ConnectionId != null) {
-                            <a href="Deck" class="btn btn-nav-small" type="button">Create</a>
-                            }
-                        else {
-                            <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button>
-                            }
+                        @if (Service.ConnectionId != null) { <a href="Create" class="btn btn-nav-small" type="button">Create</a> }
+                        else { <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
                         
                     </li>
 
