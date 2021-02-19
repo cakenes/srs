@@ -50,8 +50,14 @@
 
                     <!-- Create -->
                     <li class="nav-item">
-                        <div class="dropdown-divider"></div>      
-                        <a href="Deck" class="btn btn-nav-small" type="button">Create</a>
+                        <div class="dropdown-divider"></div>
+                        @if (Service.ConnectionId != null) {
+                            <a href="Deck" class="btn btn-nav-small" type="button">Create</a>
+                            }
+                        else {
+                            <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button>
+                            }
+                        
                     </li>
 
                     <!-- Modify -->
@@ -111,12 +117,8 @@
                     <li class="nav-item">
                         <div class="dropdown-divider"></div>
                         <div class="btn-group btn-nav-group">
-                            @if (userName == null) {
-                                <button class="btn btn-nav-small" @onclick="(() => Login())" type="button">Login</button>
-                            }
-                            else {
-                                <button class="btn btn-nav-small" @onclick="(() => Logout())" type="button">Logout</button>
-                            }
+                            @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())" type="button">Login</button> }
+                            else { <button class="btn btn-nav-small" @onclick="(() => Logout())" type="button">Logout</button> }
                             <button class="btn btn-nav-small" @onclick="(() => Register())" type="button">Register</button>
                         </div>
                     </li>
@@ -147,7 +149,7 @@
     private async Task Register() {
         Data.Info info = await Service.RegisterUserAsync(loginName, loginPassword);
         if (info.Success) { SetUserNotification(info.Message, null, "success"); }
-        else { SetUserNotification(info.Message, null, "error"); }
+        else { SetUserNotification(info.Message, null, "danger"); }
     }
 
     private void EnterSearch(KeyboardEventArgs e) {
@@ -164,7 +166,7 @@
 
     private void SetDeckNotification(string title = null, string msg = null, string type = "warning") {
         deckMsgTitle = title;
-        deckMsg = type;
+        deckMsg = msg;
         deckMsgType = "alert-" + type;
     }
 

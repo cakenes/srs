@@ -117,7 +117,7 @@
     				<td>
 						<button class="btn btn-select" type="button">
 							<img src="svg/Select.svg" alt="" width="16" height="16" title="Decks">
-							<img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks">
+							@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks"> }
 							<span>@item.Name</span>
 						</button>
 					</td>

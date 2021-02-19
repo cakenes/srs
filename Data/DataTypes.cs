@@ -9,7 +9,7 @@ namespace Srs.Data {
     }
 
     public struct Connected {
-        public string Name;
+        public User User;
         public string Guid;
     }
 
@@ -17,16 +17,8 @@ namespace Srs.Data {
         public int Id;
         public string Name;
         public string Password;
-        public string Owner;
-        public List<Card> Cards;
-    }
-
-    public struct DeckInfo {
-        public int Id;
-        public int Popularity;
-        public string Name;
         public string Author;
-        public int Cards;
+        public List<Card> Cards;
     }
 
     public struct Card {
@@ -34,11 +26,19 @@ namespace Srs.Data {
         public string Front;
         public string Back;
     }
+
+    public struct DeckInfo {
+        public int Id;
+        public string Name;
+        public bool Password;
+        public string Author;
+        public int Popularity;
+        public int Cards;
+    }
         
     public struct User {
         public int Id;
         public string Name;
         public string Password;
-        public string Email;
     }
 }

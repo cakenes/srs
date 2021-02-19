@@ -16,7 +16,7 @@
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-stack"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="tempDeck.Name" aria-label="Deck name">
+				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="newDeck.Name" aria-label="Deck name">
 			</div>
 
 			<!-- User -->
@@ -44,7 +44,7 @@
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-lock-fill"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Password" @bind="tempDeck.Password" disabled>
+				<input type="text" class="form-control rounded-right" placeholder="Password" @bind="newDeck.Password" disabled>
 
 				<!-- Password tooltip -->
 				<div class="dropdown">
@@ -71,7 +71,7 @@
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="tempCard.Front"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="newCard.Front"></textarea>
 
 				<!-- Front tooltip -->
 				<div class="dropdown">
@@ -86,7 +86,7 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="tempCard.Back"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="newCard.Back"></textarea>
 
 				<!-- Back tooltip -->
 				<div class="dropdown">
@@ -167,7 +167,7 @@
 
 			<!-- List -->
 			<tbody>
-				@if (tempDeck.Cards == null) { tempDeck.Cards = new List<Card>(); }
+				@if (newDeck.Cards == null) { newDeck.Cards = new List<Card>(); }
 				@foreach (Card item in sortedDeck)
 				{
 				<tr>
@@ -178,10 +178,10 @@
 						<span>@item.Back</span>
 					</td>
      				<td class="text-right">
-                        <button class="btn btn-sm btn-select" type="button" @onclick="(() => EditCard(item.Id))">
+                        <button class="btn btn-sm btn-select" type="button" @onclick="(() => EditCard(item))">
 							<img src="svg/Edit.svg" alt="" width="16" height="16" title="Edit">
 						</button>
-						<button class="btn btn-sm btn-select" type="button" @onclick="(() => DeleteCard(item.Id))">
+						<button class="btn btn-sm btn-select" type="button" @onclick="(() => DeleteCard(item))">
 							<img src="svg/Delete.svg" alt="" width="16" height="16" title="Delete">
 						</button>
 					</td>
@@ -194,8 +194,9 @@
 
 @code
 {
-	private Data.Deck tempDeck = new Data.Deck { Id = -1 };
-	private Data.Card tempCard = new Data.Card { Id = -1 };
+	private int editCard;
+	private Data.Deck newDeck = new Data.Deck();
+	private Data.Card newCard = new Data.Card();
 	private List<Card> sortedDeck = new List<Card>();
 	
 	private int listSort;
@@ -207,36 +208,36 @@
 		else if (input != -1) listSort = input;
 
 		switch (listSort) {
-			case 0: sortedDeck = tempDeck.Cards; break;
-			case 1: sortedDeck = tempDeck.Cards.OrderBy(x => x.Front).ToList(); break;
-			case 2: sortedDeck = tempDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
-			case 3: sortedDeck = tempDeck.Cards.OrderBy(x => x.Front).ToList(); break;
-			case 4: sortedDeck = tempDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
-			default: sortedDeck = tempDeck.Cards; break;
+			case 0: sortedDeck = newDeck.Cards; break;
+			case 1: sortedDeck = newDeck.Cards.OrderBy(x => x.Front).ToList(); break;
+			case 2: sortedDeck = newDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
+			case 3: sortedDeck = newDeck.Cards.OrderBy(x => x.Front).ToList(); break;
+			case 4: sortedDeck = newDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
+			default: sortedDeck = newDeck.Cards; break;
 		}
 	}
 
 	private void SaveCard() {
-		if (tempCard.Id == -1) { tempCard.Id = tempDeck.Cards.Count(); tempDeck.Cards.Add(tempCard); }
-		else { tempDeck.Cards[tempCard.Id] = tempCard; }
-		tempCard = new Data.Card { Id = -1 };
+		if (newDeck.Cards.Count == 0) { newCard.Id = 1; newDeck.Cards.Add(newCard); }
+		else if (newCard.Id == 0) { newCard.Id = newDeck.Cards.Last().Id + 1; newDeck.Cards.Add(newCard); }
+		else { newDeck.Cards[editCard] = newCard; }
+		newCard = new Data.Card();
 		ToggleSort(-1);
 	}
 
-	private void EditCard(int index) {
-		if (tempDeck.Cards.Count < index + 1) return;
-		tempCard = tempDeck.Cards[index];
+	private void EditCard(Data.Card card) {
+		editCard = newDeck.Cards.IndexOf(card);
+		newCard = card;
 		ToggleSort(-1);
 	}
 
-	private void DeleteCard(int index) {
-		if (tempDeck.Cards.Count < index + 1) return;
-		tempDeck.Cards.RemoveAt(index);
+	private void DeleteCard(Data.Card card) {
+		newDeck.Cards.Remove(card);
 		ToggleSort(-1);
 	}
 
 	private async Task SaveDeck() {
-		Service.SaveDeckAsync(tempDeck);
+		Service.SaveDeckAsync(newDeck);
 	}
 
 	// Accept enter on search

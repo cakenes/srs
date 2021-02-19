@@ -26,8 +26,8 @@ namespace Srs.Access
                 string jsonArray = File.ReadAllText(item);
                 Data.Deck fromJson = JsonConvert.DeserializeObject<Data.Deck>(jsonArray);
                 Data.DeckInfo info = Info(fromJson);
-                DeckList.Insert(fromJson.Id, fromJson);
-                InfoList.Insert(info.Id, info);
+                DeckList.Add(fromJson);
+                InfoList.Add(info);
             }
         }
 
@@ -45,11 +45,13 @@ namespace Srs.Access
                 InfoList.Insert(info.Id, info); }
             else { DeckList[deck.Id] = deck; }
             string toJson = JsonConvert.SerializeObject(deck);
-            File.WriteAllText("users/" + deck.Id, toJson);
+            File.WriteAllText("decks/" + deck.Id, toJson);
         }
 
         public Data.DeckInfo Info(Data.Deck deck) {
-            return new Data.DeckInfo {Id = deck.Id, Popularity = 666, Name = deck.Name, Author = deck.Owner, Cards = deck.Cards.Count};
+            Data.DeckInfo info = new Data.DeckInfo {Id = deck.Id, Popularity = 666, Name = deck.Name, Author = deck.Name, Cards = deck.Cards.Count};
+            if (deck.Password != null) info.Password = true;
+            return info;
         }
     }   
 }

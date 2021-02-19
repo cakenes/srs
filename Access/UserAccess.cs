@@ -22,7 +22,7 @@ namespace Srs.Access
             int index = UserList.FindIndex(x => x.Name == name);
             if (index == -1) return null;
             if (UserList[index].Password == password) { 
-                Data.Connected connected = new Data.Connected {Name = UserList[index].Name, Guid = Guid.NewGuid().ToString()};
+                Data.Connected connected = new Data.Connected {User = UserList[index], Guid = Guid.NewGuid().ToString()};
                 GuidList.Add(connected);
                 return connected.Guid; }
             return null;
@@ -37,10 +37,10 @@ namespace Srs.Access
             return false;
         }
 
-        public string Name(string guid) {
+        public Data.User Name(string guid) {
             int index = GuidList.FindIndex(x => x.Guid == guid);
-            if (index != -1) { return GuidList[index].Name; }
-            return null;
+            if (index != -1) { return GuidList[index].User; }
+            return new Data.User();
         }
 
         public void Save(Data.User user) {
@@ -58,7 +58,7 @@ namespace Srs.Access
             {
                 string jsonArray = File.ReadAllText(item);
                 Data.User fromJson = JsonConvert.DeserializeObject<Data.User>(jsonArray);
-                UserList.Insert(fromJson.Id, fromJson);
+                UserList.Add(fromJson);
             }
         }
     }
