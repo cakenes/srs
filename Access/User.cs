@@ -7,32 +7,38 @@ namespace Srs.Access
 {
     public class User
     {
-
         public static readonly User Current = new User();
 
-        public List<Data.User> UserList = new List<Data.User>();
-        public Dictionary<string, Data.User> Connected = new Dictionary<string, Data.User>();
+        public List<Data.User> UserList;
+        public List<Data.Connected> GuidList;
+
+        public void Initialize() {
+            UserList = new List<Data.User>();
+            GuidList = new List<Data.Connected>();
+        }
 
         public string Login(string name, string password) {
             int index = UserList.FindIndex(x => x.Name == name);
             if (index == -1) return null;
-            if (UserList[index].Password == password) { string guid = Guid.NewGuid().ToString(); Connected.Add(guid, UserList[index]); return guid; }
+            if (UserList[index].Password == password) { 
+                Data.Connected connected = new Data.Connected {Name = UserList[index].Name, Guid = Guid.NewGuid().ToString()};
+                GuidList.Add(connected);
+                return connected.Guid; }
             return null;
         }
 
         public bool Register(string name, string password) {
-            LoadUserList();
             int index = UserList.FindIndex(x => x.Name == name);
-            if (index == -1) { SaveUser(new Data.User {Name = name, Password = password, Id = -1}); return true; }
+            if (index == -1) { 
+                Data.User user = new Data.User {Name = name, Password = password, Id = -1};
+                SaveUser(user);
+                return true; }
             return false;
         }
 
-        // OLD
-        public string UserName(string guid) {
-            if (Connected.ContainsKey(guid)) {
-                return Connected[guid].Name;
-            }
-            
+        public string Name(string guid) {
+            int index = GuidList.FindIndex(x => x.Guid == guid);
+            if (index != -1) { return GuidList[index].Name; }
             return null;
         }
 

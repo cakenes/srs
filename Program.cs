@@ -15,6 +15,8 @@ namespace Srs
     {
         public static void Main(string[] args)
         {
+            Access.User.Current.Initialize();
+            Access.Deck.Current.Initialize();
             CreateHostBuilder(args).Build().Run();
         }
 

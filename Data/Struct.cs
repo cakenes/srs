@@ -8,6 +8,11 @@ namespace Srs.Data {
         public string Message;
     }
 
+    public struct Connected {
+        public string Name;
+        public string Guid;
+    }
+
     public struct Deck {
 
         // List index

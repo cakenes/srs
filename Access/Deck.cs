@@ -7,11 +7,17 @@ namespace Srs.Access
 {
     public class Deck
     {
-        public static Deck Current = new Deck();
-    
+        
+        public static readonly Deck Current = new Deck();
         public Dictionary<int, Data.User> UserList;
         public Dictionary<int, Data.Deck> DeckList;
         public  Dictionary<int, Data.DeckList> DeckInfoList;
+
+        // Run on startup
+        public void Initialize() {
+
+        }
+
 
         // Load files into dictionarys
         public void LoadDeckList() {
