@@ -15,6 +15,7 @@ namespace Srs.Access
         public void Initialize() {
             UserList = new List<Data.User>();
             GuidList = new List<Data.Connected>();
+            Load();
         }
 
         public string Login(string name, string password) {
@@ -31,7 +32,7 @@ namespace Srs.Access
             int index = UserList.FindIndex(x => x.Name == name);
             if (index == -1) { 
                 Data.User user = new Data.User {Name = name, Password = password, Id = -1};
-                SaveUser(user);
+                Save(user);
                 return true; }
             return false;
         }
@@ -42,26 +43,17 @@ namespace Srs.Access
             return null;
         }
 
-        public void SaveUser(Data.User user) {
-
-            // Add or update list
+        public void Save(Data.User user) {
             if (user.Id == -1) { user.Id =  UserList.Count; UserList.Add(user); }
             else { UserList[user.Id] = user; }
-
-            // Serialize object into file
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("users/" + user.Id, toJson);
         }
 
-        public void LoadUserList() {
-            
-            // Directory missing ?
+        public void Load() {
             if (!Directory.Exists("users/")) return;
-
             UserList = new List<Data.User>();
             string[] UserPaths = Directory.GetFiles("users/", "*.*");
-
-            // Deserialize files into objects.
             foreach (string item in UserPaths)
             {
                 string jsonArray = File.ReadAllText(item);

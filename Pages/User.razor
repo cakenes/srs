@@ -14,7 +14,7 @@
 </div>
 
 <!-- List from server -->
-@if (deckInfoList == null) LoadDeckList();
+@if (infoList == null) LoadDeckList();
 
 <!-- Table -->
 <div class="row justify-content-center mt-2">
@@ -133,7 +133,7 @@
 {
 	private int listSort = 2;
 	private string deckSearch;
-	private List<DeckList> deckInfoList;
+	private List<DeckInfo> infoList;
 
 	private void ToggleSort(int indexOne, int indexTwo) {
 		if (listSort == indexOne) listSort = indexTwo;

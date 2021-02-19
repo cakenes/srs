@@ -14,44 +14,29 @@ namespace Srs.Data {
     }
 
     public struct Deck {
-
-        // List index
         public int Id;
-
-        // Generic
         public string Name;
         public string Password;
         public string Owner;
-
-        // Cards
         public List<Card> Cards;
     }
 
-    public struct DeckList {
-
-        // List index
+    public struct DeckInfo {
         public int Id;
-
-        // Generic
+        public int Popularity;
         public string Name;
+        public string Author;
+        public int Cards;
     }
 
     public struct Card {
-
-        // List index
         public int Id;
-
-        // Generic
         public string Front;
         public string Back;
     }
         
     public struct User {
-
-        // List index
         public int Id;
-
-        // Generic
         public string Name;
         public string Password;
         public string Email;

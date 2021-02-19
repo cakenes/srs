@@ -10,30 +10,28 @@ namespace Srs.Data {
 
         // User login
         public Task<Data.Info> LoginUserAsync(string name, string password) {
-            if (ConnectionId == null) { return Task.FromResult(new Data.Info {Success = false, Message="Incorrect username / password"}); }
             ConnectionId = Access.User.Current.Login(name,password);
+            if (ConnectionId == null) { return Task.FromResult(new Data.Info {Success = false, Message="Incorrect username / password"}); }
             return Task.FromResult(new Data.Info {Success = true, Message = name});
         }
 
         // User register
         public Task<Data.Info> RegisterUserAsync(string name, string password) {
-            if (Access.User.Current.Register(name,password)) {
-                return Task.FromResult(
-                    new Data.Info {
-                        Success = true,
-                        Message = "User created"
-                    }
-                );
-            }
-            
-            else {
-                return Task.FromResult(
-                    new Data.Info {
-                        Success = false,
-                        Message = "User already exists"
-                    }
-                );
-            }
+            if (Access.User.Current.Register(name,password)) { return Task.FromResult(new Data.Info {Success = true, Message = "User created"}); }
+            else { return Task.FromResult(new Data.Info {Success = false, Message = "User already exists"}); }
+        }
+
+        // Load Deck
+        // Load Info
+        public Task<List<Data.DeckInfo>> LoadDeckInfoAsync() {
+            if (Access.Deck.Current.InfoList == null) return Task.FromResult(new List<Data.DeckInfo>());
+            return Task.FromResult(Access.Deck.Current.InfoList);
+        }
+
+        // Save Deck
+        public Task<Data.Info> SaveDeckAsync(Data.Deck deck) {
+            Access.Deck.Current.Save(deck);
+            return Task.FromResult(new Data.Info());
         }
     }
 }
