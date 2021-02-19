@@ -17,7 +17,7 @@
 	</div>
 
 	<!-- List from server -->
-	@if (deckInfoList == null) LoadDeckList();
+	@if (deckList == null) LoadDeckList();
 
 	<!-- Table -->
 	<div class="row justify-content-center mt-2">
@@ -137,7 +137,7 @@
 {
 	private int listSort = 2;
 	private string deckSearch;
-	private List<DeckInfo> deckInfoList;
+	private List<Data.DeckList> deckList;
 
 	private void ToggleSort(int indexOne, int indexTwo) {
 		if (listSort == indexOne) listSort = indexTwo;
@@ -152,7 +152,7 @@
 
 	// Run on page load
 	public async void LoadDeckList() {
-		deckInfoList = await Service.LoadDeckList();
+		//deckList = await Service.LoadDeckList();
 	}
 
 }

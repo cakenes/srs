@@ -1,4 +1,6 @@
-﻿<!-- Navigation Bar -->
+﻿ @inject Data.Service Service
+
+<!-- Navigation Bar -->
 <div class="container-fluid">
     <nav class="navbar border-bottom fixed-top">
 
@@ -37,7 +39,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-search"></span>
                             </div>
-                            <input type="search" class="form-control" placeholder="Search" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
+                            <input type="search" class="form-control" placeholder="Search" @bind="deckSearch" @onkeydown="@EnterSearch" aria-label="Search">
                         </div>
                     </li>
 
@@ -67,7 +69,8 @@
             <div class="nav-item dropdown">
                 <button class="btn btn-nav-big" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
-                    <span>User</span>
+                    @if (userName == null) { <span>User</span> }
+                    else { <span>@userName</span> }
                 </button>
 
                 <!-- User dropdown menu -->
@@ -90,7 +93,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-person-fill"></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Username" @bind="username" aria-label="Username">
+                            <input type="text" class="form-control" placeholder="Username" @bind="loginName" aria-label="Username">
                         </div>
                     </li>
 
@@ -100,7 +103,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-key-fill"></span>
                             </div>
-                            <input type="password" class="form-control" placeholder="Username" @bind="password" @onkeydown="@LoginUser" aria-label="Password">
+                            <input type="password" class="form-control" placeholder="Username" @bind="loginPassword" @onkeydown="@EnterPassword" aria-label="Password">
                         </div>
                     </li>
 
@@ -108,8 +111,8 @@
                     <li class="nav-item">
                         <div class="dropdown-divider"></div>
                         <div class="btn-group btn-nav-group">
-                            <button class="btn btn-nav-small" @onclick="(() => TryUserLogin())" type="button">Login</button>
-                            <button class="btn btn-nav-small" @onclick="(() => TryUserRegister())" type="button">Register</button>
+                            <button class="btn btn-nav-small" @onclick="(() => Login())" type="button">Login</button>
+                            <button class="btn btn-nav-small" @onclick="(() => Register())" type="button">Register</button>
                         </div>
                     </li>
                 </li>    
@@ -119,16 +122,35 @@
 </div>
 
 @code {
-    private string username, password, deckSearch;
+    // Binds
+    private string loginName, loginPassword, deckSearch, userName;
+    // Notifications
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
-    private void SearchDeck(KeyboardEventArgs e) {
+    private async Task Login() {
+        Data.Info info = await Service.LoginUserAsync(loginName, loginPassword);
+        if (info.Success) {
+            userName = info.Message;
+            SetUserNotification("Login successful", null, "success");
+        }
+        else {
+            SetUserNotification(info.Message, null, "warning");
+        }
+    }
+
+    private async Task Register() {
+        Data.Info info = await Service.RegisterUserAsync(loginName, loginPassword);
+        if (info.Success) { SetUserNotification(info.Message, null, "success"); }
+        else { SetUserNotification(info.Message, null, "error"); }
+    }
+
+    private void EnterSearch(KeyboardEventArgs e) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") {
             SetDeckNotification("Title", "this is the message, i need it to be a bit longer!!!", "success");
         }
     }
 
-    private void LoginUser(KeyboardEventArgs e) {
+    private void EnterPassword(KeyboardEventArgs e) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") {
             SetUserNotification("Title", "User created successfully!", "success");
         }

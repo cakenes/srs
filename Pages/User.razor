@@ -133,7 +133,7 @@
 {
 	private int listSort = 2;
 	private string deckSearch;
-	private List<DeckInfo> deckInfoList;
+	private List<DeckList> deckInfoList;
 
 	private void ToggleSort(int indexOne, int indexTwo) {
 		if (listSort == indexOne) listSort = indexTwo;
@@ -148,7 +148,7 @@
 
 	// Run on page load
 	public async void LoadDeckList() {
-		deckInfoList = await Service.LoadDeckList();
+		//deckInfoList = await Service.LoadDeckList();
 	}
 
 }
