@@ -23,7 +23,12 @@ namespace Srs.Data {
         public string Name;
         public string Password;
         public string Author;
-        public SortedDictionary<int, Card> Cards;   
+        public SortedDictionary<int, Card> Cards;
+        // Statistics
+        public int Favorites;
+
+        public void AddFavorite() { Favorites += 1; }
+        public void RemoveFavorite() { Favorites -= 1; }
     }
 
     public struct Card {

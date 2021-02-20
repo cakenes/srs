@@ -1,12 +1,12 @@
 ﻿@page "/Create"
 
 @using Srs.Data
-@using System.Linq;
 @inject Data.Service Service
 
-<!-- Container -->
 <div class="container">
 	<div class="row justify-content-center">
+
+		@if (newDeck.Cards == null) Initialize();
 
 		<!-- Deck -->
 		<div class="col" align="center">
@@ -73,7 +73,7 @@
 
 			<!-- Create -->
 			<div class="row justify-content-center">
-				<button class="btn btn-accept" type="button" @onclick="(() => CreateDeck())">Create</button>
+				<button class="btn btn-accept" type="button" @onclick="(() => CreateDeck())">Create Deck</button>
 			</div>
 		</div>
 
@@ -83,7 +83,7 @@
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="newCard.Front"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Front of the card" @bind="newCard.Front"></textarea>
 
 				<!-- Front tooltip -->
 				<div class="dropdown">
@@ -98,7 +98,7 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="5" placeholder="Front of the card" @bind="newCard.Back"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Back of the card" @bind="newCard.Back"></textarea>
 
 				<!-- Back tooltip -->
 				<div class="dropdown">
@@ -113,9 +113,13 @@
 
 			<!-- Card action -->
 			<div class="row justify-content-center">
-				<button class="btn btn-accept" type="button" @onclick="(() => SaveCard())">Save</button>
+				<button class="btn btn-accept" type="button" @onclick="(() => SaveCard())">Save Card</button>
 			</div>
 		</div>
+	</div>
+
+	<div class="row justify-content-center mt-2">
+		<span class="divider"></span>
 	</div>
 
 	<!-- Card list header -->
@@ -180,7 +184,6 @@
 			<!-- List -->
 			<tbody>
 				@if (sortedList == null) { ToggleSort(-1); }
-				@if (newDeck.Cards == null) { newDeck.Cards = new SortedDictionary<int, Card>(); }
 				@foreach (Card item in sortedList)
 				{
 				<tr>
@@ -207,13 +210,18 @@
 
 @code
 {
-	private int editCard;
+	private int listSort, editCard;
 	private string createMsgTitle, createMsg, createMsgType;
-	private Data.Deck newDeck = new Data.Deck();
-	private Data.Card newCard = new Data.Card();
-	private List<Card> sortedList = new List<Card>();
+	private Data.Deck newDeck;
+	private Data.Card newCard;
+	private List<Card> sortedList;
 	
-	private int listSort;
+	private void Initialize() {
+		newDeck = new Data.Deck();
+		newCard = new Data.Card();
+		sortedList = new List<Card>();
+		newDeck.Cards = new SortedDictionary<int, Card>();
+	}
 
 	private void ToggleSort(int input) {
 		if (listSort == 0) listSort = input;

@@ -3,141 +3,71 @@
 @using Srs.Data
 @inject Data.Service Service
 
-<!-- Search -->
-<div class="row">
-	<div class="input-group justify-content-center">
-		<input type="search" class="form-control rounded-left" placeholder="What are you looking for?" @bind="deckSearch" @onkeydown="@SearchDeck" aria-label="Search">
-		<div class="input-group-append">
-			<button class="btn btn-search" @onclick="(() => SearchDeck())" type="button">Search</button>
-  		</div>
+<div class="container">
+	<div class="row justify-content-center">
+
+		<!-- Review -->
+		<div class="col mr-3" align="center">
+			<span class="text-header">Review</span>
+
+			<!-- Question -->
+			<div class="row">
+				<textarea class="form-control text-center mt-2" maxlength="0" rows="3" placeholder="" readonly></textarea>
+			</div>
+
+			<!-- Answer -->
+			<div class="row">
+				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type"></textarea>
+			</div>	
+
+		</div>
+
+		<!-- Options -->
+		<div class="col ml-3" align="center">
+			<span class="text-header">Options</span>
+
+			<!-- Review slider -->
+			<div class="row mt-2">
+				<div class="input-group input-group-sm justify-content-center">
+					<span class="text-subheader">Number of cards to review: @reviewNumber</span>
+					<input type="range" class="form-range" min="10" max="50" step="5" @bind-value="reviewNumber">
+				</div>
+			</div>
+
+			<!-- Card slider -->
+			<div class="row mt-2">
+				<div class="input-group input-group-sm justify-content-center">
+					<span class="text-subheader">Percentage of new cards: @newNumber %</span>
+					<input type="range" class="form-range" min="0" max="100" step="10" @bind-value="newNumber">
+				</div>
+			</div>
+
+			<!-- Typos -->
+			<div class="row mt-2" align="center">
+				<div class="container">
+ 					<input class="form-check-input" type="checkbox" id="allowTypos" @bind-value="allowTypos">
+					<span class="text-subheader" for="allowTypos">Allow small typos</span>
+				</div>
+			</div>
+
+			<div class="divider mt-2"></div>
+
+
+			<div class="row justify-content-center mt-2">
+				<button class="btn btn-nav-big" type="button">
+                    <img src="svg/Play.svg" alt="" width="20" height="20" title="Decks" class="svg-start">
+                    <span>Start</span>
+                </button>
+			</div>
+		</div>
 	</div>
-</div>
-
-<!-- List from server -->
-
-<!-- Table -->
-<div class="row justify-content-center mt-2">
-	<table class="table table-new table-sm">
-		<colgroup>
-			<col span="1" style="width: 1%;">
-       		<col span="1" style="width: 97%">
-			<col span="1" style="width: 1%;"> 
-       		<col span="1" style="width: 1%;">
-		</colgroup>
-
-		<!-- Sort -->
-  		<thead>
-    		<tr>
-
-				<!-- Sort by popularity -->
-      			<th scope="col">
-					<div class="btn-group" role="group" aria-label="Sort by popularity">
-						@if (listSort == 0 || listSort == 1) {
-							<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(0,1))" type="button">Popularity
-								@if (listSort == 0) { <span class="bi bi-sort-down"></span> }
-								else if (listSort == 1) { <span class="bi bi-sort-up"></span> }
-							</button>
-						}
-						else {
-							<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(0,1))" type="button">Popularity
-								<span class="bi bi-sort-up btn-inactive"></span>
-							</button>
-						}
-					</div>
-				</th>
-
-				<!-- Sort by name -->
-      			<th scope="col">
-					<div class="btn-group" role="group" aria-label="Sort by name">
-						@if (listSort == 2 || listSort == 3) {
-							<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(2,3))" type="button">Name
-								@if (listSort == 2) { <span class="bi bi-sort-alpha-down"></span> }
-								else if (listSort == 3) { <span class="bi bi-sort-alpha-up"></span> }
-							</button>
-						}
-						else {
-							<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(2,3))" type="button">Name
-								<span class="bi bi-sort-alpha-up btn-inactive"></span>
-							</button>
-						}
-					</div>
-				</th>
-
-				<!-- Sort by author -->
-      			<th scope="col justify-content-center">
-					<div class="btn-group" role="group" aria-label="Sort by author">
-						@if (listSort == 4 || listSort == 5) {
-							<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(4,5))" type="button">Author
-								@if (listSort == 4) { <span class="bi bi-sort-alpha-down"></span> }
-								else if (listSort == 5) { <span class="bi bi-sort-alpha-up"></span> }
-							</button>
-						}
-						else {
-							<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(4,5))" type="button">Author
-								<span class="bi bi-sort-alpha-up btn-inactive"></span>
-							</button>
-						}
-					</div>		  
-				</th>
-
-				<!-- Sort by cards -->
-      			<th scope="col">
-					<div class="btn-group" role="group" aria-label="Sort by cards">
-						@if (listSort == 6 || listSort == 7) {
-							<button class="btn btn-sort btn-active text-right" @onclick="(() => ToggleSort(6,7))" type="button">
-								@if (listSort == 6) { <span class="bi bi-sort-numeric-down"></span> }
-								else if (listSort == 7) { <span class="bi bi-sort-numeric-up"></span> }
-							Cards</button>
-						}
-						else {
-							<button class="btn btn-sort text-right" @onclick="(() => ToggleSort(6,7))" type="button">
-								<span class="bi bi-sort-numeric-up btn-inactive"></span>
-							Cards</button>
-						}
-					</div>	
-				</th>
-    		</tr>
-  		</thead>
-
-		<!-- List -->
-		<tbody>
-			@for (int i = 0; i < 100; i++) {
-			<tr>
-	    		<td>
-					<span>16.8 K</span>
-					<button class="btn btn-favorite" type="button">
-						<img src="svg/Star.svg" alt="" width="16" height="16" title="Decks" class="align-center">
-					</button>
-	  			</td>
-    			<td>
-					<button class="btn btn-select" type="button">
-						<img src="svg/Select.svg" alt="" width="16" height="16" title="Decks">
-						<img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks">
-						<span>Spanish most used words 1-1000</span>
-					</button>
-				</td>
-      			<td class="text-center">
-					<span>Cakenes</span>
-				</td>
-     			<td class="text-right">
-					<span>200</span>
-				</td>
-    		</tr>
-			}
-  		</tbody>
-	</table>
 </div>
 
 @code
 {
-	private int listSort = 2;
-	private string deckSearch;
-	private List<DeckInfo> infoList = new List<DeckInfo>();
-
-	private void ToggleSort(int indexOne, int indexTwo) {
-		if (listSort == indexOne) listSort = indexTwo;
-		else listSort = indexOne;
-	}
+	private int reviewNumber = 10;
+	private int newNumber = 50;
+	private bool allowTypos;
 
 	// Accept enter on search
     private void SearchDeck(KeyboardEventArgs e = null) {

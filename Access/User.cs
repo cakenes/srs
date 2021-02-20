@@ -4,23 +4,21 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Srs.Access
+namespace Srs
 {
-    public class User
-    {
-        public static readonly User Current = new User();
+    public partial class Access {
 
         public SortedDictionary<int, Data.User> UserDict;
         public Dictionary<Guid?,Data.User> GuidList;
 
-        public void Initialize() {
+        public void InitializeUser() {
             UserDict = new SortedDictionary<int, Data.User>();
             GuidList = new Dictionary<Guid?, Data.User>();
-            Load();
+            LoadUsers();
         }
 
         // Load users to memory
-        public void Load() {
+        public void LoadUsers() {
             // Error
             if (!Directory.Exists("users/")) return;
 
@@ -35,9 +33,9 @@ namespace Srs.Access
         }
 
         // Login user
-        public Guid? Login(string name, string password) {
+        public Guid? LoginUser(string name, string password) {
             // Error
-            int index = FindName(name);
+            int index = FindUser(name);
             if (index == -1) return null; //Name doesn't exist
             else if (UserDict[index].Password != password) return null; //Incorrect password
             
@@ -48,10 +46,10 @@ namespace Srs.Access
         }
 
         // Update user file
-        public bool Update(Guid guid) {
+        public bool UpdateUser(Guid guid) {
             // Error
             if (!GuidList.ContainsKey(guid)) return false;
-            
+
             // Success
             string toJson = JsonConvert.SerializeObject(GuidList[guid]);
             File.WriteAllText("users/" + GuidList[guid].Name, toJson);
@@ -59,9 +57,9 @@ namespace Srs.Access
         }
 
         // Create new user
-        public bool Create(string name, string password) {
+        public bool CreateUser(string name, string password) {
             // Error
-            int index = FindName(name);
+            int index = FindUser(name);
             if (index != -1) return false; //Name exists
             
             // Success
@@ -82,38 +80,9 @@ namespace Srs.Access
         }
 
         // Return name index, if not found return -1
-        private int FindName (string input) {
+        private int FindUser (string input) {
             foreach (var item in UserDict) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
             return -1;
         }
-
-        // Add or remove own
-        public bool Own (Guid guid, int id) {
-            if (!GuidList.ContainsKey(guid)) return false;
-            if (GuidList[guid].Own.Contains(id)) GuidList[guid].Own.Remove(id);
-            else GuidList[guid].Own.Remove(id);
-            Update(guid);
-            return true;
-        }
-
-        // Add or remove favorite
-        public bool Favorite (Guid guid, int id) {
-            if (!GuidList.ContainsKey(guid)) return false;
-            if (GuidList[guid].Favorites.Contains(id)) GuidList[guid].Favorites.Remove(id);
-            else GuidList[guid].Favorites.Remove(id);
-            Update(guid);
-            return true;
-        }
-
-        // Add or remove own
-        public bool Opened (Guid guid, int id) {
-            if (!GuidList.ContainsKey(guid)) return false;
-            if (GuidList[guid].Opened.Contains(id)) GuidList[guid].Opened.Remove(id);
-            else GuidList[guid].Opened.Remove(id);
-            Update(guid);
-            return true;
-        }
-
-
     }
 }

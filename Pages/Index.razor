@@ -3,7 +3,6 @@
 @using Srs.Data
 @inject Data.Service Service
 
-<!-- Container -->
 <div class="container">
 
 	<!-- Search -->
@@ -137,11 +136,10 @@
 
 @code
 {
+	private int listSort;
 	private string deckSearch;
 	private List<DeckInfo> deckList;
 	private List<DeckInfo> sortedDeck;
-
-	private int listSort;
 
 	private void ToggleSort(int input) {
 		if (listSort == 0) listSort = input;

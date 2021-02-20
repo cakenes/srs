@@ -4,23 +4,23 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Srs.Access
-{
-    public class Deck
-    {
-        public static readonly Deck Current = new Deck();
+namespace Srs{
+
+    public partial class Access {
+
+        public static readonly Access Current = new Access();
 
         public SortedDictionary<int, Data.Deck> DeckDict;
         public List<Data.DeckInfo> InfoList;
 
-        public void Initialize() {
+        public void InitializeDeck() {
             DeckDict = new SortedDictionary<int, Data.Deck>();
             InfoList = new List<Data.DeckInfo>();
-            Load();
+            LoadDecks();
         }
 
         // Load decks to memory
-        public void Load () {
+        public void LoadDecks() {
             // Error
             if (!Directory.Exists("decks/")) return;
 
@@ -36,9 +36,9 @@ namespace Srs.Access
         }
 
         // Create new deck
-        public bool Create(Data.Deck deck) {
+        public bool CreateDeck(Data.Deck deck) {
             // Error
-            int index = FindName(deck.Name);
+            int index = FindDeck(deck.Name);
             if (index != -1) return false; // Name exists
 
             // Success, Empy list check
@@ -60,14 +60,10 @@ namespace Srs.Access
         }
 
         // Return name index, if not found return -1
-        private int FindName (string input) {
+        private int FindDeck (string input) {
             foreach (var item in DeckDict) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
             return -1;
         }
 
-        public bool Favorite (Guid guid, int id) {
-            if ()
-            return true;
-        }
-    }   
+    }
 }

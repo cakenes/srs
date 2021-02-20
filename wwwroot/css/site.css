@@ -15,9 +15,27 @@ body {
 
 /* Input */
 
+input-group {
+    width: 100%;
+}
+
+input[type="range"] {
+    width:100%;
+}
+
+input[type="checkbox"] {
+    margin-top: 7px;
+    border-color: rgb(206, 212, 218, 1);
+    box-shadow: none;
+}
+
 .textarea {
     resize: none;
 }
+
+.form-control:read-only {
+    background-color: white;
+ }
 
 .form-control {
     resize: none;
@@ -27,6 +45,10 @@ body {
     box-shadow: none;
     border-color: rgb(54, 103, 150, 1);
     outline-color: rgb(54, 103, 150, 1);
+}
+
+.form-check {
+    border-color: rgb(206, 212, 218, 1);
 }
 
 /* Button */
@@ -64,8 +86,8 @@ body {
 {
     font-size: 16px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
-    border-color: rgb(206, 212, 218, 1)
+    font-family: AristaBold sans-serif;
+    border-color: rgb(206, 212, 218, 1);
 }
 
 .btn-select
@@ -86,14 +108,14 @@ body {
 .btn-sort {
     font-size: 18px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
     white-space: nowrap;
 }
 
 .btn-accept {
-    font-size: 16px;
+    font-size: 18px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
 }
 
 .btn-accept:hover {
@@ -103,7 +125,7 @@ body {
 .btn-clear {
     font-size: 16px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
 }
 
 .btn-clear:hover {
@@ -115,7 +137,7 @@ body {
     width: 100%;
     font-size: 16px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
     
 }
 
@@ -123,7 +145,7 @@ body {
 {
     font-size: 24px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
 }
 
 .close {
@@ -160,7 +182,7 @@ body {
     margin: -20px;
     font-size: 24px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
     color: rgb(54, 103, 150, 1);
 }
 
@@ -220,6 +242,19 @@ body {
     display: block;
 }
 
+/* Icon */
+.svg-start {
+    margin-top: -4px;
+}
+
+/* Divider */
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgb(206, 212, 218, 1);
+}
+
 /* Notification */
 
 .alert {
@@ -243,7 +278,7 @@ body {
 .footer
 {
     font-size: 16px;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
     color: rgb(90, 90, 90);
     background-color: rgba(255, 255, 255, 0.8);
 }
@@ -259,7 +294,14 @@ body {
 .text-header {
     font-size: 24px;
     text-transform: uppercase;
-    font-family: Arista, sans-serif;
+    font-family: AristaBold sans-serif;
+    color: rgb(90, 90, 90);
+}
+
+.text-subheader {
+    font-size: 18px;
+    text-transform: uppercase;
+    font-family: AristaBold sans-serif;
     color: rgb(90, 90, 90);
 }
 
@@ -316,8 +358,13 @@ body {
 /* Common */
 
 @font-face {
-    font-family: Arista;
-    src: url('font/Arista.ttf');
+    font-family: AristaBold;
+    src: url('font/AristaBold.ttf');
+}
+
+@font-face {
+    font-family: AristaLight;
+    src: url('font/AristaLight.ttf');
 }
 
 .valid.modified:not([type=checkbox]) {
