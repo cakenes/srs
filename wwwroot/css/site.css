@@ -199,6 +199,7 @@ body {
     left: auto;
     width: fit-content;
     display: none;
+    float: left;
 }
 
 .dropdown-menu-tooltip-right {
