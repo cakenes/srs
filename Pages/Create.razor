@@ -1,6 +1,7 @@
 ﻿@page "/Create"
 
 @using Srs.Data
+@using System.Linq;
 @inject Data.Service Service
 
 <!-- Container -->
@@ -11,12 +12,23 @@
 		<div class="col" align="center">
 			<span class="text-header">Deck</span>
 
+			<!-- Notification -->
+			<div class="row justify-content-center">
+                @if (createMsgTitle != null)
+            	{	
+                <div class="alert @createMsgType alert-dismissible fade show" role="alert" align="center">
+                    <strong>@createMsgTitle</strong><br>@createMsg
+                    <button type="button" class="close btn-sm" @onclick="(()=>SetCreateNotification())" aria-label="Close">&times;</button>
+                </div>
+            	}
+			</div>
+
 			<!-- Name -->
 			<div class="input-group input-group-sm mt-2">
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-stack"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="newDeck.Name" aria-label="Deck name">
+				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="newDeck.Name" @onkeydown="@SearchEnter" aria-label="Deck name">
 			</div>
 
 			<!-- User -->
@@ -59,10 +71,10 @@
 
 			</div>
 
+			<!-- Create -->
 			<div class="row justify-content-center">
 				<button class="btn btn-accept" type="button" @onclick="(() => CreateDeck())">Create</button>
 			</div>
-			
 		</div>
 
 		<!-- Card -->
@@ -167,8 +179,9 @@
 
 			<!-- List -->
 			<tbody>
-				@if (newDeck.Cards == null) { newDeck.Cards = new List<Card>(); }
-				@foreach (Card item in sortedDeck)
+				@if (sortedList == null) { ToggleSort(-1); }
+				@if (newDeck.Cards == null) { newDeck.Cards = new SortedDictionary<int, Card>(); }
+				@foreach (Card item in sortedList)
 				{
 				<tr>
 		    		<td class="text-left">
@@ -195,9 +208,10 @@
 @code
 {
 	private int editCard;
+	private string createMsgTitle, createMsg, createMsgType;
 	private Data.Deck newDeck = new Data.Deck();
 	private Data.Card newCard = new Data.Card();
-	private List<Card> sortedDeck = new List<Card>();
+	private List<Card> sortedList = new List<Card>();
 	
 	private int listSort;
 
@@ -208,31 +222,37 @@
 		else if (input != -1) listSort = input;
 
 		switch (listSort) {
-			case 0: sortedDeck = newDeck.Cards; break;
-			case 1: sortedDeck = newDeck.Cards.OrderBy(x => x.Front).ToList(); break;
-			case 2: sortedDeck = newDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
-			case 3: sortedDeck = newDeck.Cards.OrderBy(x => x.Front).ToList(); break;
-			case 4: sortedDeck = newDeck.Cards.OrderByDescending(x => x.Front).ToList(); break;
-			default: sortedDeck = newDeck.Cards; break;
+			case 0: sortedList = newDeck.Cards.Values.ToList(); break;
+			case 1: sortedList = newDeck.Cards.Values.OrderBy(x => x.Front).ToList(); break;
+			case 2: sortedList = newDeck.Cards.Values.OrderByDescending(x => x.Front).ToList(); break;
+			case 3: sortedList = newDeck.Cards.Values.OrderBy(x => x.Front).ToList(); break;
+			case 4: sortedList = newDeck.Cards.Values.OrderByDescending(x => x.Front).ToList(); break;
+			default: sortedList = newDeck.Cards.Values.ToList(); break;
 		}
 	}
 
+	private void SetCreateNotification(string title = null, string msg = null, string type = "warning") {
+        createMsgTitle = title;
+        createMsg = msg;
+        createMsgType = "alert-" + type;
+    }
+
 	private void SaveCard() {
-		if (newDeck.Cards.Count == 0) { newCard.Id = 1; newDeck.Cards.Add(newCard); }
-		else if (newCard.Id == 0) { newCard.Id = newDeck.Cards.Last().Id + 1; newDeck.Cards.Add(newCard); }
+		if (newDeck.Cards.Count == 0) { newCard.Id = 1; newDeck.Cards.Add(newCard.Id, newCard); }
+		else if (newCard.Id == 0) { newCard.Id = newDeck.Cards.Keys.Last() + 1; newDeck.Cards.Add(newCard.Id, newCard); }
 		else { newDeck.Cards[editCard] = newCard; }
 		newCard = new Data.Card();
 		ToggleSort(-1);
 	}
 
 	private void EditCard(Data.Card card) {
-		editCard = newDeck.Cards.IndexOf(card);
+		editCard = card.Id;
 		newCard = card;
 		ToggleSort(-1);
 	}
 
 	private void DeleteCard(Data.Card card) {
-		newDeck.Cards.Remove(card);
+		newDeck.Cards.Remove(card.Id);
 		ToggleSort(-1);
 	}
 
@@ -241,8 +261,9 @@
 	}
 
 	// Accept enter on search
-    private void SearchDeck(KeyboardEventArgs e = null) {
+    private void SearchEnter(KeyboardEventArgs e = null) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") {  
+			SetCreateNotification("Title", "this is the message, i need it to be a bit longer!!!", "success");
         }
     }
 }

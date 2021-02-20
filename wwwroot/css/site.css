@@ -126,6 +126,13 @@ body {
     font-family: Arista, sans-serif;
 }
 
+.close {
+    width: 30px;
+    height: 30px;
+    margin-left: -30px;
+    margin-top: -10px;
+}
+
 .close:focus, .close:active {
     outline: none;
     box-shadow: none;
@@ -164,7 +171,7 @@ body {
 /* Navigation dropdown */
 
 .dropdown-menu-user {
-    right: 50px;
+    right: 30%;
     left: auto;
     padding: 20px;
     width: 300px;
@@ -199,7 +206,6 @@ body {
     left: auto;
     width: fit-content;
     display: none;
-    float: left;
 }
 
 .dropdown-menu-tooltip-right {
@@ -212,6 +218,12 @@ body {
 .dropdown:hover .dropdown-menu
 {
     display: block;
+}
+
+/* Notification */
+
+.alert {
+    flex: content;
 }
 
 /* List */

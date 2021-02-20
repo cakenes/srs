@@ -105,7 +105,8 @@
 
 			<!-- List -->
 			<tbody>
-				@foreach (DeckInfo item in deckList)
+				@if (sortedDeck == null) { ToggleSort(-1); }
+				@foreach (DeckInfo item in sortedDeck)
 				{
 					<tr>
 		    		<td>

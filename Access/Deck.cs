@@ -9,58 +9,65 @@ namespace Srs.Access
     public class Deck
     {
         public static readonly Deck Current = new Deck();
-        public List<Data.Deck> DeckList;
+
+        public SortedDictionary<int, Data.Deck> DeckDict;
         public List<Data.DeckInfo> InfoList;
 
         public void Initialize() {
-            DeckList = new List<Data.Deck>();
+            DeckDict = new SortedDictionary<int, Data.Deck>();
             InfoList = new List<Data.DeckInfo>();
             Load();
         }
 
+        // Load decks to memory
         public void Load () {
+            // Error
             if (!Directory.Exists("decks/")) return;
-            DeckList = new List<Data.Deck>();
+
+            // Success
+            DeckDict = new SortedDictionary<int, Data.Deck>();
             string[] DeckPaths = Directory.GetFiles("decks/", "*.*");
-            foreach (string item in DeckPaths)
-            {
+            foreach (string item in DeckPaths) {
                 string jsonArray = File.ReadAllText(item);
                 Data.Deck fromJson = JsonConvert.DeserializeObject<Data.Deck>(jsonArray);
-                Data.DeckInfo info = Info(fromJson);
-                DeckList.Add(fromJson);
-                InfoList.Add(info);
+                DeckDict.Add(fromJson.Id, fromJson);
+                InfoList.Add(NewInfo(fromJson));
             }
         }
 
-        public bool Add(Data.Deck deck) {
-            int index = DeckList.FindIndex(x => x.Name == deck.Name);
-            if (index == -1) { Save(deck); return true; }
-            return false;
-        }
+        // Create new deck
+        public bool Create(Data.Deck deck) {
+            // Error
+            int index = FindName(deck.Name);
+            if (index != -1) return false; // Name exists
 
-        public void Save(Data.Deck deck) {
-            if (DeckList.Count == 0) { deck.Id = 1; DeckList.Add(deck); }
-            else {  deck.Id = DeckList.Last().Id + 1; }
-
-
-            if (DeckList.Count == 0) { deck.Id = 1; 
-                deck.Id = DeckList.Count; 
-                DeckList.Insert(deck.Id, deck);
-                Data.DeckInfo info = Info(deck);
-                InfoList.Insert(info.Id, info); }
-            else { DeckList[deck.Id] = deck; }
+            // Success, Empy list check
+            if (DeckDict.Count == 0) deck.Id = 0;
+            else deck.Id = DeckDict.Keys.Last() + 1;
+            // Create Deck
+            DeckDict.Add(deck.Id, deck);
+            InfoList.Add(NewInfo(deck));
             string toJson = JsonConvert.SerializeObject(deck);
-            File.WriteAllText("decks/" + deck.Id, toJson);
+            File.WriteAllText("decks/" + deck.Name, toJson);
+            return true;
         }
 
-        public void Edit(Data.Deck deck, int index) {
-            
-        }
-
-        public Data.DeckInfo Info(Data.Deck deck) {
-            Data.DeckInfo info = new Data.DeckInfo {Id = deck.Id, Popularity = 666, Name = deck.Name, Author = deck.Name, Cards = deck.Cards.Count};
+        // Create info data
+        public Data.DeckInfo NewInfo(Data.Deck deck) {
+            Data.DeckInfo info = new Data.DeckInfo {Id = deck.Id, Popularity = 666, Name = deck.Name, Author = deck.Author, Cards = deck.Cards.Count};
             if (deck.Password != null) info.Password = true;
             return info;
+        }
+
+        // Return name index, if not found return -1
+        private int FindName (string input) {
+            foreach (var item in DeckDict) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
+            return -1;
+        }
+
+        public bool Favorite (Guid guid, int id) {
+            if ()
+            return true;
         }
     }   
 }

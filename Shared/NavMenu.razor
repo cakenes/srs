@@ -115,7 +115,7 @@
                         <div class="btn-group btn-nav-group">
                             @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())" type="button">Login</button> }
                             else { <button class="btn btn-nav-small" @onclick="(() => Logout())" type="button">Logout</button> }
-                            <button class="btn btn-nav-small" @onclick="(() => Register())" type="button">Register</button>
+                            <button class="btn btn-nav-small" @onclick="(() => CreateUser())" type="button">Register</button>
                         </div>
                     </li>
                 </li>    
@@ -142,8 +142,8 @@
         userName = null;
     }
 
-    private async Task Register() {
-        Data.Info info = await Service.RegisterUserAsync(loginName, loginPassword);
+    private async Task CreateUser() {
+        Data.Info info = await Service.CreateUserAsync(loginName, loginPassword);
         if (info.Success) { SetUserNotification(info.Message, null, "success"); }
         else { SetUserNotification(info.Message, null, "danger"); }
     }

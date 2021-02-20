@@ -23,12 +23,11 @@ namespace Srs.Data {
         public string Name;
         public string Password;
         public string Author;
-        public List<Card> Cards;
+        public SortedDictionary<int, Card> Cards;   
     }
 
     public struct Card {
         public int Id;
-        public int Level;
         public string Front;
         public string Back;
     }
@@ -46,5 +45,15 @@ namespace Srs.Data {
         public int Id;
         public string Name;
         public string Password;
+        // Deck related
+        public List<int> Own;
+        public List<int> Opened;
+        public List<int> Favorites;
+        // Card related (int = deckId)
+        public SortedDictionary<int, Card> BoxOne;
+        public SortedDictionary<int, Card> BoxTwo;
+        public SortedDictionary<int, Card> BoxThree;
+        public SortedDictionary<int, Card> BoxFour;
+        public SortedDictionary<int, Card> BoxFive;
     }
 }
