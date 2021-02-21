@@ -2,12 +2,12 @@
 
 @using Srs.Data
 @using System.Linq;
-@inject Data.Service Service
+@inject Srs.Service Service;
 
 <div class="container">
 	<div class="row justify-content-center">
 
-		@if (reviewedCards == null) Initialize();
+		@if (reviewDeck == null) Initialize();
 
 		<!-- Review -->
 		<div class="col mr-3" align="center">
@@ -23,7 +23,7 @@
 				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type" @bind="reviewBack" @onkeydown="@ReviewEnter"></textarea>
 			</div>
 
-			@if (reviewStarted) {
+			@if (reviewStart) {
 				<!-- Enter -->
 				<div class="row justify-content-center">
 					<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewEnter())">
@@ -38,7 +38,7 @@
 			<span class="text-header">Options</span>
 
 			<!-- Locked -->
-			@if (!reviewStarted) {
+			@if (!reviewStart) {
 				<!-- Review slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
@@ -50,15 +50,15 @@
 				<!-- Card slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Percentage of new cards : @newNumber %</span>
-						<input type="range" class="form-range" min="0" max="100" step="10" @bind="newNumber">
+						<span class="text-subheader">Percentage of new cards : @reviewNewPresentage %</span>
+						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewNewPresentage">
 					</div>
 				</div>
 
 				<!-- Typos -->
 				<div class="row mt-2" align="center">
 					<div class="container">
- 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="allowTypos">
+ 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="reviewTypos">
 						<span class="text-subheader" for="allowTypos">Allow small typos</span>
 					</div>
 				</div>
@@ -75,15 +75,15 @@
 				<!-- Card slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Percentage of new cards : @newNumber %</span>
-						<input type="range" class="form-range" min="0" max="100" step="10" @bind="newNumber" disabled>
+						<span class="text-subheader">Percentage of new cards : @reviewNewPresentage %</span>
+						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewNewPresentage" disabled>
 					</div>
 				</div>
 
 				<!-- Typos -->
 				<div class="row mt-2" align="center">
 					<div class="container">
- 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="allowTypos" disabled>
+ 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="reviewTypos" disabled>
 						<span class="text-subheader" for="allowTypos">Allow small typos</span>
 					</div>
 				</div>

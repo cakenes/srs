@@ -1,7 +1,7 @@
 ﻿@page "/Create"
 
 @using Srs.Data
-@inject Data.Service Service
+@inject Srs.Service Service
 
 <div class="container">
 	<div class="row justify-content-center">
@@ -212,12 +212,12 @@
 {
 	private int listSort, editCard;
 	private string createMsgTitle, createMsg, createMsgType;
-	private Data.Deck newDeck;
+	private DeckFull newDeck;
 	private Data.Card newCard;
 	private List<Card> sortedList;
 	
 	private void Initialize() {
-		newDeck = new Data.Deck();
+		newDeck = new DeckFull();
 		newCard = new Data.Card();
 		sortedList = new List<Card>();
 		newDeck.Cards = new SortedDictionary<int, Card>();

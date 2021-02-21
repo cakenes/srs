@@ -1,7 +1,7 @@
 ﻿@page "/"
 
 @using Srs.Data
-@inject Data.Service Service
+@inject Srs.Service Service
 @inject NavigationManager Navigation
 
 <div class="container">
@@ -167,7 +167,7 @@
 	}
 
 	public async void ReviewDeck(int index) {
-		Data.Info info = await Service.ReviewDeckAsync(index);
+		ReturnInfo info = await Service.ReviewDeckAsync(index);
 		if (info.Success == true) Navigation.NavigateTo("/Deck");
 	}
 

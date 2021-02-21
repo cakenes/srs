@@ -28,7 +28,7 @@ namespace Srs
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<Data.Service>();
+            services.AddSingleton<Service>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,19 +3,9 @@ using System.Collections.Generic;
 
 namespace Srs.Data {
 
-    public struct CardInfo {
+    public struct DoubleInt {
         public int Card;
         public int Box;
-    }
-
-    public struct Info {
-        public bool Success;
-        public string Message;
-    }
-
-    public struct Connected {
-        public User User;
-        public string Guid;
     }
 
     public struct UserDeck {
@@ -23,17 +13,20 @@ namespace Srs.Data {
         public List<Card> Known;
     }
 
-    public struct Deck {
+    public struct DeckFull {
         public int Id;
         public string Name;
         public string Password;
         public string Author;
         public SortedDictionary<int, Card> Cards;
-        // Statistics
         public int Favorites;
-
         public void AddFavorite() { Favorites += 1; }
         public void RemoveFavorite() { Favorites -= 1; }
+    }
+
+    public struct PartialDeck {
+        public int Id;
+        public SortedDictionary<int, Card> Cards;
     }
 
     public struct Card {
@@ -49,17 +42,5 @@ namespace Srs.Data {
         public string Author;
         public int Popularity;
         public int Cards;
-    }
-        
-    public struct User {
-        public int Id;
-        public string Name;
-        public string Password;
-        // Deck related
-        public List<int> Own;
-        public List<int> Opened;
-        public List<int> Favorites;
-        // Card related (int = deckId)
-        public SortedDictionary<int, CardInfo> Old;
     }
 }
