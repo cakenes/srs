@@ -63,12 +63,13 @@ namespace Srs
             int index = FindUser(name);
             if (index != -1) return false; //Name exists
             
-            // Success
-            Data.User user = new Data.User {Name = name, Password = password};
+            // Initialize user data
+            Data.User user = new Data.User {Name = name, Password = password, Review = new SortedDictionary<int, ReviewInfo>()};
+
+
             // Empty list check
             if (UserDict.Count == 0) user.Id = 0;
             else user.Id = UserDict.Keys.Last() + 1;
-            user.Review = new SortedDictionary<int, List<DoubleInt>>();
             // Create User
             UserDict.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user);

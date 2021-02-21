@@ -13,6 +13,11 @@ namespace Srs.Data {
         public string Guid;
     }
 
+    public struct ReviewInfo {
+        public int DeckId;
+        public List<DoubleInt> CardList;
+    }
+
     public struct User {
         public int Id;
         public string Name;
@@ -22,6 +27,6 @@ namespace Srs.Data {
         public List<int> Opened;
         public List<int> Favorites;
         // Card related (int = deckId)
-        public SortedDictionary<int, List<DoubleInt>> Review;
+        public SortedDictionary<int, ReviewInfo> Review;
     }
 }

@@ -14,9 +14,9 @@ namespace Srs {
 
             Data.PartialDeck reviewDeck = new Data.PartialDeck();
             Data.DeckFull fullDeck = Access.Current.DeckDict[CompleteDeck.Id];
-
             List<Data.DoubleInt> reviewOld = new List<Data.DoubleInt>();
-            reviewOld = Access.Current.GuidList[ConnectionId].Review[CompleteDeck.Id];
+            
+            if (Access.Current.GuidList[ConnectionId].Review.ContainsKey(CompleteDeck.Id)) reviewOld = Access.Current.GuidList[ConnectionId].Review[CompleteDeck.Id].CardList;
 
             int oldAmount = (int)MathF.Round(reviewAmount * ((100 - reviewPercent) / 100), 0);
             Random random = new Random(DateTime.Now.Millisecond);
