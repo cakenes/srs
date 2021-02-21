@@ -13,6 +13,7 @@ namespace Srs {
         public Task<Data.PartialDeck> CreateReviewDeck(float reviewAmount, float reviewPercent) {
 
             Data.PartialDeck reviewDeck = new Data.PartialDeck();
+            reviewDeck.Cards = new SortedDictionary<int, Data.Card>();
             Data.DeckFull fullDeck = Access.Current.DeckDict[CompleteDeck.Id];
             List<Data.DoubleInt> reviewOld = new List<Data.DoubleInt>();
             
@@ -35,6 +36,7 @@ namespace Srs {
             for (int i = 0; i < reviewAmount - oldAmount * 5; i++)
             {
                 var newCard = CompleteDeck.Cards.ElementAt(random.Next(0, CompleteDeck.Cards.Count));
+                
                 if (!reviewDeck.Cards.ContainsKey(newCard.Key)) reviewDeck.Cards.Add(newCard.Key, CompleteDeck.Cards[newCard.Key]);
                 if (reviewDeck.Cards.Count == reviewAmount) break;
             }

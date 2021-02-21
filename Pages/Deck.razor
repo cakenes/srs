@@ -15,15 +15,15 @@
 
 			<!-- Front -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="0" rows="3" @bind="reviewFront" readonly></textarea>
+				<textarea class="form-control text-center mt-2" maxlength="0" rows="3" @bind="cardFront" readonly></textarea>
 			</div>
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type" @bind="reviewBack" @onkeydown="@ReviewEnter"></textarea>
+				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type" @bind="cardBack" @onkeydown="@ReviewEnter"></textarea>
 			</div>
 
-			@if (reviewStart) {
+			@if (reviewRunning) {
 				<!-- Enter -->
 				<div class="row justify-content-center">
 					<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewEnter())">
@@ -38,20 +38,20 @@
 			<span class="text-header">Options</span>
 
 			<!-- Locked -->
-			@if (!reviewStart) {
+			@if (!reviewRunning) {
 				<!-- Review slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Number of cards to review : @reviewNumber</span>
-						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewNumber">
+						<span class="text-subheader">Number of cards to review : @reviewAmount</span>
+						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewAmount">
 					</div>
 				</div>
 
 				<!-- Card slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Percentage of new cards : @reviewNewPresentage %</span>
-						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewNewPresentage">
+						<span class="text-subheader">Percentage of new cards : @reviewPercent %</span>
+						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewPercent">
 					</div>
 				</div>
 
@@ -67,16 +67,16 @@
 				<!-- Review slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Number of cards to review : @reviewNumber</span>
-						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewNumber" disabled>
+						<span class="text-subheader">Number of cards to review : @reviewAmount</span>
+						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewAmount" disabled>
 					</div>
 				</div>
 
 				<!-- Card slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Percentage of new cards : @reviewNewPresentage %</span>
-						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewNewPresentage" disabled>
+						<span class="text-subheader">Percentage of new cards : @reviewPercent %</span>
+						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewPercent" disabled>
 					</div>
 				</div>
 
@@ -104,15 +104,16 @@
 
 @code
 {
-	// New
+	// Ui
+	private string cardFront, cardBack;
+	// Review
 	private Data.PartialDeck partialDeck;
 	private float reviewAmount, reviewPercent;
+	public bool reviewTypos, reviewRunning;
 
 
 	// Review
-	private string reviewFront, reviewBack;
-	private float reviewNumber, reviewNewPresentage;
-	private bool reviewTypos, reviewStart;
+	
 	private Dictionary<int, int> reviewDeck;
 	private Dictionary<int, int> oldCards;
 	private Dictionary<int, int> newCards;
@@ -122,24 +123,27 @@
 		oldCards = new Dictionary<int, int>();
 		reviewDeck = new Dictionary<int, int>();
 		partialDeck = new Data.PartialDeck();
-		reviewNewPresentage = 50;
-		reviewNumber = 10;
+		partialDeck.Cards = new SortedDictionary<int, Card>();
+		reviewPercent = 50;
+		reviewAmount = 10;
 	}
 
 	private async void CreateReviewDeck() {
+		cardFront = reviewAmount.ToString();
+		cardBack = reviewPercent.ToString();
 		partialDeck = await Service.CreateReviewDeck(reviewAmount, reviewPercent);
-		reviewFront = partialDeck.Cards.ToString();
+		cardFront = partialDeck.Cards.ToString();
 	}
 
 	private void StartReview() {
-		reviewStart = true;
+		reviewRunning = true;
 		CreateReviewDeck();
 	}
 
 	// Accept answer
     private void ReviewEnter(KeyboardEventArgs e = null) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") {
-			if (e.ShiftKey == false) reviewFront = "Enter pressed";
+			if (e.ShiftKey == false) cardFront = "Enter pressed";
         }
     }
 }
