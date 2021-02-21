@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Srs.Data {
 
+    public struct CardInfo {
+        public int Card;
+        public int Box;
+    }
+
     public struct Info {
         public bool Success;
         public string Message;
@@ -55,10 +60,6 @@ namespace Srs.Data {
         public List<int> Opened;
         public List<int> Favorites;
         // Card related (int = deckId)
-        public SortedDictionary<int, Card> BoxOne;
-        public SortedDictionary<int, Card> BoxTwo;
-        public SortedDictionary<int, Card> BoxThree;
-        public SortedDictionary<int, Card> BoxFour;
-        public SortedDictionary<int, Card> BoxFive;
+        public SortedDictionary<int, CardInfo> Old;
     }
 }

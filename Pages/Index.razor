@@ -2,6 +2,7 @@
 
 @using Srs.Data
 @inject Data.Service Service
+@inject NavigationManager Navigation
 
 <div class="container">
 
@@ -115,7 +116,7 @@
 						</button>
 	  				</td>
     				<td>
-						<button class="btn btn-select" type="button">
+						<button class="btn btn-select" type="button" @onclick="(() => ReviewDeck(item.Id))">
 							<img src="svg/Select.svg" alt="" width="16" height="16" title="Decks">
 							@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks"> }
 							<span>@item.Name</span>
@@ -163,6 +164,11 @@
 
 	public async void LoadDeckInfo() {
 		deckList = await Service.LoadDeckInfoAsync();
+	}
+
+	public async void ReviewDeck(int index) {
+		Data.Info info = await Service.ReviewDeckAsync(index);
+		if (info.Success == true) Navigation.NavigateTo("/Deck");
 	}
 
 	// Accept enter on search

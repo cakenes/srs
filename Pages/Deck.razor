@@ -1,60 +1,99 @@
 ﻿@page "/Deck"
 
 @using Srs.Data
+@using System.Linq;
 @inject Data.Service Service
 
 <div class="container">
 	<div class="row justify-content-center">
 
+		@if (reviewedCards == null) Initialize();
+
 		<!-- Review -->
 		<div class="col mr-3" align="center">
 			<span class="text-header">Review</span>
 
-			<!-- Question -->
+			<!-- Front -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="0" rows="3" placeholder="" readonly></textarea>
+				<textarea class="form-control text-center mt-2" maxlength="0" rows="3" @bind="reviewFront" readonly></textarea>
 			</div>
 
-			<!-- Answer -->
+			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type"></textarea>
-			</div>	
+				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type" @bind="reviewBack" @onkeydown="@ReviewEnter"></textarea>
+			</div>
 
+			@if (reviewStarted) {
+				<!-- Enter -->
+				<div class="row justify-content-center">
+					<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewEnter())">
+                    	<span>Enter</span>
+                	</button>
+				</div>
+			}
 		</div>
 
 		<!-- Options -->
 		<div class="col ml-3" align="center">
 			<span class="text-header">Options</span>
 
-			<!-- Review slider -->
-			<div class="row mt-2">
-				<div class="input-group input-group-sm justify-content-center">
-					<span class="text-subheader">Number of cards to review: @reviewNumber</span>
-					<input type="range" class="form-range" min="10" max="50" step="5" @bind-value="reviewNumber">
+			<!-- Locked -->
+			@if (!reviewStarted) {
+				<!-- Review slider -->
+				<div class="row mt-2">
+					<div class="input-group input-group-sm justify-content-center">
+						<span class="text-subheader">Number of cards to review : @reviewNumber</span>
+						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewNumber">
+					</div>
 				</div>
-			</div>
 
-			<!-- Card slider -->
-			<div class="row mt-2">
-				<div class="input-group input-group-sm justify-content-center">
-					<span class="text-subheader">Percentage of new cards: @newNumber %</span>
-					<input type="range" class="form-range" min="0" max="100" step="10" @bind-value="newNumber">
+				<!-- Card slider -->
+				<div class="row mt-2">
+					<div class="input-group input-group-sm justify-content-center">
+						<span class="text-subheader">Percentage of new cards : @newNumber %</span>
+						<input type="range" class="form-range" min="0" max="100" step="10" @bind="newNumber">
+					</div>
 				</div>
-			</div>
 
-			<!-- Typos -->
-			<div class="row mt-2" align="center">
-				<div class="container">
- 					<input class="form-check-input" type="checkbox" id="allowTypos" @bind-value="allowTypos">
-					<span class="text-subheader" for="allowTypos">Allow small typos</span>
+				<!-- Typos -->
+				<div class="row mt-2" align="center">
+					<div class="container">
+ 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="allowTypos">
+						<span class="text-subheader" for="allowTypos">Allow small typos</span>
+					</div>
 				</div>
-			</div>
+			}
+			else {
+				<!-- Review slider -->
+				<div class="row mt-2">
+					<div class="input-group input-group-sm justify-content-center">
+						<span class="text-subheader">Number of cards to review : @reviewNumber</span>
+						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewNumber" disabled>
+					</div>
+				</div>
 
+				<!-- Card slider -->
+				<div class="row mt-2">
+					<div class="input-group input-group-sm justify-content-center">
+						<span class="text-subheader">Percentage of new cards : @newNumber %</span>
+						<input type="range" class="form-range" min="0" max="100" step="10" @bind="newNumber" disabled>
+					</div>
+				</div>
+
+				<!-- Typos -->
+				<div class="row mt-2" align="center">
+					<div class="container">
+ 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="allowTypos" disabled>
+						<span class="text-subheader" for="allowTypos">Allow small typos</span>
+					</div>
+				</div>
+			}
+			
 			<div class="divider mt-2"></div>
 
-
+			<!-- Start -->
 			<div class="row justify-content-center mt-2">
-				<button class="btn btn-nav-big" type="button">
+				<button class="btn btn-nav-big" type="button" @onclick="(() => StartReview())">
                     <img src="svg/Play.svg" alt="" width="20" height="20" title="Decks" class="svg-start">
                     <span>Start</span>
                 </button>
@@ -65,13 +104,43 @@
 
 @code
 {
-	private int reviewNumber = 10;
-	private int newNumber = 50;
-	private bool allowTypos;
+	// Review
+	private string reviewFront, reviewBack;
+	private float reviewNumber, reviewNewPresentage;
+	private bool reviewTypos, reviewStart;
+	private Dictionary<int, int> reviewDeck;
+	private Dictionary<int, int> oldCards;
+	private Dictionary<int, int> newCards;
 
-	// Accept enter on search
-    private void SearchDeck(KeyboardEventArgs e = null) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") {  
+	private void Initialize() {
+		newCards = new Dictionary<int, int>();
+		oldCards = new Dictionary<int, int>();
+		reviewDeck = new Dictionary<int, int>();
+		reviewNewPresentage = 50;
+		reviewNumber = 10;
+	}
+
+	private void CreateReviewDeck() {
+		
+		int oldCardNumber = (int)reviewNumber - (int)MathF.Round(reviewNumber * (reviewNewPresentage / 100), 0);
+		Random random = new Random(DateTime.Now.Millisecond);
+
+		for (int i = 0; i < oldCards.Count; i++)
+		{
+			var old = oldCards.ElementAt(random.Next(0, oldCards.Count));
+			if (!reviewDeck.ContainsKey(old.Key)) reviewDeck.Add(old.Key, old.Value);
+			if (reviewDeck.Count >= oldCardNumber) break;
+		}
+	}
+
+	private void StartReview() {
+		reviewStart = true;
+	}
+
+	// Accept answer
+    private void ReviewEnter(KeyboardEventArgs e = null) {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter") {
+			if (e.ShiftKey == false) reviewFront = "Enter pressed";
         }
     }
 }

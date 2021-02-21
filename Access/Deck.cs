@@ -35,6 +35,11 @@ namespace Srs{
             }
         }
 
+        // Review deck
+        public Data.Deck ReviewDeck(int index) {
+            return DeckDict[index];
+        }
+
         // Create new deck
         public bool CreateDeck(Data.Deck deck) {
             // Error

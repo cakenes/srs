@@ -86,7 +86,7 @@ input[type="checkbox"] {
 {
     font-size: 16px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     border-color: rgb(206, 212, 218, 1);
 }
 
@@ -108,14 +108,14 @@ input[type="checkbox"] {
 .btn-sort {
     font-size: 18px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     white-space: nowrap;
 }
 
 .btn-accept {
     font-size: 18px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
 }
 
 .btn-accept:hover {
@@ -125,7 +125,7 @@ input[type="checkbox"] {
 .btn-clear {
     font-size: 16px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
 }
 
 .btn-clear:hover {
@@ -137,7 +137,7 @@ input[type="checkbox"] {
     width: 100%;
     font-size: 16px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     
 }
 
@@ -145,7 +145,7 @@ input[type="checkbox"] {
 {
     font-size: 24px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
 }
 
 .close {
@@ -182,7 +182,7 @@ input[type="checkbox"] {
     margin: -20px;
     font-size: 24px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     color: rgb(54, 103, 150, 1);
 }
 
@@ -278,7 +278,7 @@ input[type="checkbox"] {
 .footer
 {
     font-size: 16px;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     color: rgb(90, 90, 90);
     background-color: rgba(255, 255, 255, 0.8);
 }
@@ -294,14 +294,14 @@ input[type="checkbox"] {
 .text-header {
     font-size: 24px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     color: rgb(90, 90, 90);
 }
 
 .text-subheader {
     font-size: 18px;
     text-transform: uppercase;
-    font-family: AristaBold sans-serif;
+    font-family: AristaBold, sans-serif;
     color: rgb(90, 90, 90);
 }
 
