@@ -68,6 +68,7 @@ namespace Srs
             // Empty list check
             if (UserDict.Count == 0) user.Id = 0;
             else user.Id = UserDict.Keys.Last() + 1;
+            user.Review = new SortedDictionary<int, List<DoubleInt>>();
             // Create User
             UserDict.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user);
@@ -84,6 +85,39 @@ namespace Srs
         private int FindUser (string input) {
             foreach (var item in UserDict) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
             return -1;
+        }
+
+        // Add or remove own tag
+        public bool SetOwn (Guid guid, int id) {
+            // Error
+            if (!GuidList.ContainsKey(guid)) return false;
+            // Success
+            if (GuidList[guid].Own.Contains(id)) GuidList[guid].Own.Remove(id);
+            else GuidList[guid].Own.Add(id);
+            UpdateUser(guid);
+            return true;
+        }
+
+        // Add or remove favorite tag
+        public bool SetFavorite (Guid guid, int id) {
+            // Error
+            if (!GuidList.ContainsKey(guid)) return false;
+            // Success
+            if (GuidList[guid].Favorites.Contains(id)) { GuidList[guid].Favorites.Remove(id); DeckDict[id].RemoveFavorite(); }
+            else { GuidList[guid].Favorites.Add(id); DeckDict[id].AddFavorite(); }  
+            UpdateUser(guid);
+            return true;
+        }
+
+        // Add or remove opened tag
+        public bool SetOpened (Guid guid, int id) {
+            // Error
+            if (!GuidList.ContainsKey(guid)) return false;
+            // Success
+            if (GuidList[guid].Opened.Contains(id)) GuidList[guid].Opened.Remove(id);
+            else GuidList[guid].Opened.Add(id);
+            UpdateUser(guid);
+            return true;
         }
     }
 }

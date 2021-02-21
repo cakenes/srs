@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace Srs.Data {
 
     public struct DoubleInt {
-        public int Card;
-        public int Box;
+        public int One;
+        public int Two;
     }
 
     public struct UserDeck {
@@ -31,6 +31,7 @@ namespace Srs.Data {
 
     public struct Card {
         public int Id;
+        public int Box;
         public string Front;
         public string Back;
     }

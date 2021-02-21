@@ -104,6 +104,11 @@
 
 @code
 {
+	// New
+	private Data.PartialDeck partialDeck;
+	private float reviewAmount, reviewPercent;
+
+
 	// Review
 	private string reviewFront, reviewBack;
 	private float reviewNumber, reviewNewPresentage;
@@ -120,21 +125,14 @@
 		reviewNumber = 10;
 	}
 
-	private void CreateReviewDeck() {
-		
-		int oldCardNumber = (int)reviewNumber - (int)MathF.Round(reviewNumber * (reviewNewPresentage / 100), 0);
-		Random random = new Random(DateTime.Now.Millisecond);
-
-		for (int i = 0; i < oldCards.Count; i++)
-		{
-			var old = oldCards.ElementAt(random.Next(0, oldCards.Count));
-			if (!reviewDeck.ContainsKey(old.Key)) reviewDeck.Add(old.Key, old.Value);
-			if (reviewDeck.Count >= oldCardNumber) break;
-		}
+	private async void CreateReviewDeck() {
+		partialDeck = await Service.CreateReviewDeck(reviewAmount, reviewPercent);
+		reviewFront = partialDeck.Cards.ToString();
 	}
 
 	private void StartReview() {
 		reviewStart = true;
+		CreateReviewDeck();
 	}
 
 	// Accept answer

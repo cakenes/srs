@@ -116,7 +116,7 @@
 						</button>
 	  				</td>
     				<td>
-						<button class="btn btn-select" type="button" @onclick="(() => ReviewDeck(item.Id))">
+						<button class="btn btn-select" type="button" @onclick="(() => ReviewDeck(item))">
 							<img src="svg/Select.svg" alt="" width="16" height="16" title="Decks">
 							@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks"> }
 							<span>@item.Name</span>
@@ -166,8 +166,8 @@
 		deckList = await Service.LoadDeckInfoAsync();
 	}
 
-	public async void ReviewDeck(int index) {
-		ReturnInfo info = await Service.ReviewDeckAsync(index);
+	public async void ReviewDeck(DeckInfo item) {
+		ReturnInfo info = await Service.ReviewDeckAsync(item.Id);
 		if (info.Success == true) Navigation.NavigateTo("/Deck");
 	}
 

@@ -22,6 +22,6 @@ namespace Srs.Data {
         public List<int> Opened;
         public List<int> Favorites;
         // Card related (int = deckId)
-        public SortedDictionary<int, DoubleInt> Old;
+        public SortedDictionary<int, List<DoubleInt>> Review;
     }
 }

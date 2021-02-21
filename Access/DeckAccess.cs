@@ -11,6 +11,7 @@ namespace Srs{
         public static readonly Access Current = new Access();
 
         public SortedDictionary<int, Data.DeckFull> DeckDict;
+        public SortedDictionary<int, Data.PartialDeck> PartialDictionary;
         public List<Data.DeckInfo> InfoList;
 
         public void InitializeDeck() {
