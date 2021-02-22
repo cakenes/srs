@@ -15,12 +15,10 @@ namespace Srs {
             return Task.FromResult(new Data.ReturnInfo {Success = true, Message = name});
         }
 
-        // Create User
+        // Create user
         public Task<Data.ReturnInfo> CreateUserAsync(string name, string password) {
             if (Access.Current.CreateUser(name,password)) { return Task.FromResult(new Data.ReturnInfo {Success = true, Message = "User created"}); }
             else { return Task.FromResult(new Data.ReturnInfo {Success = false, Message = "User already exists"}); }
         }
-
     }
-
 }

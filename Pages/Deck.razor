@@ -131,7 +131,7 @@
 	private async void CreateReviewDeck() {
 		cardFront = reviewAmount.ToString();
 		cardBack = reviewPercent.ToString();
-		partialDeck = await Service.CreateReviewDeck(reviewAmount, reviewPercent);
+		partialDeck = await Service.ReviewDeckCreateAsync(reviewAmount, reviewPercent);
 		cardFront = partialDeck.Cards.ToString();
 	}
 

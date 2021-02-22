@@ -8,11 +8,6 @@ namespace Srs.Data {
         public int Two;
     }
 
-    public struct UserDeck {
-        public int Id;
-        public List<Card> Known;
-    }
-
     public struct DeckFull {
         public int Id;
         public string Name;

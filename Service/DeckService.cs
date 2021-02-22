@@ -7,51 +7,45 @@ namespace Srs {
 
     public partial class Service {
 
-        public Data.DeckFull CompleteDeck;
-
-        // Create review deck
-        public Task<Data.PartialDeck> CreateReviewDeck(float reviewAmount, float reviewPercent) {
-
-            Data.PartialDeck reviewDeck = new Data.PartialDeck();
-            reviewDeck.Cards = new SortedDictionary<int, Data.Card>();
-            Data.DeckFull fullDeck = Access.Current.DeckDict[CompleteDeck.Id];
+        public Data.DeckFull Deck = new Data.DeckFull {Cards = new SortedDictionary<int, Data.Card>()};
+    
+        public Task<Data.PartialDeck> ReviewDeckCreateAsync(float reviewAmount, float reviewPercent) {
+            // Initialize
+            Data.PartialDeck partialDeck = new Data.PartialDeck {Cards = new SortedDictionary<int, Data.Card>()};
+            Data.User reviewUser = Access.Current.GuidList[ConnectionId];
             List<Data.DoubleInt> reviewOld = new List<Data.DoubleInt>();
-            
-            if (Access.Current.GuidList[ConnectionId].Review.ContainsKey(CompleteDeck.Id)) reviewOld = Access.Current.GuidList[ConnectionId].Review[CompleteDeck.Id].CardList;
-
-            int oldAmount = (int)MathF.Round(reviewAmount * ((100 - reviewPercent) / 100), 0);
             Random random = new Random(DateTime.Now.Millisecond);
+            int oldAmount = (int)MathF.Round(reviewAmount * ((100 - reviewPercent) / 100), 0);
 
+            if (reviewUser.Review.ContainsKey(Deck.Id)) reviewOld = reviewUser.Review[Deck.Id].Cards;
             if (oldAmount > reviewOld.Count) oldAmount = reviewOld.Count;
 
+
             // Add old cards 
-            for (int i = 0; i < oldAmount * 2; i++)
-            {
+            for (int i = 0; i < oldAmount * 2; i++) {
                 var oldCard = reviewOld.ElementAt(random.Next(0, reviewOld.Count));
-                if (!reviewDeck.Cards.ContainsKey(oldCard.One)) reviewDeck.Cards.Add(oldCard.One, CompleteDeck.Cards[oldCard.One]);
-                if (reviewDeck.Cards.Count == oldAmount) break;
+                if (!partialDeck.Cards.ContainsKey(oldCard.One)) partialDeck.Cards.Add(oldCard.One, Deck.Cards[oldCard.One]);
+                if (partialDeck.Cards.Count == oldAmount) break;
             }
 
             // Add new cards
-            for (int i = 0; i < reviewAmount - oldAmount * 5; i++)
-            {
-                var newCard = CompleteDeck.Cards.ElementAt(random.Next(0, CompleteDeck.Cards.Count));
-                
-                if (!reviewDeck.Cards.ContainsKey(newCard.Key)) reviewDeck.Cards.Add(newCard.Key, CompleteDeck.Cards[newCard.Key]);
-                if (reviewDeck.Cards.Count == reviewAmount) break;
+            for (int i = 0; i < reviewAmount - oldAmount * 5; i++) {
+                var newCard = Deck.Cards.ElementAt(random.Next(0, Deck.Cards.Count));
+                if (!partialDeck.Cards.ContainsKey(newCard.Key)) partialDeck.Cards.Add(newCard.Key, Deck.Cards[newCard.Key]);
+                if (partialDeck.Cards.Count == reviewAmount) break;
             }
 
-            return Task.FromResult(reviewDeck);
+            return Task.FromResult(partialDeck);
         }
 
         // Review Deck
         public Task<Data.ReturnInfo> ReviewDeckAsync(int index) {
-            CompleteDeck = Access.Current.DeckDict[index];
+            Deck = Access.Current.DeckDict[index];
             return Task.FromResult(new Data.ReturnInfo {Success = true});
         }
 
         // Create Deck
-        public Task<Data.ReturnInfo> CreateDeckAsync(Data.DeckFull deck) {
+        public Task<Data.ReturnInfo> DeckCreateAsync(Data.DeckFull deck) {
             deck.Author = Access.Current.GuidList[ConnectionId].Name;
             Access.Current.CreateDeck(deck);
             return Task.FromResult(new Data.ReturnInfo());

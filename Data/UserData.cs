@@ -8,14 +8,9 @@ namespace Srs.Data {
         public string Message;
     }
 
-    public struct Connected {
-        public User User;
-        public string Guid;
-    }
-
     public struct ReviewInfo {
-        public int DeckId;
-        public List<DoubleInt> CardList;
+        public int Id;
+        public List<DoubleInt> Cards;
     }
 
     public struct User {
@@ -26,7 +21,7 @@ namespace Srs.Data {
         public List<int> Own;
         public List<int> Opened;
         public List<int> Favorites;
-        // Card related (int = deckId)
+        // Old reviews
         public SortedDictionary<int, ReviewInfo> Review;
     }
 }
