@@ -56,7 +56,7 @@ namespace Srs{
 
         // Create info data
         public Data.DeckInfo NewInfo(Data.DeckFull deck) {
-            Data.DeckInfo info = new Data.DeckInfo {Id = deck.Id, Popularity = 666, Name = deck.Name, Author = deck.Author, Cards = deck.Cards.Count};
+            Data.DeckInfo info = new Data.DeckInfo {Id = deck.Id, Popularity = 0, Name = deck.Name, Author = deck.Author, Cards = deck.Cards.Count};
             if (deck.Password != null) info.Password = true;
             return info;
         }

@@ -59,8 +59,9 @@ namespace Srs
         // Create new user
         public bool CreateUser(string name, string password) {
             // Error
-            int index = FindUser(name);
-            if (index != -1) return false; //Name exists
+            if (name.Length < 3) return false; //Name too short
+            if (password.Length < 3) return false; //Password too short
+            if (FindUser(name) != -1) return false; //Name exists
             
             // Initialize user data
             Data.User user = new Data.User {Name = name, Password = password, Review = new Dictionary<int, Dictionary<int, int>>()};

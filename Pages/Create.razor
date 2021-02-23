@@ -8,7 +8,6 @@
 	<div class="row justify-content-center">
 
 		@if (Service.ConnectionId == null) Navigation.NavigateTo("/");
-		@if (newDeck.Cards == null) Initialize();
 
 		<!-- Deck -->
 		<div class="col" align="center">
@@ -41,16 +40,16 @@
 				<input type="text" class="form-control rounded-right" placeholder="Users" disabled>
 
 				<!-- User tooltip -->
-				<div class="dropdown">
-	  				<button class="btn btn-sm btn-tooltip">
-						<span class="dropdown bi bi-question-circle"></span>
-					</button>
-  					<div class="dropdown-menu dropdown-menu-tooltip-left">
-						<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
-						<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma.</span>
-						<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+					<div class="dropdown">
+						<div class="dropdown-menu dropdown-menu-tooltip-center">
+							<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
+							<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma</span>
+							<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+						</div>
 					</div>
-				</div>
+					<span class="dropdown bi bi-question-circle"></span>
+				</button>
 			</div>
 
 			<!-- Password -->
@@ -59,18 +58,17 @@
     				<span class="input-group-text bi bi-lock-fill"></span>
     			</div>
 				<input type="text" class="form-control rounded-right" placeholder="Password" @bind="newDeck.Password" disabled>
-
+				
 				<!-- Password tooltip -->
-				<div class="dropdown">
-	  				<button class="btn btn-sm btn-tooltip">
-						<span class="dropdown bi bi-question-circle"></span>
-					</button>
-  					<div class="dropdown-menu dropdown-menu-tooltip-left">
-						<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
-						<span class="dropdown-item text-tooltip disabled">Password required to open deck.</span>
+  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+					<div class="dropdown">
+						<div class="dropdown-menu dropdown-menu-tooltip-center">
+							<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
+						<span class="dropdown-item text-tooltip disabled">Password required to open deck</span>
+						</div>
 					</div>
-				</div>
-
+					<span class="dropdown bi bi-question-circle"></span>
+				</button>
 			</div>
 
 			<!-- Create -->
@@ -88,14 +86,15 @@
 				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Front of the card" @bind="newCard.Front"></textarea>
 
 				<!-- Front tooltip -->
-				<div class="dropdown">
-  					<button class="btn btn-sm btn-tooltip">
-						<span class="dropdown bi bi-question-circle"></span>
-					</button>
-  					<div class="dropdown-menu dropdown-menu-tooltip-left">
-						<span class="dropdown-item text-tooltip disabled">Limited currently to 5rows, 50chars</span>
+  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+					<div class="dropdown">
+						<div class="dropdown-menu dropdown-menu-tooltip-left">
+							<span class="dropdown-item text-tooltip disabled">Front text for the card</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 50 characters</span>
+						</div>
 					</div>
-				</div>
+					<span class="dropdown bi bi-question-circle"></span>
+				</button>
 			</div>
 
 			<!-- Card back -->
@@ -103,14 +102,15 @@
 				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Back of the card" @bind="newCard.Back"></textarea>
 
 				<!-- Back tooltip -->
-				<div class="dropdown">
-  					<button class="btn btn-sm btn-tooltip">
-						<span class="dropdown bi bi-question-circle"></span>
-					</button>
-  					<div class="dropdown-menu dropdown-menu-tooltip-left">
-						<span class="dropdown-item text-tooltip disabled">Limited currently to 5rows, 50chars</span>
+  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+					<div class="dropdown">
+						<div class="dropdown-menu dropdown-menu-tooltip-left">
+							<span class="dropdown-item text-tooltip disabled">Front text for the card</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 50 characters</span>
+						</div>
 					</div>
-				</div>
+					<span class="dropdown bi bi-question-circle"></span>
+				</button>
 			</div>
 
 			<!-- Card action -->
@@ -120,13 +120,16 @@
 		</div>
 	</div>
 
-	<div class="row justify-content-center mt-2">
-		<span class="divider"></span>
-	</div>
-
 	<!-- Card list header -->
 	<div class="row justify-content-center mt-2">
 		<span class="text-header">Card list</span>
+	</div>
+
+	<!-- Search -->
+	<div class="row mt-2">
+		<div class="input-group justify-content-center">
+			<input type="search" class="form-control rounded-left" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
+		</div>
 	</div>
 
 	<!-- Table -->
@@ -188,22 +191,23 @@
 				@if (sortedList == null) { ToggleSort(-1); }
 				@foreach (Card item in sortedList)
 				{
-				<tr>
-		    		<td class="text-left">
-						<span>@item.Front</span>		
-					</td>
-      				<td class="text-left overflow-hidden">
-						<span>@item.Back</span>
-					</td>
-     				<td class="text-right">
-                        <button class="btn btn-sm btn-select" type="button" @onclick="(() => EditCard(item))">
-							<img src="svg/Edit.svg" alt="" width="16" height="16" title="Edit">
-						</button>
-						<button class="btn btn-sm btn-select" type="button" @onclick="(() => DeleteCard(item))">
-							<img src="svg/Delete.svg" alt="" width="16" height="16" title="Delete">
-						</button>
-					</td>
-    			</tr>
+
+					// Search
+					if (!item.Front.Contains(deckSearch, StringComparison.CurrentCultureIgnoreCase) && 
+						!item.Back.Contains(deckSearch, StringComparison.CurrentCultureIgnoreCase)) continue;
+
+					<tr>
+		    			<td class="text-left overflow-hidden">@item.Front</td>
+      					<td class="text-left overflow-hidden">@item.Back</td>
+     					<td class="text-right">
+                        	<button class="btn btn-sm btn-select" type="button" @onclick="(() => EditCard(item))">
+								<img src="svg/Edit.svg" alt="" width="16" height="16" title="Edit">
+							</button>
+							<button class="btn btn-sm btn-select" type="button" @onclick="(() => DeleteCard(item))">
+								<img src="svg/Delete.svg" alt="" width="16" height="16" title="Delete">
+							</button>
+						</td>
+    				</tr>
 				}
   			</tbody>
 		</table>
@@ -214,17 +218,11 @@
 {
 	private int listSort, editCard;
 	private string createMsgTitle, createMsg, createMsgType;
-	private DeckFull newDeck;
-	private Data.Card newCard;
-	private List<Card> sortedList;
+	private string deckSearch = "";
+	private DeckFull newDeck = new DeckFull {Cards = new SortedDictionary<int, Card>()};
+	private Data.Card newCard = new Data.Card();
+	private List<Card> sortedList = new List<Card>();
 	
-	private void Initialize() {
-		newDeck = new DeckFull();
-		newCard = new Data.Card();
-		sortedList = new List<Card>();
-		newDeck.Cards = new SortedDictionary<int, Card>();
-	}
-
 	private void ToggleSort(int input) {
 		if (listSort == 0) listSort = input;
 		else if (listSort == input) listSort += 1;

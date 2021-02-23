@@ -1,7 +1,7 @@
-﻿ @inject Srs.Service Service
+﻿@inject Srs.Service Service
 
 <!-- Navigation Bar -->
-<div class="container-fluid">
+<div class="container">
     <nav class="navbar border-bottom fixed-top">
 
         <!-- Logo -->
@@ -11,7 +11,7 @@
 
         <!-- Deck column -->
         <div class="col" align="center">
-
+            
             <!-- Deck dropdown button -->
             <div class="nav-item dropdown">
                 <button class="btn btn-nav-big" type="button">
@@ -25,48 +25,30 @@
                     <!-- Notification -->
                     @if (deckMsgTitle != null)
                     {
-                        <li class="nav-item">
-                            <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
-                                <strong>@deckMsgTitle</strong><br>@deckMsg
-                                <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
-                            </div>
-                        </li>
+                        <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
+                            <strong>@deckMsgTitle</strong><br>
+                            <span class="notification-text">@deckMsg</span>
+                            <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                        </div>
                     }
 
-                    <!-- Search -->
-                    <li class="nav-item">
-                        <div class="input-group input-group-sm justify-content-center">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bi bi-search"></span>
-                            </div>
-                            <input type="search" class="form-control" placeholder="Search" @bind="deckSearch" @onkeydown="@EnterSearch" aria-label="Search">
-                        </div>
-                    </li>
-
-                    <!-- List -->
-                    <li class="nav-item mt-2">       
-                        <a href="/" class="btn btn-nav-small" type="button">List</a>
-                    </li>
+                    <!-- List -->     
+                    <a href="/" class="btn btn-nav-small" type="button">List</a>
 
                     <!-- Create -->
-                    <li class="nav-item">
-                        <div class="dropdown-divider"></div>
-                        @if (Service.ConnectionId != null) { <a href="Create" class="btn btn-nav-small" type="button">Create</a> }
-                        else { <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
+                    <div class="dropdown-divider"></div>
+                    @if (Service.ConnectionId != null) { <a href="Create" class="btn btn-nav-small" type="button">Create</a> }
+                    else { <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
                         
-                    </li>
-
                     <!-- Modify -->
-                    <li class="nav-item mt-2">
-                        <a href="/" class="btn btn-nav-small" type="button">Modify</a>
-                    </li>
+                    <a href="/" class="btn btn-nav-small" type="button">Modify</a>
                 </li>
             </div>
         </div>
 
         <!-- User column -->
         <div class="col" align="center">
-
+            
             <!-- User dropdown button -->
             <div class="nav-item dropdown">
                 <button class="btn btn-nav-big" type="button">
@@ -81,44 +63,36 @@
                     <!-- Notification -->
                     @if (userMsgTitle != null)
                     {
-                        <li class="nav-item">
                             <div class="alert @userMsgType alert-dismissible fade show" role="alert">
                                 <strong>@userMsgTitle</strong><br>@userMsg
                                 <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
                             </div>
-                        </li>
                     }
 
                     <!-- Username input -->
-                    <li class="nav-item">
                         <div class="input-group input-group-sm justify-content-center">
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-person-fill"></span>
                             </div>
                             <input type="text" class="form-control" placeholder="Username" @bind="loginName" aria-label="Username">
                         </div>
-                    </li>
 
-                    <!-- Password input -->
-                    <li class="nav-item mt-2">                  
-                        <div class="input-group input-group-sm justify-content-center">
+                    <!-- Password input -->                
+                        <div class="input-group input-group-sm justify-content-center mt-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-key-fill"></span>
                             </div>
                             <input type="password" class="form-control" placeholder="Username" @bind="loginPassword" @onkeydown="@EnterPassword" aria-label="Password">
                         </div>
-                    </li>
 
                     <!-- Control buttons -->
-                    <li class="nav-item">
                         <div class="dropdown-divider"></div>
                         <div class="btn-group btn-nav-group">
                             @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())" type="button">Login</button> }
                             else { <button class="btn btn-nav-small" @onclick="(() => Logout())" type="button">Logout</button> }
                             <button class="btn btn-nav-small" @onclick="(() => CreateUser())" type="button">Register</button>
                         </div>
-                    </li>
-                </li>    
+                </li>   
             </div>
         </div>
     </nav>
@@ -148,34 +122,15 @@
         else { SetUserNotification(info.Message, null, "danger"); }
     }
 
-    private void EnterSearch(KeyboardEventArgs e) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") {
-            SetDeckNotification("Title", "this is the message, i need it to be a bit longer!!!", "success");
-        }
-    }
-
     private void EnterPassword(KeyboardEventArgs e) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") {
-            SetUserNotification("Title", "User created successfully!", "success");
-        }
+        if (e.Code == "Enter" || e.Code == "NumpadEnter") Login();
     }
 
     private void SetDeckNotification(string title = null, string msg = null, string type = "warning") {
-        deckMsgTitle = title;
-        deckMsg = msg;
-        deckMsgType = "alert-" + type;
+        deckMsgTitle = title; deckMsg = msg; deckMsgType = "alert-" + type;
     }
 
     private void SetUserNotification(string title = null, string msg = null, string type = "warning") {
-        userMsgTitle = title;
-        userMsg = msg;
-        userMsgType = "alert-" + type;
+        userMsgTitle = title; userMsg = msg; userMsgType = "alert-" + type;
     }
-
-    private void TryUserLogin() {
-    }
-
-    private void TryUserRegister() {
-    }
-
 }
