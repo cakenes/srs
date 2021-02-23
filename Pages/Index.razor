@@ -116,7 +116,7 @@
 						</button>
 	  				</td>
     				<td>
-						<button class="btn btn-select" type="button" @onclick="(() => ReviewDeck(item))">
+						<button class="btn btn-select" type="button" @onclick="(() => ReviewDeckSelect(item))">
 							<img src="svg/Select.svg" alt="" width="16" height="16" title="Decks">
 							@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16" title="Decks"> }
 							<span>@item.Name</span>
@@ -166,14 +166,14 @@
 		deckList = await Service.LoadDeckInfoAsync();
 	}
 
-	public async void ReviewDeck(DeckInfo item) {
-		ReturnInfo info = await Service.ReviewDeckAsync(item.Id);
+	public async void ReviewDeckSelect(DeckInfo item) {
+		ReturnInfo info = await Service.ReviewDeckSelectAsync(item.Id);
 		if (info.Success == true) Navigation.NavigateTo("/Deck");
 	}
 
 	// Accept enter on search
     private void SearchDeck(KeyboardEventArgs e = null) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") {  
+        if (e.Code == "Enter" || e.Code == "NumpadEnter") { 
         }
     }
 }

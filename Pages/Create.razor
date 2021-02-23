@@ -2,10 +2,12 @@
 
 @using Srs.Data
 @inject Srs.Service Service
+@inject NavigationManager Navigation
 
 <div class="container">
 	<div class="row justify-content-center">
 
+		@if (Service.ConnectionId == null) Navigation.NavigateTo("/");
 		@if (newDeck.Cards == null) Initialize();
 
 		<!-- Deck -->

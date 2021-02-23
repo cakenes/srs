@@ -47,7 +47,7 @@ namespace Srs
         }
 
         // Update user file
-        public bool UpdateUser(Guid guid) {
+        public bool UpdateUser(Guid? guid) {
             // Error
             if (!GuidList.ContainsKey(guid)) return false;
 
@@ -64,8 +64,7 @@ namespace Srs
             if (index != -1) return false; //Name exists
             
             // Initialize user data
-            Data.User user = new Data.User {Name = name, Password = password, Review = new SortedDictionary<int, ReviewInfo>()};
-
+            Data.User user = new Data.User {Name = name, Password = password, Review = new Dictionary<int, Dictionary<int, int>>()};
 
             // Empty list check
             if (UserDict.Count == 0) user.Id = 0;

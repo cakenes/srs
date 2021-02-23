@@ -3,11 +3,13 @@
 @using Srs.Data
 @using System.Linq;
 @inject Srs.Service Service;
+@inject NavigationManager Navigation
 
 <div class="container">
 	<div class="row justify-content-center">
 
-		@if (reviewDeck == null) Initialize();
+		@if (Service.Deck.Id == 0) Navigation.NavigateTo("/");
+		@if (reviewReturn == null) Initialize();
 
 		<!-- Review -->
 		<div class="col mr-3" align="center">
@@ -20,13 +22,13 @@
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="Type" @bind="cardBack" @onkeydown="@ReviewEnter"></textarea>
+				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="@cardBackPlaceholder" @bind="cardBack" @onkeydown="@ReviewEnter"></textarea>
 			</div>
 
 			@if (reviewRunning) {
 				<!-- Enter -->
 				<div class="row justify-content-center">
-					<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewEnter())">
+					<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewCardValidate())">
                     	<span>Enter</span>
                 	</button>
 				</div>
@@ -93,7 +95,7 @@
 
 			<!-- Start -->
 			<div class="row justify-content-center mt-2">
-				<button class="btn btn-nav-big" type="button" @onclick="(() => StartReview())">
+				<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewDeckCreate())">
                     <img src="svg/Play.svg" alt="" width="20" height="20" title="Decks" class="svg-start">
                     <span>Start</span>
                 </button>
@@ -105,45 +107,56 @@
 @code
 {
 	// Ui
-	private string cardFront, cardBack;
+	private string cardFront, cardBack, cardBackPlaceholder;
 	// Review
-	private Data.PartialDeck partialDeck;
+	private int currentIndex;
+	private int[] indexArray;
 	private float reviewAmount, reviewPercent;
-	public bool reviewTypos, reviewRunning;
-
-
-	// Review
-	
-	private Dictionary<int, int> reviewDeck;
-	private Dictionary<int, int> oldCards;
-	private Dictionary<int, int> newCards;
+	private bool reviewTypos, reviewRunning;
+	private Data.PartialDeck partialDeck;
+	private Dictionary<int, int> reviewReturn;
 
 	private void Initialize() {
-		newCards = new Dictionary<int, int>();
-		oldCards = new Dictionary<int, int>();
-		reviewDeck = new Dictionary<int, int>();
 		partialDeck = new Data.PartialDeck();
 		partialDeck.Cards = new SortedDictionary<int, Card>();
+		reviewReturn = new Dictionary<int, int>();
 		reviewPercent = 50;
 		reviewAmount = 10;
 	}
 
-	private async void CreateReviewDeck() {
-		cardFront = reviewAmount.ToString();
-		cardBack = reviewPercent.ToString();
+	private async void ReviewDeckCreate() {
+		Initialize();
+		reviewRunning = true;
 		partialDeck = await Service.ReviewDeckCreateAsync(reviewAmount, reviewPercent);
-		cardFront = partialDeck.Cards.ToString();
+		indexArray = partialDeck.Cards.Keys.ToArray();
+		ReviewCardDisplay();
 	}
 
-	private void StartReview() {
-		reviewRunning = true;
-		CreateReviewDeck();
+	private void ReviewCardDisplay() {
+		if (currentIndex >= indexArray.Count()) { ReviewDeckReturn(); return; }
+		cardFront = partialDeck.Cards[indexArray[currentIndex]].Front;
+		cardBack = null;
+	}
+
+	private void ReviewCardValidate() {
+		cardBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
+		string tempBack = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
+		if (cardBack == tempBack) { cardBackPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
+		else { cardBackPlaceholder = "Incorrect! Answer was: " + tempBack; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
+		currentIndex += 1;
+		ReviewCardDisplay();
+	}
+
+	private async void ReviewDeckReturn() {
+		cardBack = null;
+		cardBackPlaceholder = null;
+		cardFront = "Review done!";
+		reviewRunning = false;
+		Service.ReviewDeckReturnAsync(reviewReturn);
 	}
 
 	// Accept answer
-    private void ReviewEnter(KeyboardEventArgs e = null) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") {
-			if (e.ShiftKey == false) cardFront = "Enter pressed";
-        }
+    private void ReviewEnter(KeyboardEventArgs e) {
+		if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();
     }
 }

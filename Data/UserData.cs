@@ -8,11 +8,6 @@ namespace Srs.Data {
         public string Message;
     }
 
-    public struct ReviewInfo {
-        public int Id;
-        public List<DoubleInt> Cards;
-    }
-
     public struct User {
         public int Id;
         public string Name;
@@ -22,6 +17,6 @@ namespace Srs.Data {
         public List<int> Opened;
         public List<int> Favorites;
         // Old reviews
-        public SortedDictionary<int, ReviewInfo> Review;
+        public Dictionary<int, Dictionary<int, int>> Review;
     }
 }
