@@ -125,7 +125,7 @@
 	}
 
 	private async void ReviewDeckCreate() {
-		Initialize();
+		currentIndex = 0;
 		reviewRunning = true;
 		partialDeck = await Service.ReviewDeckCreateAsync(reviewAmount, reviewPercent);
 		indexArray = partialDeck.Cards.Keys.ToArray();
