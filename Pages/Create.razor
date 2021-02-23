@@ -83,14 +83,14 @@
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="100" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
 
 				<!-- Front tooltip -->
   				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
 					<div class="dropdown">
 						<div class="dropdown-menu dropdown-menu-tooltip-left">
-							<span class="dropdown-item text-tooltip disabled">Front text for the card</span>
-							<span class="dropdown-item text-tooltip disabled">Limited currently to 50 characters</span>
+							<span class="dropdown-item text-tooltip disabled">Front of the card</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 100 characters</span>
 						</div>
 					</div>
 					<span class="dropdown bi bi-question-circle"></span>
@@ -99,14 +99,14 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="20" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
 
 				<!-- Back tooltip -->
   				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
 					<div class="dropdown">
 						<div class="dropdown-menu dropdown-menu-tooltip-left">
-							<span class="dropdown-item text-tooltip disabled">Front text for the card</span>
-							<span class="dropdown-item text-tooltip disabled">Limited currently to 50 characters</span>
+							<span class="dropdown-item text-tooltip disabled">Back of the card</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 20 characters</span>
 						</div>
 					</div>
 					<span class="dropdown bi bi-question-circle"></span>
