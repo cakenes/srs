@@ -74,7 +74,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-person-fill"></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Username" @bind="loginName" aria-label="Username">
+                            <input type="text" class="form-control" placeholder="Username" @bind="loginName" @bind:event="oninput" aria-label="Username">
                         </div>
 
                     <!-- Password input -->                
@@ -116,6 +116,7 @@
     private async Task CreateUser() {
         // Error
         if (loginName == null || loginPassword == null) return;
+        
         Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
         if (info.Success) { SetUserNotification(info.Message, null, "success"); }
         else { SetUserNotification(info.Message, null, "danger"); }

@@ -83,7 +83,7 @@
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Front of the card" @bind="newCard.Front"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
 
 				<!-- Front tooltip -->
   				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">

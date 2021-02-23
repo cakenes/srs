@@ -57,8 +57,9 @@ namespace Srs
         }
 
         // Create new user
-        public bool CreateUser(string name = "", string password = "") {
+        public bool CreateUser(string name, string password) {
             // Error
+            if (name == null || password == null) return false;
             if (name.Length < 3) return false; //Name too short
             if (password.Length < 3) return false; //Password too short
             if (FindUser(name) != -1) return false; //Name exists
