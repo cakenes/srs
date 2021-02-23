@@ -10,13 +10,13 @@ namespace Srs{
 
         public static readonly Access Current = new Access();
 
+        public List<Data.DeckInfo> InfoList;
         public SortedDictionary<int, Data.DeckFull> DeckDict;
         public SortedDictionary<int, Data.PartialDeck> PartialDictionary;
-        public List<Data.DeckInfo> InfoList;
 
         public void InitializeDeck() {
-            DeckDict = new SortedDictionary<int, Data.DeckFull>();
             InfoList = new List<Data.DeckInfo>();
+            DeckDict = new SortedDictionary<int, Data.DeckFull>();
             LoadDecks();
         }
 
@@ -25,7 +25,7 @@ namespace Srs{
             // Error
             if (!Directory.Exists("decks/")) return;
 
-            // Success
+            // Success, loop thrue files
             DeckDict = new SortedDictionary<int, Data.DeckFull>();
             string[] DeckPaths = Directory.GetFiles("decks/", "*.*");
             foreach (string item in DeckPaths) {
@@ -36,20 +36,16 @@ namespace Srs{
             }
         }
 
-        // Review deck
-        public Data.DeckFull ReviewDeck(int index) {
-            return DeckDict[index];
-        }
-
         // Create new deck
         public bool CreateDeck(Data.DeckFull deck) {
             // Error
             int index = FindDeck(deck.Name);
             if (index != -1) return false; // Name exists
 
-            // Success, Empy list check
-            if (DeckDict.Count == 0) deck.Id = 0;
+            // Success, set deck.Id
+            if (DeckDict.Count == 0) deck.Id = 1;
             else deck.Id = DeckDict.Keys.Last() + 1;
+
             // Create Deck
             DeckDict.Add(deck.Id, deck);
             InfoList.Add(NewInfo(deck));

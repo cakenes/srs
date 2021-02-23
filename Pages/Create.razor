@@ -30,7 +30,7 @@
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-stack"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="newDeck.Name" @onkeydown="@SearchEnter" aria-label="Deck name">
+				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="newDeck.Name" aria-label="Deck name">
 			</div>
 
 			<!-- User -->
@@ -115,7 +115,7 @@
 
 			<!-- Card action -->
 			<div class="row justify-content-center">
-				<button class="btn btn-accept" type="button" @onclick="(() => SaveCard())">Save Card</button>
+				<button class="btn btn-accept" type="button" @onkeydown="@EnterSaveCard" @onclick="(() => SaveCard())">Save Card</button>
 			</div>
 		</div>
 	</div>
@@ -270,10 +270,8 @@
 		Service.DeckCreateAsync(newDeck);
 	}
 
-	// Accept enter on search
-    private void SearchEnter(KeyboardEventArgs e = null) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") {  
-			SetCreateNotification("Title", "this is the message, i need it to be a bit longer!!!", "success");
-        }
+	// Enter to save card
+    private void EnterSaveCard(KeyboardEventArgs e = null) {
+        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) SaveCard();
     }
 }

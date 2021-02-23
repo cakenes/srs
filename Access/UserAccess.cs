@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Srs.Data;
 
 namespace Srs
 {
@@ -66,19 +65,15 @@ namespace Srs
             // Initialize user data
             Data.User user = new Data.User {Name = name, Password = password, Review = new Dictionary<int, Dictionary<int, int>>()};
 
-            // Empty list check
-            if (UserDict.Count == 0) user.Id = 0;
+            // Success, set deck.Id
+            if (UserDict.Count == 0) user.Id = 1;
             else user.Id = UserDict.Keys.Last() + 1;
+            
             // Create User
             UserDict.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("users/" + user.Name, toJson);
             return true;
-        }
-
-        // Create user data
-        private Data.User NewUser(string name, string password) {
-            return new Data.User {Name = name, Password = password};
         }
 
         // Return name index, if not found return -1
