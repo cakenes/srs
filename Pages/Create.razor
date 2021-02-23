@@ -99,7 +99,7 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Back of the card" @bind="newCard.Back"></textarea>
+				<textarea class="form-control text-center rounded-right" maxlength="50" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
 
 				<!-- Back tooltip -->
   				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
@@ -269,7 +269,7 @@
 	}
 
 	// Enter to save card
-    private void EnterSaveCard(KeyboardEventArgs e = null) {
+    private void Enter(KeyboardEventArgs e) {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) SaveCard();
     }
 }

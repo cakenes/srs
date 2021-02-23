@@ -157,6 +157,6 @@
 	}
 
 	private void Enter(KeyboardEventArgs e) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") ReviewCardValidate();
+        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();
     }
 }
