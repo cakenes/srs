@@ -82,7 +82,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text bi bi-key-fill"></span>
                             </div>
-                            <input type="password" class="form-control" placeholder="Username" @bind="loginPassword" @onkeydown="@EnterPassword" aria-label="Password">
+                            <input type="password" class="form-control" placeholder="Username" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
                         </div>
 
                     <!-- Control buttons -->
@@ -103,6 +103,8 @@
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
     private async Task Login() {
+        SetDeckNotification(loginName, loginPassword);
+
         Data.ReturnInfo info = await Service.LoginUserAsync(loginName, loginPassword);
         if (info.Success) {
             userName = info.Message;
@@ -124,7 +126,7 @@
         else { SetUserNotification(info.Message, null, "danger"); }
     }
 
-    private void EnterPassword(KeyboardEventArgs e) {
+    private void Enter(KeyboardEventArgs e) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") Login();
     }
 

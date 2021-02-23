@@ -22,7 +22,7 @@
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="@cardBackPlaceholder" @bind="cardBack"></textarea>
+				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="@cardBackPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeydown="Enter"></textarea>
 			</div>
 
 			@if (reviewRunning) {
@@ -155,4 +155,8 @@
 		reviewRunning = false;
 		Service.ReviewDeckReturnAsync(reviewReturn);
 	}
+
+	private void Enter(KeyboardEventArgs e) {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter") ReviewCardValidate();
+    }
 }
