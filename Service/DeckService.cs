@@ -13,7 +13,7 @@ namespace Srs {
         public Task<Data.PartialDeck> ReviewDeckCreateAsync(float reviewAmount, float reviewPercent) {
             // Initialize
             Data.PartialDeck partialDeck = new Data.PartialDeck {Cards = new SortedDictionary<int, Data.Card>()};
-            Data.User reviewUser = Access.Current.GuidList[ConnectionId];
+            Data.User reviewUser = Access.Current.GetUser(ConnectionId);
             Dictionary<int,int> reviewOld = new Dictionary<int, int>();
             Random random = new Random(DateTime.Now.Millisecond);
             int oldAmount = (int)MathF.Round(reviewAmount * ((100 - reviewPercent) / 100), 0);
@@ -53,15 +53,16 @@ namespace Srs {
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(Dictionary<int,int> reviewReturn) {  
+            if (ConnectionId == null) return Task.FromResult(new Data.ReturnInfo());
             Data.User reviewUser = Access.Current.GuidList[ConnectionId];
 
             foreach (var card in reviewReturn)
             {
                 if (!reviewUser.Review.ContainsKey(Deck.Id)) reviewUser.Review[Deck.Id] = new Dictionary<int, int>();
-                else if (!reviewUser.Review[Deck.Id].ContainsKey(card.Key)) reviewUser.Review[Deck.Id].Add(card.Key, card.Value);
+                if (!reviewUser.Review[Deck.Id].ContainsKey(card.Key)) reviewUser.Review[Deck.Id].Add(card.Key, card.Value);
                 else reviewUser.Review[Deck.Id][card.Key] += card.Value;
-                if (reviewUser.Review[Deck.Id][card.Key] == 6) reviewUser.Review[Deck.Id][card.Key] = 5;
-                if (reviewUser.Review[Deck.Id][card.Key] == -1) reviewUser.Review[Deck.Id][card.Key] = 0;
+                //if (reviewUser.Review[Deck.Id][card.Key] == 6) reviewUser.Review[Deck.Id][card.Key] = 5;
+                //if (reviewUser.Review[Deck.Id][card.Key] == -1) reviewUser.Review[Deck.Id][card.Key] = 0;
             }
 
             Access.Current.UpdateUser(ConnectionId);

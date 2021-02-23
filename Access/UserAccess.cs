@@ -57,7 +57,7 @@ namespace Srs
         }
 
         // Create new user
-        public bool CreateUser(string name, string password) {
+        public bool CreateUser(string name = "", string password = "") {
             // Error
             if (name.Length < 3) return false; //Name too short
             if (password.Length < 3) return false; //Password too short
@@ -75,6 +75,12 @@ namespace Srs
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("users/" + user.Name, toJson);
             return true;
+        }
+
+        public Data.User GetUser (Guid? guid) {
+            if (guid == null) return new Data.User { Review = new Dictionary<int, Dictionary<int, int>>()};
+            if (!GuidList.ContainsKey(guid)) return new Data.User { Review = new Dictionary<int, Dictionary<int, int>>()};
+            return GuidList[guid];
         }
 
         // Return name index, if not found return -1

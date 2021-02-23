@@ -117,6 +117,8 @@
     }
 
     private async Task CreateUser() {
+        // Error
+        if (loginName == null || loginPassword == null) return;
         Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
         if (info.Success) { SetUserNotification(info.Message, null, "success"); }
         else { SetUserNotification(info.Message, null, "danger"); }

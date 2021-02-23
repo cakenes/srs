@@ -22,7 +22,7 @@
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="@cardBackPlaceholder" @bind="cardBack" @onkeydown="@ReviewEnter"></textarea>
+				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="@cardBackPlaceholder" @bind="cardBack"></textarea>
 			</div>
 
 			@if (reviewRunning) {
@@ -139,10 +139,11 @@
 	}
 
 	private void ReviewCardValidate() {
+		if (cardBack == null) return;
 		cardBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
-		string tempBack = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
-		if (cardBack == tempBack) { cardBackPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
-		else { cardBackPlaceholder = "Incorrect! Answer was: " + tempBack; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
+		string tempAnswer = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
+		if (cardBack == tempAnswer) { cardBackPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
+		else { cardBackPlaceholder = "Incorrect! Answer was: " + tempAnswer; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
 		currentIndex += 1;
 		ReviewCardDisplay();
 	}
@@ -154,9 +155,4 @@
 		reviewRunning = false;
 		Service.ReviewDeckReturnAsync(reviewReturn);
 	}
-
-	// Accept answer
-    private void ReviewEnter(KeyboardEventArgs e) {
-		if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();
-    }
 }
