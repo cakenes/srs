@@ -181,7 +181,7 @@
 	}
 
 	public async void ReviewDeckSelect(DeckInfo item) {
-		ReturnInfo info = await Service.ReviewDeckSelectAsync(item.Id);
+		ReturnInfo info = await Service.SelectReviewDeckAsync(item.Id);
 		if (info.Success == true) Navigation.NavigateTo("/Deck");
 	}
 }

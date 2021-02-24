@@ -10,7 +10,7 @@ namespace Srs {
         public Data.DeckFull Deck = new Data.DeckFull {Cards = new SortedDictionary<int, Data.Card>()};
     
         // Create review deck
-        public Task<Data.PartialDeck> ReviewDeckCreateAsync(float reviewAmount, float reviewPercent) {
+        public Task<Data.PartialDeck> CreateReviewDeckAsync(float reviewAmount, float reviewPercent) {
             // Initialize
             Data.PartialDeck partialDeck = new Data.PartialDeck {Cards = new SortedDictionary<int, Data.Card>()};
             Data.User reviewUser = Access.Current.GetUser(ConnectionId);
@@ -39,17 +39,19 @@ namespace Srs {
         }
 
         // Select deck
-        public Task<Data.ReturnInfo> ReviewDeckSelectAsync(int index) {
-            Deck = Access.Current.DeckDict[index];
-            return Task.FromResult(new Data.ReturnInfo());
+        public Task<Data.ReturnInfo> SelectReviewDeckAsync(int index) {
+            Deck = Access.Current.GetDeckList(index);
+            if (Deck.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
+            return Task.FromResult(CreateReturn(true, "Success", "success"));
         }
 
         // Create deck
-        public Task<Data.ReturnInfo> DeckCreateAsync(Data.DeckFull deck) {
+        public Task<Data.ReturnInfo> CreateDeckAsync(Data.DeckFull deck) {
             deck.Author = Access.Current.GetUser(ConnectionId).Name;
             Data.ReturnInfo info = Access.Current.CreateDeck(deck);
             return Task.FromResult(info);
         }
+
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(Dictionary<int,int> reviewReturn) {  
@@ -72,7 +74,7 @@ namespace Srs {
 
         // Load Info
         public Task<List<Data.DeckInfo>> LoadDeckInfoAsync() {
-            return Task.FromResult(Access.Current.InfoList);
+            return Task.FromResult(Access.Current.GetInfoList());
         }
     }
 }

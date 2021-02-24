@@ -8,11 +8,11 @@ namespace Srs
 {
     public partial class Access {
 
-        private SortedDictionary<int, Data.User> UserDict;
+        private SortedDictionary<int, Data.User> UserList;
         private Dictionary<Guid?,Data.User> GuidList;
 
         public void InitializeUser() {
-            UserDict = new SortedDictionary<int, Data.User>();
+            UserList = new SortedDictionary<int, Data.User>();
             GuidList = new Dictionary<Guid?, Data.User>();
             LoadUsers();
         }
@@ -23,12 +23,12 @@ namespace Srs
             if (!Directory.Exists("users/")) return;
 
             // Success
-            UserDict = new SortedDictionary<int, Data.User>();
+            UserList = new SortedDictionary<int, Data.User>();
             string[] UserPaths = Directory.GetFiles("users/", "*.*");
             foreach (string item in UserPaths) {
                 string jsonArray = File.ReadAllText(item);
                 Data.User fromJson = JsonConvert.DeserializeObject<Data.User>(jsonArray);
-                UserDict.Add(fromJson.Id, fromJson);
+                UserList.Add(fromJson.Id, fromJson);
             }
         }
 
@@ -37,11 +37,11 @@ namespace Srs
             // Error
             int index = FindUser(name);
             if (index == -1) return CreateReturn(false, "Username does not exist", "danger"); //Name doesn't exist
-            else if (UserDict[index].Password != password) return CreateReturn(false, "Incorrect password", "danger"); //Incorrect password
+            else if (UserList[index].Password != password) return CreateReturn(false, "Incorrect password", "danger"); //Incorrect password
             
             // Success
             Guid guid = Guid.NewGuid();
-            GuidList.Add(guid, UserDict[index]);
+            GuidList.Add(guid, UserList[index]);
             return CreateReturn(true, guid.ToString(), "success");
         }
 
@@ -68,11 +68,11 @@ namespace Srs
             Data.User user = new Data.User {Name = name, Password = password, Review = new Dictionary<int, Dictionary<int, int>>()};
 
             // Success, set deck.Id
-            if (UserDict.Count == 0) user.Id = 1;
-            else user.Id = UserDict.Keys.Last() + 1;
+            if (UserList.Count == 0) user.Id = 1;
+            else user.Id = UserList.Keys.Last() + 1;
             
             // Create User
-            UserDict.Add(user.Id, user);
+            UserList.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("users/" + user.Name, toJson);
             return true;
@@ -90,7 +90,7 @@ namespace Srs
 
         // Return name index, if not found return -1
         private int FindUser (string input) {
-            foreach (var item in UserDict) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
+            foreach (var item in UserList) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
             return -1;
         }
 
@@ -110,8 +110,8 @@ namespace Srs
             // Error
             if (!GuidList.ContainsKey(guid)) return false;
             // Success
-            if (GuidList[guid].Favorites.Contains(id)) { GuidList[guid].Favorites.Remove(id); DeckDict[id].RemoveFavorite(); }
-            else { GuidList[guid].Favorites.Add(id); DeckDict[id].AddFavorite(); }  
+            if (GuidList[guid].Favorites.Contains(id)) { GuidList[guid].Favorites.Remove(id); DeckList[id].RemoveFavorite(); }
+            else { GuidList[guid].Favorites.Add(id); DeckList[id].AddFavorite(); }  
             UpdateUser(guid);
             return true;
         }

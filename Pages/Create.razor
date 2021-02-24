@@ -265,7 +265,7 @@
 	}
 
 	private async Task CreateDeck() {
-		Data.ReturnInfo info = await Service.DeckCreateAsync(newDeck);
+		Data.ReturnInfo info = await Service.CreateDeckAsync(newDeck);
 		SetCreateNotification("Create deck", info.Message, info.Type);
 	}
 
