@@ -7,7 +7,7 @@
 
         <!-- Logo -->
         <div class="col" align="center">
-            <span class="navbar-text" align="center" aria-label="To index" asp-area="" asp-page="/Index">Srs</span>
+            <span class="text-bold-large text-blue" align="center" aria-label="To index" asp-area="" asp-page="/Index">Srs</span>
         </div>
 
         <!-- Deck column -->
@@ -15,13 +15,13 @@
             
             <!-- Deck dropdown button -->
             <div class="nav-item dropdown">
-                <button class="btn btn-nav-big" type="button">
+                <button class="btn text-bold-large" type="button">
                     <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-top">
                     <span>Decks</span>
                 </button>
 
                 <!-- Deck dropdown menu -->
-                <li class="dropdown-menu dropdown-menu-decks">
+                <li class="dropdown-menu dropdown-center">
 
                     <!-- Notification -->
                     @if (deckMsgTitle != null)
@@ -34,13 +34,13 @@
                     }
 
                     <!-- List -->     
-                    <button href="/" class="btn btn-nav-small" type="button">List</button>
+                    <button href="/" class="btn text-bold-small width-full" type="button">List</button>
 
                     <div class="dropdown-divider"></div>
 
                     <!-- Create -->
-                    @if (Service.ConnectionId != null) { <button href="Create" class="btn btn-nav-small" type="button">Create</button> }
-                    else { <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
+                    @if (Service.ConnectionId != null) { <a href="Create" class="btn text-bold-small width-full" type="button">Create</a> }
+                    else { <button class="btn text-bold-small width-full" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
                         
                     <!-- Modify -->
                     <!-- <a href="/" class="btn btn-nav-small" type="button">Modify</a> -->
@@ -53,14 +53,14 @@
             
             <!-- User dropdown button -->
             <div class="nav-item dropdown">
-                <button class="btn btn-nav-big" type="button">
+                <button class="btn text-bold-large" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
                     @if (userName == null) { <span>User</span> }
                     else { <span>@userName</span> }
                 </button>
 
                 <!-- User dropdown menu -->
-                <li class="dropdown-menu dropdown-menu-user">
+                <li class="dropdown-menu dropdown-left">
 
                     <!-- Notification -->
                     @if (userMsgTitle != null)
@@ -84,7 +84,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-key-fill"></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="Password" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
+                        <input type="password" class="form-control" placeholder="Password (3-16 Characters)" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
                     </div>
 
                     <div class="dropdown-divider"></div>
@@ -92,8 +92,8 @@
                     <!-- Control buttons -->
                     <div class="btn-group btn-nav-group">
                         @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())">Login</button> }
-                        else { <button class="btn btn-nav-small" @onclick="(() => Logout())">Logout</button> }
-                        <button class="btn btn-nav-small" @onclick="(() => CreateUser())">Register</button>
+                        else { <button class="btn text-bold-small width-full" @onclick="(() => Logout())">Logout</button> }
+                        <button class="btn text-bold-small width-full" @onclick="(() => CreateUser())">Register</button>
                     </div>
                 </li>   
             </div>
