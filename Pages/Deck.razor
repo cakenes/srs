@@ -22,7 +22,13 @@
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="50" rows="3" placeholder="@cardBackPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeydown="Enter"></textarea>
+				@if (placeholderColor) {
+					<textarea class="form-control form-control-green text-center mt-2" maxlength="50" rows="3" placeholder="@cardPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter"></textarea>
+				}
+				else {
+					<textarea class="form-control form-control-red text-center mt-2" maxlength="50" rows="3" placeholder="@cardPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter"></textarea>
+				}
+				
 			</div>
 
 			@if (reviewRunning) {
@@ -107,12 +113,12 @@
 @code
 {
 	// Ui
-	private string cardFront, cardBack, cardBackPlaceholder;
+	private string cardFront, cardBack, cardPlaceholder;
 	// Review
 	private int currentIndex;
 	private int[] indexArray;
 	private float reviewAmount, reviewPercent;
-	private bool reviewTypos, reviewRunning;
+	private bool reviewTypos, reviewRunning, placeholderColor;
 	private Data.PartialDeck partialDeck;
 	private Dictionary<int, int> reviewReturn;
 
@@ -127,6 +133,7 @@
 	private async void ReviewDeckCreate() {
 		currentIndex = 0;
 		reviewRunning = true;
+		reviewReturn = new Dictionary<int, int>();
 		partialDeck = await Service.ReviewDeckCreateAsync(reviewAmount, reviewPercent);
 		indexArray = partialDeck.Cards.Keys.ToArray();
 		ReviewCardDisplay();
@@ -139,11 +146,10 @@
 	}
 
 	private void ReviewCardValidate() {
-		if (cardBack == null) return;
-		cardBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
+		string tempBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
 		string tempAnswer = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
-		if (cardBack == tempAnswer) { cardBackPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
-		else { cardBackPlaceholder = "Incorrect! Answer was: " + tempAnswer; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
+		if (tempBack == tempAnswer) { placeholderColor = true; cardPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
+		else { placeholderColor = false; cardPlaceholder = "Incorrect! Answer was: " + tempAnswer; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
 		currentIndex += 1;
 		ReviewCardDisplay();
 	}

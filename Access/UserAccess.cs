@@ -8,8 +8,8 @@ namespace Srs
 {
     public partial class Access {
 
-        public SortedDictionary<int, Data.User> UserDict;
-        public Dictionary<Guid?,Data.User> GuidList;
+        private SortedDictionary<int, Data.User> UserDict;
+        private Dictionary<Guid?,Data.User> GuidList;
 
         public void InitializeUser() {
             UserDict = new SortedDictionary<int, Data.User>();

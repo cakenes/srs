@@ -19,5 +19,11 @@ namespace Srs {
             if (Access.Current.CreateUser(name,password)) { return Task.FromResult(new Data.ReturnInfo {Success = true, Message = "User created"}); }
             else { return Task.FromResult(new Data.ReturnInfo {Success = false, Message = "User already exists"}); }
         }
+
+        // Create Return
+        public Data.ReturnInfo CreateReturn(bool success, string message, string type) {
+            return new Data.ReturnInfo {Success = success, Message = message, Type = type};
+        }
+
     }
 }

@@ -41,28 +41,29 @@ namespace Srs {
         // Select deck
         public Task<Data.ReturnInfo> ReviewDeckSelectAsync(int index) {
             Deck = Access.Current.DeckDict[index];
-            return Task.FromResult(new Data.ReturnInfo {Success = true});
+            return Task.FromResult(new Data.ReturnInfo());
         }
 
         // Create deck
         public Task<Data.ReturnInfo> DeckCreateAsync(Data.DeckFull deck) {
-            deck.Author = Access.Current.GuidList[ConnectionId].Name;
+            deck.Author = Access.Current.GetUser(ConnectionId).Name;
             Access.Current.CreateDeck(deck);
             return Task.FromResult(new Data.ReturnInfo());
         }
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(Dictionary<int,int> reviewReturn) {  
-            if (ConnectionId == null) return Task.FromResult(new Data.ReturnInfo());
-            Data.User reviewUser = Access.Current.GuidList[ConnectionId];
+            if (ConnectionId == null) return Task.FromResult(new Data.ReturnInfo()); // Not logged in
+            Data.User reviewUser = Access.Current.GetUser(ConnectionId);
+
+            if (!reviewUser.Review.ContainsKey(Deck.Id)) reviewUser.Review[Deck.Id] = new Dictionary<int, int>();
 
             foreach (var card in reviewReturn)
             {
-                if (!reviewUser.Review.ContainsKey(Deck.Id)) reviewUser.Review[Deck.Id] = new Dictionary<int, int>();
                 if (!reviewUser.Review[Deck.Id].ContainsKey(card.Key)) reviewUser.Review[Deck.Id].Add(card.Key, card.Value);
                 else reviewUser.Review[Deck.Id][card.Key] += card.Value;
-                //if (reviewUser.Review[Deck.Id][card.Key] == 6) reviewUser.Review[Deck.Id][card.Key] = 5;
-                //if (reviewUser.Review[Deck.Id][card.Key] == -1) reviewUser.Review[Deck.Id][card.Key] = 0;
+                if (reviewUser.Review[Deck.Id][card.Key] == 6) reviewUser.Review[Deck.Id][card.Key] = 5;
+                if (reviewUser.Review[Deck.Id][card.Key] == -1) reviewUser.Review[Deck.Id][card.Key] = 0;
             }
 
             Access.Current.UpdateUser(ConnectionId);

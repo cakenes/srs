@@ -33,11 +33,12 @@
                     }
 
                     <!-- List -->     
-                    <a href="/" class="btn btn-nav-small" type="button">List</a>
+                    <button href="/" class="btn btn-nav-small" type="button">List</button>
+
+                    <div class="dropdown-divider"></div>
 
                     <!-- Create -->
-                    <div class="dropdown-divider"></div>
-                    @if (Service.ConnectionId != null) { <a href="Create" class="btn btn-nav-small" type="button">Create</a> }
+                    @if (Service.ConnectionId != null) { <button href="Create" class="btn btn-nav-small" type="button">Create</button> }
                     else { <button class="btn btn-nav-small" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
                         
                     <!-- Modify -->

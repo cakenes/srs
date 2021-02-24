@@ -316,6 +316,14 @@ width: fit-content;
 
 /* Text */
 
+.form-control-red::placeholder {
+    color: rgb(150, 54, 54, 1);
+}
+
+.form-control-green::placeholder {
+    color: rgb(63, 150, 54, 1);
+}
+
 .text-header {
     font-size: 24px;
     text-transform: uppercase;
