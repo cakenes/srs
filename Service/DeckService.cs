@@ -55,7 +55,7 @@ namespace Srs {
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(Dictionary<int,int> reviewReturn) {  
-            if (ConnectionId == null) return Task.FromResult(CreateReturn(false, "Not logged in, progress wont be saved", "warning")); // Not logged in
+            if (ConnectionId == null) return Task.FromResult(CreateReturn(false, "Review Done! \n Not logged in, progress wont be saved", "warning"));
             Data.User reviewUser = Access.Current.GetUser(ConnectionId);
 
             if (!reviewUser.Review.ContainsKey(Deck.Id)) reviewUser.Review[Deck.Id] = new Dictionary<int, int>();

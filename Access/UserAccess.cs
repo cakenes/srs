@@ -47,7 +47,6 @@ namespace Srs
 
         // Update user file
         public bool UpdateUser(Guid? guid) {
-            // Error
             if (!GuidList.ContainsKey(guid)) return false;
 
             // Success
@@ -57,12 +56,8 @@ namespace Srs
         }
 
         // Create new user
-        public bool CreateUser(string name, string password) {
-            // Error
-            if (name == null || password == null) return false;
-            if (name.Length < 3) return false; //Name too short
-            if (password.Length < 3) return false; //Password too short
-            if (FindUser(name) != -1) return false; //Name exists
+        public Data.ReturnInfo CreateUser(string name, string password) {
+            if (FindUser(name) != -1) return CreateReturn(false, "Username is taken", "warning");
             
             // Initialize user data
             Data.User user = new Data.User {Name = name, Password = password, Review = new Dictionary<int, Dictionary<int, int>>()};
@@ -75,7 +70,7 @@ namespace Srs
             UserList.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("users/" + user.Name, toJson);
-            return true;
+            return CreateReturn(true, "User created successfully", "success");
         }
 
         public Data.ReturnInfo CreateReturn(bool success, string message, string type) {

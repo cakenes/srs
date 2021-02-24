@@ -76,7 +76,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-person-fill"></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="user" autocomplete="username" @bind="loginName" @bind:event="oninput" aria-label="Username">
+                        <input type="text" class="form-control" placeholder="Username" autocomplete="username" @bind="loginName" @bind:event="oninput" aria-label="Username">
                     </div>
 
                     <!-- Password input -->                
@@ -84,7 +84,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-key-fill"></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="pass" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
+                        <input type="password" class="form-control" placeholder="Password" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
                     </div>
 
                     <div class="dropdown-divider"></div>
@@ -120,10 +120,9 @@
     }
 
     private async Task CreateUser() {
-        if (loginName == null || loginPassword == null) return;
         Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
-        if (info.Success) { SetUserNotification(info.Message, null, "success"); }
-        else { SetUserNotification(info.Message, null, "danger"); }
+        if (info.Success) { SetUserNotification("Register", info.Message, "success"); }
+        else { SetUserNotification("Register", info.Message, "danger"); }
     }
 
     async void Enter(KeyboardEventArgs e) {
