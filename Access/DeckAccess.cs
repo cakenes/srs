@@ -37,10 +37,10 @@ namespace Srs{
         }
 
         // Create new deck
-        public bool CreateDeck(Data.DeckFull deck) {
+        public Data.ReturnInfo CreateDeck(Data.DeckFull deck) {
             // Error
             int index = FindDeck(deck.Name);
-            if (index != -1) return false; // Name exists
+            if (index != -1) return CreateReturn(false, "Name is already in use", "warning"); // Name exists
 
             // Success, set deck.Id
             if (DeckDict.Count == 0) deck.Id = 1;
@@ -51,7 +51,7 @@ namespace Srs{
             InfoList.Add(NewInfo(deck));
             string toJson = JsonConvert.SerializeObject(deck);
             File.WriteAllText("decks/" + deck.Name, toJson);
-            return true;
+            return CreateReturn(true, "Deck successfully created", "success");
         }
 
         // Create info data

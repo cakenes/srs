@@ -47,13 +47,13 @@ namespace Srs {
         // Create deck
         public Task<Data.ReturnInfo> DeckCreateAsync(Data.DeckFull deck) {
             deck.Author = Access.Current.GetUser(ConnectionId).Name;
-            Access.Current.CreateDeck(deck);
-            return Task.FromResult(new Data.ReturnInfo());
+            Data.ReturnInfo info = Access.Current.CreateDeck(deck);
+            return Task.FromResult(info);
         }
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(Dictionary<int,int> reviewReturn) {  
-            if (ConnectionId == null) return Task.FromResult(new Data.ReturnInfo()); // Not logged in
+            if (ConnectionId == null) return Task.FromResult(CreateReturn(false, "Not logged in, progress wont be saved", "warning")); // Not logged in
             Data.User reviewUser = Access.Current.GetUser(ConnectionId);
 
             if (!reviewUser.Review.ContainsKey(Deck.Id)) reviewUser.Review[Deck.Id] = new Dictionary<int, int>();
@@ -67,8 +67,7 @@ namespace Srs {
             }
 
             Access.Current.UpdateUser(ConnectionId);
-
-            return Task.FromResult(new Data.ReturnInfo());
+            return Task.FromResult(CreateReturn(true, "Done! Progress saved", "success"));
         }
 
         // Load Info

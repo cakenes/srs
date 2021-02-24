@@ -1,4 +1,5 @@
-﻿@inject Srs.Service Service
+﻿@using System.ComponentModel.DataAnnotations;
+@inject Srs.Service Service
 
 <!-- Navigation Bar -->
 <div class="container">
@@ -64,35 +65,36 @@
                     <!-- Notification -->
                     @if (userMsgTitle != null)
                     {
-                            <div class="alert @userMsgType alert-dismissible fade show" role="alert">
-                                <strong>@userMsgTitle</strong><br>@userMsg
-                                <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
-                            </div>
-                    }
-
-                    <!-- Username input -->
-                        <div class="input-group input-group-sm justify-content-center">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bi bi-person-fill"></span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Username" @bind="loginName" @bind:event="oninput" aria-label="Username">
+                        <div class="alert @userMsgType alert-dismissible fade show" role="alert">
+                            <strong>@userMsgTitle</strong><br>@userMsg
+                            <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
                         </div>
+                    }
+                    
+                    <!-- Username input -->
+                    <div class="input-group input-group-sm justify-content-center">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bi bi-person-fill"></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="user" autocomplete="username" @bind="loginName" @bind:event="oninput" aria-label="Username">
+                    </div>
 
                     <!-- Password input -->                
-                        <div class="input-group input-group-sm justify-content-center mt-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bi bi-key-fill"></span>
-                            </div>
-                            <input type="password" class="form-control" placeholder="Username" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
+                    <div class="input-group input-group-sm justify-content-center mt-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bi bi-key-fill"></span>
                         </div>
+                        <input type="password" class="form-control" placeholder="pass" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
+                    </div>
 
+                    <div class="dropdown-divider"></div>
+                    
                     <!-- Control buttons -->
-                        <div class="dropdown-divider"></div>
-                        <div class="btn-group btn-nav-group">
-                            @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())" type="button">Login</button> }
-                            else { <button class="btn btn-nav-small" @onclick="(() => Logout())" type="button">Logout</button> }
-                            <button class="btn btn-nav-small" @onclick="(() => CreateUser())" type="button">Register</button>
-                        </div>
+                    <div class="btn-group btn-nav-group">
+                        @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())">Login</button> }
+                        else { <button class="btn btn-nav-small" @onclick="(() => Logout())">Logout</button> }
+                        <button class="btn btn-nav-small" @onclick="(() => CreateUser())">Register</button>
+                    </div>
                 </li>   
             </div>
         </div>
@@ -100,31 +102,32 @@
 </div>
 
 @code {
-    private string loginName, loginPassword, deckSearch, userName;
+    private string loginName, loginPassword, userName;
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
     private async Task Login() {
+        if (loginName == null || loginPassword == null) return; // Nothing to login to.
         Data.ReturnInfo info = await Service.LoginUserAsync(loginName, loginPassword);
-        if (info.Success) { userName = info.Message; SetUserNotification("Login successful", null, "success"); }
-        else SetUserNotification(info.Message, null, "warning");
+        if (!info.Success) SetUserNotification("Login", info.Message, info.Type);
+        else { userName = info.Message; SetUserNotification("Login successful", null, "success"); } 
     }
 
-    private void Logout() {
-        Service.ConnectionId = null;
+    private async Task Logout() {
+        if (userName == null) return; // Nothing to log out of.
+        Data.ReturnInfo info = await Service.LogoutUserAsync();
+        SetUserNotification("Logout", info.Message, info.Type);
         userName = null;
     }
 
     private async Task CreateUser() {
-        // Error
         if (loginName == null || loginPassword == null) return;
-        
         Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
         if (info.Success) { SetUserNotification(info.Message, null, "success"); }
         else { SetUserNotification(info.Message, null, "danger"); }
     }
 
-    private void Enter(KeyboardEventArgs e) {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter") Login();
+    async void Enter(KeyboardEventArgs e) {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter") await Login();
     }
 
     private void SetDeckNotification(string title = null, string msg = null, string type = "warning") {

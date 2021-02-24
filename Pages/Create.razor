@@ -265,7 +265,8 @@
 	}
 
 	private async Task CreateDeck() {
-		Service.DeckCreateAsync(newDeck);
+		Data.ReturnInfo info = await Service.DeckCreateAsync(newDeck);
+		SetCreateNotification("Create deck", info.Message, info.Type);
 	}
 
 	// Enter to save card

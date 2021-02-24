@@ -33,16 +33,16 @@ namespace Srs
         }
 
         // Login user
-        public Guid? LoginUser(string name, string password) {
+        public Data.ReturnInfo LoginUser(string name, string password) {
             // Error
             int index = FindUser(name);
-            if (index == -1) return null; //Name doesn't exist
-            else if (UserDict[index].Password != password) return null; //Incorrect password
+            if (index == -1) return CreateReturn(false, "Username does not exist", "danger"); //Name doesn't exist
+            else if (UserDict[index].Password != password) return CreateReturn(false, "Incorrect password", "danger"); //Incorrect password
             
             // Success
             Guid guid = Guid.NewGuid();
             GuidList.Add(guid, UserDict[index]);
-            return guid;
+            return CreateReturn(true, guid.ToString(), "success");
         }
 
         // Update user file
@@ -76,6 +76,10 @@ namespace Srs
             string toJson = JsonConvert.SerializeObject(user);
             File.WriteAllText("users/" + user.Name, toJson);
             return true;
+        }
+
+        public Data.ReturnInfo CreateReturn(bool success, string message, string type) {
+            return new Data.ReturnInfo {Success = success, Message = message, Type = type};
         }
 
         public Data.User GetUser (Guid? guid) {

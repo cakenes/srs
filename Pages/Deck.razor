@@ -140,7 +140,7 @@
 	}
 
 	private void ReviewCardDisplay() {
-		if (currentIndex >= indexArray.Count()) { ReviewDeckReturn(); return; }
+		if (currentIndex >= indexArray.Count()) { ReturnReviewDeck(); return; }
 		cardFront = partialDeck.Cards[indexArray[currentIndex]].Front;
 		cardBack = null;
 	}
@@ -154,11 +154,10 @@
 		ReviewCardDisplay();
 	}
 
-	private async void ReviewDeckReturn() {
-		cardBack = null;
-		cardFront = "Review done!";
+	private async void ReturnReviewDeck() {
+		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(reviewReturn);
 		reviewRunning = false;
-		Service.ReviewDeckReturnAsync(reviewReturn);
+		cardFront = "Review done!";
 	}
 
 	private void Enter(KeyboardEventArgs e) {
