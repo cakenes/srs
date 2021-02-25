@@ -15,7 +15,7 @@
             
             <!-- Deck dropdown button -->
             <div class="nav-item dropdown">
-                <button class="btn text-bold-large" type="button">
+                <button class="btn text-bold-large hover-blue" type="button">
                     <img src="svg/Deck.svg" alt="" width="32" height="32" title="Decks" class="align-top">
                     <span>Decks</span>
                 </button>
@@ -26,21 +26,20 @@
                     <!-- Notification -->
                     @if (deckMsgTitle != null)
                     {
-                        <div class="alert @deckMsgType alert-dismissible fade show" role="alert">
-                            <strong>@deckMsgTitle</strong><br>
-                            <span class="notification-text">@deckMsg</span>
+                        <div class="alert @deckMsgType text-light-small alert-dismissible fade show" role="alert">
+                            <span><strong>@deckMsgTitle</strong><br>@deckMsg</span>
                             <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
                         </div>
                     }
 
                     <!-- List -->     
-                    <button href="/" class="btn text-bold-small width-full" type="button">List</button>
+                    <a href="/" class="btn text-bold-small hover-blue width-full" type="button">List</a>
 
                     <div class="dropdown-divider"></div>
 
                     <!-- Create -->
-                    @if (Service.ConnectionId != null) { <a href="Create" class="btn text-bold-small width-full" type="button">Create</a> }
-                    else { <button class="btn text-bold-small width-full" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
+                    @if (Service.ConnectionId != null) { <a href="Create" class="btn text-bold-small hover-blue width-full" type="button">Create</a> }
+                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
                         
                     <!-- Modify -->
                     <!-- <a href="/" class="btn btn-nav-small" type="button">Modify</a> -->
@@ -53,7 +52,7 @@
             
             <!-- User dropdown button -->
             <div class="nav-item dropdown">
-                <button class="btn text-bold-large" type="button">
+                <button class="btn text-bold-large hover-blue" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
                     @if (userName == null) { <span>User</span> }
                     else { <span>@userName</span> }
@@ -65,8 +64,8 @@
                     <!-- Notification -->
                     @if (userMsgTitle != null)
                     {
-                        <div class="alert @userMsgType alert-dismissible fade show" role="alert">
-                            <strong>@userMsgTitle</strong><br>@userMsg
+                        <div class="alert @userMsgType text-light-small alert-dismissible fade show" role="alert">
+                            <span><strong>@userMsgTitle</strong><br>@userMsg</span>
                             <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
                         </div>
                     }
@@ -76,24 +75,24 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-person-fill"></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Username" autocomplete="username" @bind="loginName" @bind:event="oninput" aria-label="Username">
+                        <input type="text" class="form-control text-light-small" placeholder="Username" autocomplete="username" @bind="loginName" @bind:event="oninput" aria-label="Username">
                     </div>
 
                     <!-- Password input -->                
-                    <div class="input-group input-group-sm justify-content-center mt-2">
+                    <div class="input-group input-group-sm mt-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text bi bi-key-fill"></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="Password (3-16 Characters)" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
+                        <input type="password" class="form-control text-light-small" placeholder="Password" autocomplete="current-password" @bind="loginPassword" @bind:event="oninput" @onkeydown="Enter" aria-label="Password">
                     </div>
 
                     <div class="dropdown-divider"></div>
                     
                     <!-- Control buttons -->
-                    <div class="btn-group btn-nav-group">
-                        @if (userName == null) { <button class="btn btn-nav-small" @onclick="(() => Login())">Login</button> }
-                        else { <button class="btn text-bold-small width-full" @onclick="(() => Logout())">Logout</button> }
-                        <button class="btn text-bold-small width-full" @onclick="(() => CreateUser())">Register</button>
+                    <div class="btn-group width-full">
+                        @if (userName == null) { <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Login())">Login</button> }
+                        else { <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Logout())">Logout</button> }
+                        <button class="btn text-bold-small hover-blue width-full" @onclick="(() => CreateUser())">Register</button>
                     </div>
                 </li>   
             </div>

@@ -34,13 +34,15 @@
       				<th scope="col">
 						<div class="btn-group" role="group" aria-label="Sort by popularity">
 							@if (listSort == 1 || listSort == 2) {
-								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ListSort(1))" type="button">Popularity
+								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ListSort(1))" type="button">
+									<span class="hover-blue">Popularity</span>
 									@if (listSort == 1) { <span class="bi bi-sort-down"></span> }
 									else if (listSort == 2) { <span class="bi bi-sort-up"></span> }
 								</button>
 							}
 							else {
-								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(1))" type="button">Popularity
+								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(1))" type="button">
+									<span class="hover-blue">Popularity</span>
 									<span class="bi bi-sort-up text-invis"></span>
 								</button>
 							}
@@ -51,13 +53,15 @@
       				<th scope="col">
 						<div class="btn-group" role="group" aria-label="Sort by name">
 							@if (listSort == 3 || listSort == 4) {
-								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ListSort(3))" type="button">Name
+								<button class="btn text-bold-medium text-left no-wrap text-blue" @onclick="(() => ListSort(3))" type="button">
+									<span class="hover-blue">Name</span>
 									@if (listSort == 3) { <span class="bi bi-sort-alpha-down"></span> }
 									else if (listSort == 4) { <span class="bi bi-sort-alpha-up"></span> }
 								</button>
 							}
 							else {
-								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(3))" type="button">Name
+								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(3))" type="button">
+									<span class="hover-blue">Name</span>
 									<span class="bi bi-sort-alpha-up text-invis"></span>
 								</button>
 							}
@@ -68,13 +72,15 @@
       				<th scope="col justify-content-center">
 						<div class="btn-group" role="group" aria-label="Sort by author">
 							@if (listSort == 5 || listSort ==6) {
-								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ListSort(5))" type="button">Author
+								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ListSort(5))" type="button">
+									<span class="hover-blue">Author</span>
 									@if (listSort == 5) { <span class="bi bi-sort-alpha-down"></span> }
 									else if (listSort == 6) { <span class="bi bi-sort-alpha-up"></span> }
 								</button>
 							}
 							else {
-								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(5))" type="button">Author
+								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(5))" type="button">
+									<span class="hover-blue">Author</span>
 									<span class="bi bi-sort-alpha-up text-invis"></span>
 								</button>
 							}
@@ -88,12 +94,14 @@
 								<button class="btn text-bold-medium text-blue text-right no-wrap" @onclick="(() => ListSort(7))" type="button">
 									@if (listSort == 7) { <span class="bi bi-sort-numeric-down"></span> }
 									else if (listSort == 8) { <span class="bi bi-sort-numeric-up"></span> }
-								Cards</button>
+									<span class="hover-blue">Cards</span>
+								</button>
 							}
 							else {
 								<button class="btn text-bold-medium text-right no-wrap" @onclick="(() => ListSort(7))" type="button">
 									<span class="bi bi-sort-numeric-up text-invis"></span>
-								Cards</button>
+									<span class="hover-blue">Cards</span>
+								</button>
 							}
 						</div>	
 					</th>
@@ -112,33 +120,42 @@
 
 					<tr>
 		    			<td>
-							<!-- Popularity -->
-							<span class="text-light-small text-black">@item.Popularity</span>
-							<!-- Favorite icon -->
-							<button class="btn btn-sm dropdown btn-tooltip-favorite btn-favorite" tabindex="-1">
-								<div class="dropdown">
-									<div class="dropdown-menu dropdown-menu-tooltip-center">
-										<span class="dropdown-item text-tooltip">Favorite</span>
+							<div class="btn-group btn-group-sm">
+
+								<!-- Favorite icon -->
+								<button class="btn btn-list hover-blue dropdown" tabindex="-1"> 
+									<div class="dropdown">
+										<div class="dropdown-menu tooltip-center">
+											<span class="dropdown-item text-tooltip disabled">Set as Favorite</span>
+										</div>
 									</div>
-								</div>
-								<img src="svg/Star.svg" alt="" width="16" height="16" title="Reviewed before?" class="align-center">
-							</button>
+									<img src="svg/Star.svg" alt="" width="16" height="16" class="align-center">
+								</button>
+
+								<!-- Popularity -->
+									<span class="btn-group-prepend text-light-small text-black">@item.Popularity</span>
+							</div>
 	  					</td>
+
     					<td>
-						
+							<div class="btn-group btn-group-sm">
+
 							<!-- Reviewed -->
-							<button class="btn btn-sm dropdown btn-tooltip-favorite btn-select">
-								<div class="dropdown">
-									<div class="dropdown-menu dropdown-menu-tooltip-center">
-										<span class="dropdown-item text-tooltip">Reviewed before</span>
+								<button class="btn btn-list hover-blue dropdown" tabindex="-1"> 
+									<div class="dropdown">
+										<div class="dropdown-menu tooltip-center">
+											<span class="dropdown-item text-tooltip disabled">Reviewed before</span>
+										</div>
 									</div>
-								</div>
-								<img src="svg/Select.svg" alt="" width="16" height="16" class="align-center">
-							</button>
-							<button class="btn btn-select" type="button" @onclick="(() => ReviewDeckSelect(item))">
-								@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16"> }
-								<span class="text-light-small text-black">@item.Name</span>
-							</button>
+									<img src="svg/Select.svg" alt="" width="16" height="16" class="align-center">
+								</button>
+
+							<!-- Select -->
+								<button class="btn btn-list" type="button" @onclick="(() => ReviewDeckSelect(item))">
+									@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16"> }
+									<span class="text-light-small text-black">@item.Name</span>
+								</button>
+							</div>
 						</td>
       					<td class="text-light-small text-black text-center">@item.Author</td>
      					<td class="text-light-small text-black text-right">@item.Cards</td>

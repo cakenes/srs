@@ -7,17 +7,17 @@
 <div class="container">
 	<div class="row justify-content-center">
 
-		@if (Service.ConnectionId == null) Navigation.NavigateTo("/");
+		@if (Service.ConnectionId == null) Navigation.NavigateTo("");
 
 		<!-- Deck -->
 		<div class="col" align="center">
-			<span class="text-header">Deck</span>
+			<span class="text-bold-large">Deck</span>
 
 			<!-- Notification -->
 			<div class="row justify-content-center">
                 @if (createMsgTitle != null)
             	{	
-                <div class="alert @createMsgType alert-dismissible fade show" role="alert" align="center">
+                <div class="ml-5 alert @createMsgType text-light-small width-full alert-dismissible fade show mr-5" role="alert" align="center">
                     <strong>@createMsgTitle</strong><br>@createMsg
                     <button type="button" class="close btn-sm" @onclick="(()=>SetCreateNotification())" aria-label="Close">&times;</button>
                 </div>
@@ -25,24 +25,24 @@
 			</div>
 
 			<!-- Name -->
-			<div class="input-group input-group-sm mt-2">
+			<div class="input-group input-group-sm">
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-stack"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Name" @bind="newDeck.Name" aria-label="Deck name">
+				<input type="text" class="form-control text-light-small" placeholder="Name" @bind="newDeck.Name" aria-label="Deck name">
 			</div>
 
 			<!-- User -->
 			<div class="input-group input-group-sm mt-2">
 				<div class="input-group-prepend">
-			    	<span class="input-group-text bi bi-people-fill rounded-left"></span>
+			    	<span class="input-group-text bi bi-people-fill"></span>
 			    </div>
-				<input type="text" class="form-control rounded-right" placeholder="Users" disabled>
+				<input type="text" class="form-control text-light-small rounded-right" placeholder="Users" disabled>
 
 				<!-- User tooltip -->
-  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+  				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
-						<div class="dropdown-menu dropdown-menu-tooltip-center">
+						<div class="dropdown-menu tooltip-left">
 							<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
 							<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma</span>
 							<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
@@ -57,14 +57,14 @@
 	 			<div class="input-group-prepend">
     				<span class="input-group-text bi bi-lock-fill"></span>
     			</div>
-				<input type="text" class="form-control rounded-right" placeholder="Password" @bind="newDeck.Password" disabled>
+				<input type="text" class="form-control text-light-small rounded-right" placeholder="Password" @bind="newDeck.Password" disabled>
 				
 				<!-- Password tooltip -->
-  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+  				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
-						<div class="dropdown-menu dropdown-menu-tooltip-center">
+						<div class="dropdown-menu tooltip-left">
 							<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
-						<span class="dropdown-item text-tooltip disabled">Password required to open deck</span>
+							<span class="dropdown-item text-tooltip disabled">Password required to open deck</span>
 						</div>
 					</div>
 					<span class="dropdown bi bi-question-circle"></span>
@@ -73,22 +73,22 @@
 
 			<!-- Create -->
 			<div class="row justify-content-center">
-				<button class="btn btn-accept" type="button" @onclick="(() => CreateDeck())">Create Deck</button>
+				<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => CreateDeck())">Create Deck</button>
 			</div>
 		</div>
 
 		<!-- Card -->
 		<div class="col" align="center">
-			<span class="text-header">Card</span>
+			<span class="text-bold-large">Card</span>
 
 			<!-- Card front -->
-			<div class="input-group input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="100" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
+			<div class="input-group input-group-sm">
+				<textarea class="form-control text-light-small text-center rounded-right" maxlength="100" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
 
 				<!-- Front tooltip -->
-  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+  				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
-						<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<div class="dropdown-menu tooltip-left">
 							<span class="dropdown-item text-tooltip disabled">Front of the card</span>
 							<span class="dropdown-item text-tooltip disabled">Limited currently to 100 characters</span>
 						</div>
@@ -99,12 +99,12 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-center rounded-right" maxlength="20" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
+				<textarea class="form-control text-light-small text-center rounded-right" maxlength="20" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
 
 				<!-- Back tooltip -->
-  				<button class="btn btn-sm dropdown btn-tooltip" tabindex="-1">
+  				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
-						<div class="dropdown-menu dropdown-menu-tooltip-left">
+						<div class="dropdown-menu tooltip-left">
 							<span class="dropdown-item text-tooltip disabled">Back of the card</span>
 							<span class="dropdown-item text-tooltip disabled">Limited currently to 20 characters</span>
 						</div>
@@ -114,21 +114,16 @@
 			</div>
 
 			<!-- Card action -->
-			<div class="row justify-content-center">
-				<button class="btn btn-accept" type="button" @onclick="(() => SaveCard())">Save Card</button>
+			<div class="row justify-content-center mb-5">
+				<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => SaveCard())">Save Card</button>
 			</div>
 		</div>
 	</div>
 
-	<!-- Card list header -->
-	<div class="row justify-content-center mt-2">
-		<span class="text-header">Card list</span>
-	</div>
-
 	<!-- Search -->
-	<div class="row mt-2">
+	<div class="row">
 		<div class="input-group justify-content-center">
-			<input type="search" class="form-control rounded-left" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
+			<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
 		</div>
 	</div>
 
@@ -147,16 +142,18 @@
 
 				<!-- Sort by front -->
       				<th scope="col">
-						<div class="btn-group" role="group" aria-label="Sort by popularity">
+						<div class="btn-group" role="group" aria-label="Sort by Front">
 							@if (listSort == 1 || listSort == 2) {
-								<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(1))" type="button">Front
+								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ToggleSort(1))" type="button">
+									<span class="hover-blue">Front</span>
 									@if (listSort == 1) { <span class="bi bi-sort-alpha-down"></span> }
 									else if (listSort == 2) { <span class="bi bi-sort-alpha-up"></span> }
 								</button>
 							}
 							else {
-								<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(1))" type="button">Front
-									<span class="bi bi-sort-alpha-up btn-inactive"></span>
+								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ToggleSort(1))" type="button">
+									<span class="hover-blue">Front</span>
+									<span class="bi bi-sort-alpha-up text-invis"></span>
 								</button>
 							}
 						</div>
@@ -164,16 +161,18 @@
 
 					<!-- Sort by back -->
       				<th scope="col">
-						<div class="btn-group" role="group" aria-label="Sort by name">
+						<div class="btn-group" role="group" aria-label="Sort by Back">
 							@if (listSort == 3 || listSort == 4) {
-								<button class="btn btn-sort btn-active text-left" @onclick="(() => ToggleSort(3))" type="button">Back
+								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ToggleSort(3))" type="button">
+									<span class="hover-blue">Back</span>
 									@if (listSort == 3) { <span class="bi bi-sort-alpha-down"></span> }
 									else if (listSort == 4) { <span class="bi bi-sort-alpha-up"></span> }
 								</button>
 							}
 							else {
-								<button class="btn btn-sort text-left" @onclick="(() => ToggleSort(3))" type="button">Back
-									<span class="bi bi-sort-alpha-up btn-inactive"></span>
+								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ToggleSort(3))" type="button">
+									<span class="hover-blue">Back</span>
+									<span class="bi bi-sort-alpha-up text-invis"></span>
 								</button>
 							}
 						</div>
@@ -181,7 +180,7 @@
 
 					<!-- Action -->
 					<th scope="col" class="text-center">
-						<span class="btn btn-sort">Action</span>
+						<span class="btn text-bold-medium no-wrap">Action</span>
 					</th>
 				</tr>
 			</thead>
@@ -197,15 +196,31 @@
 						!item.Back.Contains(deckSearch, StringComparison.CurrentCultureIgnoreCase)) continue;
 
 					<tr>
-		    			<td class="text-left overflow-hidden">@item.Front</td>
-      					<td class="text-left overflow-hidden">@item.Back</td>
+		    			<td class="text-light-small text-black text-left overflow-hidden">@item.Front</td>
+      					<td class="text-light-small text-black text-left overflow-hidden">@item.Back</td>
      					<td class="text-right">
-                        	<button class="btn btn-sm btn-select" type="button" @onclick="(() => EditCard(item))">
-								<img src="svg/Edit.svg" alt="" width="16" height="16" title="Edit">
-							</button>
-							<button class="btn btn-sm btn-select" type="button" @onclick="(() => DeleteCard(item))">
-								<img src="svg/Delete.svg" alt="" width="16" height="16" title="Delete">
-							</button>
+							<div class="btn-group" role="group">
+
+								<!-- Edit -->
+								<button class="btn btn-list dropdown" @onclick="(() => EditCard(item))" tabindex="-1"> 
+									<div class="dropdown">
+										<div class="dropdown-menu tooltip-left">
+											<span class="dropdown-item text-tooltip disabled">Edit</span>
+										</div>
+									</div>
+									<img src="svg/Edit.svg" alt="" width="16" height="16">
+								</button>
+
+								<!-- Delete -->
+								<button class="btn btn-list dropdown" @onclick="(() => DeleteCard(item))" tabindex="-1"> 
+									<div class="dropdown">
+										<div class="dropdown-menu tooltip-left">
+											<span class="dropdown-item text-tooltip disabled">Delete</span>
+										</div>
+									</div>
+									<img src="svg/Delete.svg" alt="" width="16" height="16">
+								</button>
+							</div>
 						</td>
     				</tr>
 				}

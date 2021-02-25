@@ -13,22 +13,22 @@
 
 		<!-- Review -->
 		<div class="col mr-3" align="center">
-			<span class="text-header">Review</span>
+			<span class="text-bold-large">Review</span>
 
 			<!-- Front -->
 			<div class="row">
-				<textarea class="form-control text-center mt-2" maxlength="0" rows="3" @bind="cardFront" readonly></textarea>
+				<textarea class="form-control text-light-small text-center mt-2" maxlength="0" rows="3" @bind="cardFront" readonly></textarea>
 			</div>
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control @placeholderColor text-center mt-2" maxlength="50" rows="3" placeholder="@cardPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter" autofocus></textarea>				
+				<textarea class="form-control text-light-small @placeholderColor text-center mt-2" maxlength="50" rows="3" placeholder="@cardPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter" autofocus></textarea>				
 			</div>
 
 			@if (reviewRunning) {
 				<!-- Enter -->
 				<div class="row justify-content-center">
-					<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewCardValidate())">
+					<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())">
                     	<span>Enter</span>
                 	</button>
 				</div>
@@ -37,66 +37,42 @@
 
 		<!-- Options -->
 		<div class="col ml-3" align="center">
-			<span class="text-header">Options</span>
+			<span class="text-bold-large">Options</span>
 
-			<!-- Locked -->
-			@if (!reviewRunning) {
 				<!-- Review slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Number of cards to review : @reviewAmount</span>
-						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewAmount">
+						<span class="text-light-medium">Number of cards to review : @reviewAmount</span>
+						@if (!reviewRunning) { <input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewAmount"> }
+						else { <input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewAmount" disabled> }
 					</div>
 				</div>
 
 				<!-- Card slider -->
 				<div class="row mt-2">
 					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Percentage of new cards : @reviewPercent %</span>
-						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewPercent">
+						<span class="text-light-medium">Percentage of new cards : @reviewPercent %</span>
+						@if (!reviewRunning) { <input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewPercent"> }
+						else { <input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewPercent" disabled> }
 					</div>
 				</div>
 
 				<!-- Typos -->
 				<div class="row mt-2" align="center">
 					<div class="container">
- 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="reviewTypos">
-						<span class="text-subheader" for="allowTypos">Allow small typos</span>
-					</div>
-				</div>
-			}
-			else {
-				<!-- Review slider -->
-				<div class="row mt-2">
-					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Number of cards to review : @reviewAmount</span>
-						<input type="range" class="form-range" min="10" max="50" step="5" @bind="reviewAmount" disabled>
+ 						@if (!reviewRunning) { <input class="form-check-input" type="checkbox" id="allowTypos" @bind="reviewTypos"> }
+						else { <input class="form-check-input" type="checkbox" id="allowTypos" @bind="reviewTypos" disabled> }
+						<span class="text-light-medium" for="allowTypos">Allow small typos</span>
 					</div>
 				</div>
 
-				<!-- Card slider -->
-				<div class="row mt-2">
-					<div class="input-group input-group-sm justify-content-center">
-						<span class="text-subheader">Percentage of new cards : @reviewPercent %</span>
-						<input type="range" class="form-range" min="0" max="100" step="10" @bind="reviewPercent" disabled>
-					</div>
-				</div>
-
-				<!-- Typos -->
-				<div class="row mt-2" align="center">
-					<div class="container">
- 						<input class="form-check-input" type="checkbox" id="allowTypos" @bind="reviewTypos" disabled>
-						<span class="text-subheader" for="allowTypos">Allow small typos</span>
-					</div>
-				</div>
-			}
 			
 			<!-- Start -->
 			<div class="divider mt-2"></div>
 			<div class="row justify-content-center mt-2">
-				<button class="btn btn-nav-big" type="button" @onclick="(() => ReviewDeckCreate())">
-                    <img src="svg/Play.svg" alt="" width="20" height="20" title="Decks" class="svg-start">
-                    <span>Start</span>
+				<button class="btn text-bold-large hover-blue" type="button" @onclick="(() => ReviewDeckCreate())">
+                    <img src="svg/Play.svg" alt="" width="27" height="27" class="align-top">
+                    <span>Start Review</span>
                 </button>
 			</div>
 		</div>
@@ -142,8 +118,8 @@
 		string tempBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
 		string tempAnswer = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
 		if (reviewTypos) { tempBack = tempBack.ToLower(); tempAnswer.ToLower(); }
-		if (tempBack == tempAnswer) { placeholderColor = "form-control-green"; cardPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
-		else { placeholderColor = "form-control-red"; cardPlaceholder = "Incorrect! Answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
+		if (tempBack == tempAnswer) { placeholderColor = "placeholder-green"; cardPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
+		else { placeholderColor = "placeholder-red"; cardPlaceholder = "Incorrect! Answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
 		currentIndex += 1;
 		ReviewCardDisplay();
 	}
