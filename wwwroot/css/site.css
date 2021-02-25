@@ -1,64 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
-
-/* Input */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ----------- Connection ----------- */
-
-.reconnect-modal > div {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    position: absolute;
-    overflow: hidden;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.80);
-}
-.components-reconnect-hide > div {
-    display: none;
-}
-
-.components-reconnect-show > div {
-    display: none;
-}
-
-.components-reconnect-show > .show {
-    display: block;
-}
-
-.components-reconnect-failed > div {
-    display: none;
-}
-
-.components-reconnect-failed > .failed {
-    display: block;
-}
-
-.components-reconnect-rejected >div {
-    display: none;
-}
-
-.components-reconnect-rejected > .rejected {
-    display: block;
-}
-
 /* ----------- Button ----------- */
 
 .alert {
@@ -213,7 +154,7 @@ input[type="checkbox"] { margin-top: 7px; border-color: rgb(206, 212, 218, 1); b
 
 /* ----------- Text Scaling ----------- */
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 600px) {
     .text-bold-large { font-size: 22px; }
     .text-bold-medium { font-size: 18px; }
     .text-bold-small { font-size: 14px; }
@@ -223,7 +164,7 @@ input[type="checkbox"] { margin-top: 7px; border-color: rgb(206, 212, 218, 1); b
     .text-light-small { font-size: 12px; }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 300px) {
     .text-bold-large { font-size: 20px; }
     .text-bold-medium { font-size: 16px; }
     .text-bold-small { font-size: 12px; }
@@ -231,23 +172,6 @@ input[type="checkbox"] { margin-top: 7px; border-color: rgb(206, 212, 218, 1); b
     .text-light-large { font-size: 18px; }
     .text-light-medium { font-size: 14px; }
     .text-light-small { font-size: 10px; }
-}
-
-/* ----------- Font ----------- */
-
-@font-face {
-    font-family: AristaBold;
-    src: url('font/AristaBold.ttf');
-}
-
-@font-face {
-    font-family: AristaLight;
-    src: url('font/AristaLight.ttf');
-}
-
-@font-face {
-    font-family: Din-Round;
-    src: url('font/Din-Round.ttf');
 }
 
 /* ----------- Tooltip ----------- */
@@ -287,6 +211,34 @@ input[type="checkbox"] { margin-top: 7px; border-color: rgb(206, 212, 218, 1); b
     transform: translate(-20%, 0);
 }
 
+/* ----------- Font ----------- */
+
+@font-face {
+    font-family: AristaBold;
+    src: url('font/AristaBold.ttf');
+}
+
+@font-face {
+    font-family: AristaLight;
+    src: url('font/AristaLight.ttf');
+}
+
+@font-face {
+    font-family: Din-Round;
+    src: url('font/Din-Round.ttf');
+}
+
+/* ----------- Connection ----------- */
+
+.reconnect-modal > div { top: 0; bottom: 0; left: 0; right: 0; z-index: 9999; position: absolute; overflow: hidden; text-align: center; background-color: rgba(255, 255, 255, 0.80); }
+.components-reconnect-hide > div { display: none; }
+.components-reconnect-show > div { display: none; }
+.components-reconnect-show > .show { display: block; }
+.components-reconnect-failed > div { display: none; }
+.components-reconnect-failed > .failed { display: block; }
+.components-reconnect-rejected >div { display: none; }
+.components-reconnect-rejected > .rejected { display: block; }
+
 /* ----------- Random ----------- */
 
 .divider { width: 100%; height: 1px; background-color: rgb(206, 212, 218, 1); }
@@ -296,4 +248,4 @@ input[type="checkbox"] { margin-top: 7px; border-color: rgb(206, 212, 218, 1); b
 .table thead th { border: 0; }
 .content { padding-top: 1rem; }
 html { overflow-y: scroll; }
-body { margin: 2%; margin-top: 110px; }
+body { margin-top: 110px; }

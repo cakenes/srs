@@ -1,5 +1,5 @@
-﻿@using System.ComponentModel.DataAnnotations;
-@inject Srs.Service Service
+﻿@inject Srs.Service Service
+@inject NavigationManager Navigation
 
 <!-- Navigation Bar -->
 <div class="container">
@@ -33,7 +33,7 @@
                     }
 
                     <!-- List -->     
-                    <a href="/" class="btn text-bold-small hover-blue width-full" type="button">List</a>
+                    <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/"))">List</button>
 
                     <div class="dropdown-divider"></div>
 
