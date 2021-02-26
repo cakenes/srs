@@ -10,12 +10,12 @@ namespace Srs{
 
         public static readonly Access Current = new Access();
 
-        private List<Data.DeckInfo> InfoList;
+        private SortedDictionary<int, Data.DeckInfo> InfoList;
         private SortedDictionary<int, Data.DeckFull> DeckList;
 
         public void InitializeDeck() {
-            InfoList = new List<Data.DeckInfo>();
             DeckList = new SortedDictionary<int, Data.DeckFull>();
+            InfoList = new SortedDictionary<int, Data.DeckInfo>();
             LoadDecks();
         }
 
@@ -31,7 +31,7 @@ namespace Srs{
                 string jsonArray = File.ReadAllText(item);
                 Data.DeckFull fromJson = JsonConvert.DeserializeObject<Data.DeckFull>(jsonArray);
                 DeckList.Add(fromJson.Id, fromJson);
-                InfoList.Add(NewInfo(fromJson));
+                InfoList.Add(fromJson.Id, NewInfo(fromJson));
             }
         }
 
@@ -46,7 +46,7 @@ namespace Srs{
 
             // Create Deck
             DeckList.Add(deck.Id, deck);
-            InfoList.Add(NewInfo(deck));
+            InfoList.Add(deck.Id, NewInfo(deck));
             string toJson = JsonConvert.SerializeObject(deck);
             File.WriteAllText("decks/" + deck.Name, toJson);
             return CreateReturn(true, "Deck successfully created", "success");
@@ -61,6 +61,7 @@ namespace Srs{
             else if (GuidList[guid].Name != deck.Author) return CreateReturn(false, "User not match the author", "warning"); // User does not match
 
             // Success
+            InfoList[deck.Id] = NewInfo(deck);
             DeckList[deck.Id] = deck;
             string toJson = JsonConvert.SerializeObject(deck);
             File.WriteAllText("decks/" + deck.Name, toJson);
@@ -74,12 +75,12 @@ namespace Srs{
 
         public List<Data.DeckInfo> GetInfoList() {
             if (InfoList.Count == 0) return new List<Data.DeckInfo>();
-            return InfoList;
+            return InfoList.Values.ToList();
         }
 
         public List<Data.DeckInfo> GetModifyList(Guid? guid) {
             if (!GuidList.ContainsKey(guid)) return new List<Data.DeckInfo>();
-            List<Data.DeckInfo> returnList = InfoList.Where(x => x.Author == GuidList[guid].Name).ToList();
+            List<Data.DeckInfo> returnList = InfoList.Values.Where(x => x.Author == GuidList[guid].Name).ToList();
             return returnList;
         }  
 
