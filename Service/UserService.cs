@@ -33,13 +33,23 @@ namespace Srs {
             return Task.FromResult(info);
         }
 
+        public Task<Data.ReturnInfo> ChangeUserPassword(string current, string password, string confirm) {
+            if (current == null) return Task.FromResult(CreateReturn(false, "Current password missing", "warning"));
+            else if (password == null || confirm == null) return Task.FromResult(CreateReturn(false, "Passwords do not match", "warning"));
+            else if (current == password) return Task.FromResult(CreateReturn(false, "Cannot change into current password", "warning"));
+            else if (password != confirm) return Task.FromResult(CreateReturn(false, "Passwords do not match", "warning"));
+            Data.ReturnInfo info = Access.Current.ChangePassword(ConnectionId, current, password);
+            return Task.FromResult(info);
+        }
+
+        // Get user name
+        public Task<string> GetUserNameAsync() {
+            return Task.FromResult(Access.Current.GetUserName(ConnectionId));
+        }
+
         // Create Return
         public Data.ReturnInfo CreateReturn(bool success, string message, string type) {
             return new Data.ReturnInfo {Success = success, Message = message, Type = type};
-        }
-
-        public Task<string> GetUserNameAsync() {
-            return Task.FromResult(Access.Current.GetUserName(ConnectionId));
         }
     }
 }

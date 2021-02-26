@@ -40,7 +40,6 @@
                     <!-- Modify -->
                     @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
                     else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
-                    
                 </li>
             </div>
         </div>
@@ -84,13 +83,38 @@
                     </div>
 
                     <div class="dropdown-divider"></div>
-                    
+
                     <!-- Control buttons -->
                     <div class="btn-group width-full">
-                        @if (userName == null) { <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Login())">Login</button> }
-                        else { <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Logout())">Logout</button> }
-                        <button class="btn text-bold-small hover-blue width-full" @onclick="(() => CreateUser())">Register</button>
+                        @if (Service.ConnectionId == null) {
+                            <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Login())">Login</button> 
+                            <button class="btn text-bold-small hover-blue width-full" @onclick="(() => CreateUser())">Register</button>
+                        } else {
+                            <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Logout())">Logout</button>
+                            <button class="btn text-bold-small hover-blue width-full" @onclick="() => showSettings = !showSettings">Settings</button>
+                        }
                     </div>
+
+                    @if (showSettings) {
+                    <!-- Password input -->                
+                    <div class="input-group input-group-sm mt-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bi bi-key-fill"></span>
+                        </div>
+                        <input type="password" class="form-control text-light-small" placeholder="New Password" autocomplete="new-password" @bind="newPassword" @bind:event="oninput" aria-label="Password">
+                    </div>
+
+                    <div class="input-group input-group-sm mt-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bi bi-key-fill"></span>
+                        </div>
+                        <input type="password" class="form-control text-light-small" placeholder="Confirm Password" autocomplete="new-password" @bind="confirmPassword" @bind:event="oninput" aria-label="Password">
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="(()=>ChangePassword())">Change Password</button>
+                    }
                 </li>   
             </div>
         </div>
@@ -98,14 +122,17 @@
 </div>
 
 @code {
-    private string loginName, loginPassword, userName;
+    private bool showSettings;
+    private string loginName, loginPassword, userName, newPassword, confirmPassword;
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
     private async Task Login() {
         if (loginName == null || loginPassword == null) return; // Nothing to login to.
         Data.ReturnInfo info = await Service.LoginUserAsync(loginName, loginPassword);
-        if (!info.Success) SetUserNotification("Login", info.Message, info.Type);
-        else { userName = info.Message; SetUserNotification("Login successful", null, "success"); } 
+        if (!info.Success) { SetUserNotification("Login", info.Message, info.Type); return; }
+        SetUserNotification("Login successful", null, "success");
+        userName = info.Message;
+        loginPassword = "";
     }
 
     private async Task Logout() {
@@ -119,7 +146,12 @@
     private async Task CreateUser() {
         Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
         if (info.Success) { SetUserNotification("Register", info.Message, "success"); }
-        else { SetUserNotification("Register", info.Message, "danger"); }
+        else { SetUserNotification("Register", info.Message, info.Type); }
+    }
+
+    private async Task ChangePassword() {
+        Data.ReturnInfo info = await Service.ChangeUserPassword(loginPassword, newPassword, confirmPassword);
+        SetUserNotification("Change Password", info.Message, info.Type);
     }
 
     async void Enter(KeyboardEventArgs e) {

@@ -8,9 +8,6 @@
 <div class="container">
 	<div class="row justify-content-center">
 
-		@if (Service.Deck.Id == 0) Navigation.NavigateTo("/");
-		@if (reviewReturn == null) Initialize();
-
 		<!-- Review -->
 		<div class="col mr-3" align="center">
 			<span class="text-bold-large">Review</span>
@@ -81,23 +78,13 @@
 
 @code
 {
-	// Ui
-	private string cardFront, cardBack, cardPlaceholder, placeholderColor;
-	// Review
 	private int currentIndex;
 	private int[] indexArray;
 	private float reviewAmount, reviewPercent;
 	private bool reviewTypos = true, reviewRunning;
+	private string cardFront, cardBack, cardPlaceholder, placeholderColor;
 	private Data.PartialDeck partialDeck;
 	private Dictionary<int, int> reviewReturn;
-
-	private void Initialize() {
-		partialDeck = new Data.PartialDeck();
-		partialDeck.Cards = new SortedDictionary<int, Card>();
-		reviewReturn = new Dictionary<int, int>();
-		reviewPercent = 50;
-		reviewAmount = 10;
-	}
 
 	private async void ReviewDeckCreate() {
 		currentIndex = 0;
@@ -133,4 +120,18 @@
 	private void Enter(KeyboardEventArgs e) {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();
     }
+
+	private Task Initialize() {
+		if (Service.ConnectionId == null) Navigation.NavigateTo("/");
+		partialDeck = new Data.PartialDeck();
+		partialDeck.Cards = new SortedDictionary<int, Card>();
+		reviewReturn = new Dictionary<int, int>();
+		reviewPercent = 50;
+		reviewAmount = 10;
+		return Task.CompletedTask;
+	}
+
+	protected override async Task OnInitializedAsync() {
+		await Initialize();
+	}
 }

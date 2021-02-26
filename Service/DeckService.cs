@@ -29,7 +29,7 @@ namespace Srs {
             }
 
             // Add new cards
-            for (int i = 0; i < reviewAmount - oldAmount * 5; i++) {
+            for (int i = 0; i < (reviewAmount - oldAmount) * 5; i++) {
                 var newCard = Deck.Cards.ElementAt(random.Next(0, Deck.Cards.Count));
                 if (!partialDeck.Cards.ContainsKey(newCard.Key)) partialDeck.Cards.Add(newCard.Key, Deck.Cards[newCard.Key]);
                 if (partialDeck.Cards.Count >= reviewAmount) break;

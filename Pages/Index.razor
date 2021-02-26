@@ -16,23 +16,20 @@
 	<!-- Select -->
 	<div class="row justify-content-between">
 		<div class="col" align="left">
-			<button class="btn text-bold-large disable" type="button">Select deck</button>
+			<button class="btn text-bold-large disable" type="button">Select deck <i class="text-bold-medium bi bi-arrow-down-right-circle-fill"></i></button>
 		</div>
 	</div>
 
 	<div class="divider"></div>
 
-	<!-- List from server -->
-	@if (deckList == null) LoadDeckInfo();
-
 	<!-- Table -->
 	<div class="row justify-content-center">
 		<table class="table table-new table-sm">
 			<colgroup>
-				<col span="1" style="width: 5%;">
+				<col span="1" style="width: 50px;">
        			<col span="1" style="width: 85%;">
 				<col span="1" style="width: 5%;"> 
-       			<col span="1" style="width: 5%;">
+       			<col span="1" style="width: 50px;">
 			</colgroup>
 
 			<!-- Sort -->
@@ -202,12 +199,16 @@
 		}
 	}
 
-	public async void LoadDeckInfo() {
-		deckList = await Service.LoadDeckInfoAsync();
-	}
-
 	public async void ReviewDeckSelect(DeckInfo item) {
 		ReturnInfo info = await Service.SelectReviewDeckAsync(item.Id);
 		if (info.Success == true) Navigation.NavigateTo("/Deck");
+	}
+
+	private async Task Initialize() {
+		deckList = await Service.LoadDeckInfoAsync();
+	}
+
+	protected override async Task OnInitializedAsync() {
+		await Initialize();
 	}
 }

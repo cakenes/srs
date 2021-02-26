@@ -73,6 +73,13 @@ namespace Srs
             return CreateReturn(true, "User created successfully", "success");
         }
 
+        public Data.ReturnInfo ChangePassword(Guid? guid, string current, string password) {
+            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "User not found", "danger");
+            else if (GuidList[guid].Password != current) return CreateReturn(false, "Current password incorrect", "warning");
+            else { Data.User user = GuidList[guid]; user.Password = password; GuidList[guid] = user; }
+            return CreateReturn(true, "Password changed successfully", "success");
+        }
+
         public Data.ReturnInfo CreateReturn(bool success, string message, string type) {
             return new Data.ReturnInfo {Success = success, Message = message, Type = type};
         }

@@ -8,8 +8,6 @@
 <div class="container">
 	<div class="row justify-content-center">
 
-		@if (Service.ConnectionId == null) Navigation.NavigateTo("");
-
 		<!-- Deck -->
 		<div class="col" align="center">
 			<span class="text-bold-large">Deck</span>
@@ -240,12 +238,6 @@
 	private Data.Card newCard;
 	private List<Card> sortedList;
 	
-	private Task Initialize() {
-		newDeck = Service.Deck;
-		newCard = new Data.Card();
-		return Task.CompletedTask;
-	}
-
 	private void ToggleSort(int input) {
 		if (listSort == 0) listSort = input;
 		else if (listSort == input) listSort += 1;
@@ -305,6 +297,13 @@
     private void Enter(KeyboardEventArgs e) {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) SaveCard();
     }
+
+	private Task Initialize() {
+		if (Service.ConnectionId == null) Navigation.NavigateTo("");
+		newDeck = Service.Deck;
+		newCard = new Data.Card();
+		return Task.CompletedTask;
+	}
 
 	protected override async Task OnInitializedAsync() {
 		await Initialize();
