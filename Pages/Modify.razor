@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/Modify"
 
 @using Srs.Data
 @inject Srs.Service Service
@@ -6,21 +6,30 @@
 
 <div class="container" align="center">
 
-	<!-- Search -->
-	<div class="row">
-		<div class="input-group justify-content-center">
-			<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
+	<!-- Create new -->
+	<button class="btn text-bold-medium hover-green" type="button">Create new</button>
+
+	<div class="row" align="center">
+		 
+			
 		</div>
+		<div class="row justify-content-center">
+			<div class="input-group justify-content-center">
+				<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
+			</div>
+
+
+
+
 	</div>
 
-	<!-- List from server -->
+		<!-- List from server -->
 	@if (deckList == null) LoadDeckInfo();
 
 	<!-- Table -->
 	<div class="row justify-content-center mt-2">
 		<table class="table table-new table-sm">
 			<colgroup>
-				<col span="1" style="width: 5%;">
        			<col span="1" style="width: 85%;">
 				<col span="1" style="width: 5%;"> 
        			<col span="1" style="width: 5%;">
@@ -29,25 +38,6 @@
 			<!-- Sort -->
   			<thead>
 	    		<tr>
-
-					<!-- Sort by popularity -->
-      				<th scope="col">
-						<div class="btn-group" role="group" aria-label="Sort by popularity">
-							@if (listSort == 1 || listSort == 2) {
-								<button class="btn text-bold-medium text-blue text-left no-wrap" @onclick="(() => ListSort(1))" type="button">
-									<span class="hover-blue">Popularity</span>
-									@if (listSort == 1) { <span class="bi bi-sort-down"></span> }
-									else if (listSort == 2) { <span class="bi bi-sort-up"></span> }
-								</button>
-							}
-							else {
-								<button class="btn text-bold-medium text-left no-wrap" @onclick="(() => ListSort(1))" type="button">
-									<span class="hover-blue">Popularity</span>
-									<span class="bi bi-sort-up text-invis"></span>
-								</button>
-							}
-						</div>
-					</th>
 
 					<!-- Sort by name -->
       				<th scope="col">
@@ -119,24 +109,6 @@
 						!item.Author.Contains(deckSearch, StringComparison.CurrentCultureIgnoreCase)) continue;
 
 					<tr>
-		    			<td>
-							<div class="btn-group btn-group-sm">
-
-								<!-- Favorite icon -->
-								<button class="btn btn-list hover-blue dropdown" tabindex="-1"> 
-									<div class="dropdown">
-										<div class="dropdown-menu tooltip-center">
-											<span class="dropdown-item text-tooltip disabled">Set as Favorite</span>
-										</div>
-									</div>
-									<img src="svg/Star.svg" alt="" width="16" height="16" class="align-center">
-								</button>
-
-								<!-- Popularity -->
-									<span class="btn-group-prepend text-light-small text-black">@item.Popularity</span>
-							</div>
-	  					</td>
-
     					<td>
 							<div class="btn-group btn-group-sm">
 
@@ -165,6 +137,7 @@
 		</table>
 	</div>
 </div>
+
 
 @code
 {

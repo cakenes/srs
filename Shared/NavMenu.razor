@@ -38,11 +38,13 @@
                     <div class="dropdown-divider"></div>
 
                     <!-- Create -->
-                    @if (Service.ConnectionId != null) { <a href="Create" class="btn text-bold-small hover-blue width-full" type="button">Create</a> }
+                    @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Create"))">Create</button> }
                     else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
                         
                     <!-- Modify -->
-                    <!-- <a href="/" class="btn btn-nav-small" type="button">Modify</a> -->
+                    @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/"))">Modify</button> }
+                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Modify Deck", "Requires to be logged in", "danger"))">Modify</button> }
+                    
                 </li>
             </div>
         </div>
