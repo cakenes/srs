@@ -37,13 +37,9 @@
 
                     <div class="dropdown-divider"></div>
 
-                    <!-- Create -->
-                    @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Create"))">Create</button> }
-                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Create Deck", "Requires to be logged in", "danger"))">Create</button> }
-                        
                     <!-- Modify -->
-                    @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/"))">Modify</button> }
-                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Modify Deck", "Requires to be logged in", "danger"))">Modify</button> }
+                    @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
+                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
                     
                 </li>
             </div>
@@ -56,8 +52,7 @@
             <div class="nav-item dropdown">
                 <button class="btn text-bold-large hover-blue" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
-                    @if (userName == null) { <span>User</span> }
-                    else { <span>@userName</span> }
+                    <span>@userName</span>
                 </button>
 
                 <!-- User dropdown menu -->
@@ -117,7 +112,8 @@
         if (userName == null) return; // Nothing to log out of.
         Data.ReturnInfo info = await Service.LogoutUserAsync();
         SetUserNotification("Logout", info.Message, info.Type);
-        userName = null;
+        Navigation.NavigateTo("/");
+        userName = "User";
     }
 
     private async Task CreateUser() {
@@ -137,4 +133,12 @@
     private void SetUserNotification(string title = null, string msg = null, string type = "warning") {
         userMsgTitle = title; userMsg = msg; userMsgType = "alert-" + type;
     }
+
+    private async Task Initialize() {
+        userName = await Service.GetUserNameAsync();
+    }
+
+    protected override async Task OnInitializedAsync() {
+		await Initialize();
+	}
 }

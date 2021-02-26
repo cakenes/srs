@@ -73,7 +73,8 @@
 
 			<!-- Create -->
 			<div class="row justify-content-center">
-				<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => CreateDeck())">Create Deck</button>
+				@if (newDeck.Id == 0) { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => CreateDeck())">Create Deck</button> }
+				else { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ModifyDeck())">Modify Deck</button> } 
 			</div>
 		</div>
 
@@ -234,10 +235,16 @@
 	private int listSort, editCard;
 	private string createMsgTitle, createMsg, createMsgType;
 	private string deckSearch = "";
-	private DeckFull newDeck = new DeckFull {Cards = new SortedDictionary<int, Card>()};
-	private Data.Card newCard = new Data.Card();
-	private List<Card> sortedList = new List<Card>();
+	private DeckFull newDeck;
+	private Data.Card newCard;
+	private List<Card> sortedList;
 	
+	private Task Initialize() {
+		newDeck = Service.Deck;
+		newCard = new Data.Card();
+		return Task.CompletedTask;
+	}
+
 	private void ToggleSort(int input) {
 		if (listSort == 0) listSort = input;
 		else if (listSort == input) listSort += 1;
@@ -282,10 +289,23 @@
 	private async Task CreateDeck() {
 		Data.ReturnInfo info = await Service.CreateDeckAsync(newDeck);
 		SetCreateNotification("Create deck", info.Message, info.Type);
+		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
+		ToggleSort(-1);
+	}
+
+	private async Task ModifyDeck() {
+		Data.ReturnInfo info = await Service.ModifyDeckAsync(newDeck);
+		SetCreateNotification("Modify deck", info.Message, info.Type);
+		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
+		ToggleSort(-1);
 	}
 
 	// Enter to save card
     private void Enter(KeyboardEventArgs e) {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) SaveCard();
     }
+
+	protected override async Task OnInitializedAsync() {
+		await Initialize();
+	}
 }

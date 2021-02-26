@@ -4,30 +4,35 @@
 @inject Srs.Service Service
 @inject NavigationManager Navigation
 
-<div class="container" align="center">
+<div class="container">
 
-	<!-- Create new -->
-	<button class="btn text-bold-medium hover-green" type="button">Create new</button>
+	@if (Service.ConnectionId == null) Navigation.NavigateTo("");
 
-	<div class="row" align="center">
-		 
-			
+	<!-- Search -->
+	<div class="row">
+		<div class="input-group justify-content-center">
+			<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
 		</div>
-		<div class="row justify-content-center">
-			<div class="input-group justify-content-center">
-				<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
-			</div>
-
-
-
-
 	</div>
 
-		<!-- List from server -->
+	<!-- Select -->
+	<div class="row justify-content-between">
+		<div class="col" align="left">
+			<button class="btn text-bold-large disable" type="button">Select deck</button>
+		</div>
+		<!-- Create new -->
+		<div class="col" align="right">
+			<button class="btn text-bold-large hover-green" type="button" @onclick="@(()=>Navigation.NavigateTo("/Create"))">+ Create new</button>
+		</div>
+	</div>
+
+	<div class="divider"></div>
+
+	<!-- List from server -->
 	@if (deckList == null) LoadDeckInfo();
 
 	<!-- Table -->
-	<div class="row justify-content-center mt-2">
+	<div class="row justify-content-center">
 		<table class="table table-new table-sm">
 			<colgroup>
        			<col span="1" style="width: 85%;">
@@ -123,7 +128,7 @@
 								</button>
 
 							<!-- Select -->
-								<button class="btn btn-list" type="button" @onclick="(() => ReviewDeckSelect(item))">
+								<button class="btn btn-list" type="button" @onclick="(() => ModifyDeckSelect(item))">
 									@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16"> }
 									<span class="text-light-small text-black">@item.Name</span>
 								</button>
@@ -166,12 +171,18 @@
 		}
 	}
 
-	public async void LoadDeckInfo() {
-		deckList = await Service.LoadDeckInfoAsync();
+	public void CreateDeck() {
+		Service.Deck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
+		Navigation.NavigateTo("/Create");
 	}
 
-	public async void ReviewDeckSelect(DeckInfo item) {
-		ReturnInfo info = await Service.SelectReviewDeckAsync(item.Id);
-		if (info.Success == true) Navigation.NavigateTo("/Deck");
+	public async void ModifyDeckSelect(DeckInfo item) {
+		ReturnInfo info = await Service.SelectModifyDeckAsync(item.Id);
+		if (info.Success == true) Navigation.NavigateTo("/Create");
+	}
+
+	public async void LoadDeckInfo() {
+		deckList = new List<DeckInfo>();
+		deckList = await Service.LoadModifyInfoAsync();
 	}
 }

@@ -37,7 +37,6 @@ namespace Srs{
 
         // Create new deck
         public Data.ReturnInfo CreateDeck(Data.DeckFull deck) {
-            // Error
             int index = FindDeck(deck.Name);
             if (index != -1) return CreateReturn(false, "Name is already in use", "warning"); // Name exists
 
@@ -53,6 +52,21 @@ namespace Srs{
             return CreateReturn(true, "Deck successfully created", "success");
         }
 
+        // Modify existing deck
+        public Data.ReturnInfo ModifyDeck(Data.DeckFull deck, Guid? guid) {
+            int index = FindDeck(deck.Name);
+            if (index == -1) return CreateReturn(false, "Deck not found", "warning"); // Deck not found
+            else if (index != deck.Id) return CreateReturn(false, "Deck ID doesnt match", "warning"); // Deck id doesnt match the list
+            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "User not found", "warning"); // User not in the list
+            else if (GuidList[guid].Name != deck.Author) return CreateReturn(false, "User not match the author", "warning"); // User does not match
+
+            // Success
+            DeckList[deck.Id] = deck;
+            string toJson = JsonConvert.SerializeObject(deck);
+            File.WriteAllText("decks/" + deck.Name, toJson);
+            return CreateReturn(true, "Deck successfully modified", "success");
+        }
+
         public Data.DeckFull GetDeckList(int index) {
             if (!DeckList.ContainsKey(index)) return new Data.DeckFull();
             return DeckList[index];
@@ -62,6 +76,12 @@ namespace Srs{
             if (InfoList.Count == 0) return new List<Data.DeckInfo>();
             return InfoList;
         }
+
+        public List<Data.DeckInfo> GetModifyList(Guid? guid) {
+            if (!GuidList.ContainsKey(guid)) return new List<Data.DeckInfo>();
+            List<Data.DeckInfo> returnList = InfoList.Where(x => x.Author == GuidList[guid].Name).ToList();
+            return returnList;
+        }  
 
         // Create info data
         public Data.DeckInfo NewInfo(Data.DeckFull deck) {

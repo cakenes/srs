@@ -45,6 +45,13 @@ namespace Srs {
             return Task.FromResult(CreateReturn(true, "Success", "success"));
         }
 
+        // Select modify deck
+        public Task<Data.ReturnInfo> SelectModifyDeckAsync(int index) {
+            Deck = Access.Current.GetDeckList(index);
+            if (Deck.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
+            return Task.FromResult(CreateReturn(true, "Success", "success"));
+        }
+
         // Create deck
         public Task<Data.ReturnInfo> CreateDeckAsync(Data.DeckFull deck) {
             deck.Author = Access.Current.GetUser(ConnectionId).Name;
@@ -52,6 +59,11 @@ namespace Srs {
             return Task.FromResult(info);
         }
 
+        // Modify deck
+        public Task<Data.ReturnInfo> ModifyDeckAsync(Data.DeckFull deck) {
+            Data.ReturnInfo info = Access.Current.ModifyDeck(deck, ConnectionId);
+            return Task.FromResult(info);
+        }
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(Dictionary<int,int> reviewReturn) {  
@@ -72,9 +84,14 @@ namespace Srs {
             return Task.FromResult(CreateReturn(true, "Done! Progress saved", "success"));
         }
 
-        // Load Info
+        // Load info
         public Task<List<Data.DeckInfo>> LoadDeckInfoAsync() {
             return Task.FromResult(Access.Current.GetInfoList());
+        }
+
+        // Load modify info
+        public Task<List<Data.DeckInfo>> LoadModifyInfoAsync() {
+            return Task.FromResult(Access.Current.GetModifyList(ConnectionId));
         }
     }
 }

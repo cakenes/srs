@@ -117,7 +117,7 @@
 	private void ReviewCardValidate() {
 		string tempBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
 		string tempAnswer = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
-		if (reviewTypos) { tempBack = tempBack.ToLower(); tempAnswer.ToLower(); }
+		if (reviewTypos) { tempBack = tempBack.ToLower(); tempAnswer = tempAnswer.ToLower(); }
 		if (tempBack == tempAnswer) { placeholderColor = "placeholder-green"; cardPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
 		else { placeholderColor = "placeholder-red"; cardPlaceholder = "Incorrect! Answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
 		currentIndex += 1;

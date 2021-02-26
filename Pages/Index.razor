@@ -13,11 +13,20 @@
 		</div>
 	</div>
 
+	<!-- Select -->
+	<div class="row justify-content-between">
+		<div class="col" align="left">
+			<button class="btn text-bold-large disable" type="button">Select deck</button>
+		</div>
+	</div>
+
+	<div class="divider"></div>
+
 	<!-- List from server -->
 	@if (deckList == null) LoadDeckInfo();
 
 	<!-- Table -->
-	<div class="row justify-content-center mt-2">
+	<div class="row justify-content-center">
 		<table class="table table-new table-sm">
 			<colgroup>
 				<col span="1" style="width: 5%;">

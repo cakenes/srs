@@ -83,6 +83,12 @@ namespace Srs
             return GuidList[guid];
         }
 
+        public string GetUserName (Guid? guid) {
+            if (guid == null) return "User";
+            if (!GuidList.ContainsKey(guid)) return "User";
+            return GuidList[guid].Name;
+        }
+
         // Return name index, if not found return -1
         private int FindUser (string input) {
             foreach (var item in UserList) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }

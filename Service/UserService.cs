@@ -37,5 +37,9 @@ namespace Srs {
         public Data.ReturnInfo CreateReturn(bool success, string message, string type) {
             return new Data.ReturnInfo {Success = success, Message = message, Type = type};
         }
+
+        public Task<string> GetUserNameAsync() {
+            return Task.FromResult(Access.Current.GetUserName(ConnectionId));
+        }
     }
 }
