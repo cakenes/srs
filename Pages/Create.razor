@@ -2,7 +2,7 @@
 
 @using Srs.Data
 @inject Srs.Service Service
-@inject IJSRuntime JSRuntime
+@inject Srs.ServiceData ServiceData
 @inject NavigationManager Navigation
 
 <div class="container">
@@ -280,14 +280,14 @@
 	}
 
 	private async Task CreateDeck() {
-		Data.ReturnInfo info = await Service.CreateDeckAsync(newDeck);
+		Data.ReturnInfo info = await Service.CreateDeckAsync(ServiceData, newDeck);
 		SetCreateNotification("Create deck", info.Message, info.Type);
 		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		ToggleSort(-1);
 	}
 
 	private async Task ModifyDeck() {
-		Data.ReturnInfo info = await Service.ModifyDeckAsync(newDeck);
+		Data.ReturnInfo info = await Service.ModifyDeckAsync(ServiceData, newDeck);
 		SetCreateNotification("Modify deck", info.Message, info.Type);
 		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		ToggleSort(-1);
@@ -299,8 +299,8 @@
     }
 
 	private Task Initialize() {
-		if (Service.ConnectionId == null) Navigation.NavigateTo("");
-		newDeck = Service.Deck;
+		if (ServiceData.UserId == null) Navigation.NavigateTo("");
+		newDeck = ServiceData.Deck;
 		newCard = new Data.Card();
 		return Task.CompletedTask;
 	}

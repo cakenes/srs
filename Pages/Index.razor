@@ -2,6 +2,7 @@
 
 @using Srs.Data
 @inject Srs.Service Service
+@inject Srs.ServiceData ServiceData
 @inject NavigationManager Navigation
 
 <div class="container" align="center">
@@ -200,7 +201,7 @@
 	}
 
 	public async void ReviewDeckSelect(DeckInfo item) {
-		ReturnInfo info = await Service.SelectReviewDeckAsync(item.Id);
+		ReturnInfo info = await Service.SelectReviewDeckAsync(ServiceData, item.Id);
 		if (info.Success == true) Navigation.NavigateTo("/Deck");
 	}
 

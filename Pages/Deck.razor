@@ -2,7 +2,8 @@
 
 @using Srs.Data
 @using System.Linq;
-@inject Srs.Service Service;
+@inject Srs.Service Service
+@inject Srs.ServiceData ServiceData
 @inject NavigationManager Navigation
 
 <div class="container">
@@ -90,7 +91,7 @@
 		currentIndex = 0;
 		reviewRunning = true;
 		reviewReturn = new Dictionary<int, int>();
-		partialDeck = await Service.CreateReviewDeckAsync(reviewAmount, reviewPercent);
+		partialDeck = await Service.CreateReviewDeckAsync(ServiceData, reviewAmount, reviewPercent);
 		indexArray = partialDeck.Cards.Keys.ToArray();
 		ReviewCardDisplay();
 	}
@@ -112,7 +113,7 @@
 	}
 
 	private async void ReturnReviewDeck() {
-		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(reviewReturn);
+		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(ServiceData, reviewReturn);
 		cardFront = info.Message;
 		reviewRunning = false;
 	}
@@ -122,7 +123,6 @@
     }
 
 	private Task Initialize() {
-		if (Service.ConnectionId == null) Navigation.NavigateTo("/");
 		partialDeck = new Data.PartialDeck();
 		partialDeck.Cards = new SortedDictionary<int, Card>();
 		reviewReturn = new Dictionary<int, int>();

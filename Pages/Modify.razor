@@ -2,6 +2,7 @@
 
 @using Srs.Data
 @inject Srs.Service Service
+@inject Srs.ServiceData ServiceData
 @inject NavigationManager Navigation
 
 <div class="container">
@@ -168,19 +169,19 @@
 	}
 
 	public void CreateDeck() {
-		Service.Deck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
+		ServiceData.Deck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		Navigation.NavigateTo("/Create");
 	}
 
 	public async void ModifyDeckSelect(DeckInfo item) {
-		ReturnInfo info = await Service.SelectModifyDeckAsync(item.Id);
+		ReturnInfo info = await Service.SelectModifyDeckAsync(ServiceData, item.Id);
 		if (info.Success == true) Navigation.NavigateTo("/Create");
 	}
 
 	private async Task Initialize() {
-		if (Service.ConnectionId == null) Navigation.NavigateTo("/");
+		if (ServiceData.UserId == null) Navigation.NavigateTo("/");
 		deckList = new List<DeckInfo>();
-		deckList = await Service.LoadModifyInfoAsync();
+		deckList = await Service.LoadModifyInfoAsync(ServiceData);
 	}
 
 	protected override async Task OnInitializedAsync() {

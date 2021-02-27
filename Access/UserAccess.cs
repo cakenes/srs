@@ -4,8 +4,11 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Srs
-{
+namespace Srs {
+    
+    public partial class AccessData {
+    }
+
     public partial class Access {
 
         private SortedDictionary<int, Data.User> UserList;
@@ -21,7 +24,6 @@ namespace Srs
         public void LoadUsers() {
             // Error
             if (!Directory.Exists("users/")) return;
-
             // Success
             UserList = new SortedDictionary<int, Data.User>();
             string[] UserPaths = Directory.GetFiles("users/", "*.*");
@@ -68,7 +70,7 @@ namespace Srs
             
             // Create User
             UserList.Add(user.Id, user);
-            string toJson = JsonConvert.SerializeObject(user);
+            string toJson = JsonConvert.SerializeObject(user, Formatting.Indented);
             File.WriteAllText("users/" + user.Name, toJson);
             return CreateReturn(true, "User created successfully", "success");
         }
@@ -76,7 +78,7 @@ namespace Srs
         public Data.ReturnInfo ChangePassword(Guid? guid, string current, string password) {
             if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "User not found", "danger");
             else if (GuidList[guid].Password != current) return CreateReturn(false, "Current password incorrect", "warning");
-            else { Data.User user = GuidList[guid]; user.Password = password; GuidList[guid] = user; }
+            else { Data.User user = GuidList[guid]; user.Password = password; GuidList[guid] = user; UpdateUser(guid); }
             return CreateReturn(true, "Password changed successfully", "success");
         }
 

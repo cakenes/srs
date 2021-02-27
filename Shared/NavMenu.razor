@@ -1,4 +1,5 @@
 ﻿@inject Srs.Service Service
+@inject Srs.ServiceData ServiceData;
 @inject NavigationManager Navigation
 
 <!-- Navigation Bar -->
@@ -38,7 +39,7 @@
                     <div class="dropdown-divider"></div>
 
                     <!-- Modify -->
-                    @if (Service.ConnectionId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
+                    @if (ServiceData.UserId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
                     else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
                 </li>
             </div>
@@ -86,7 +87,7 @@
 
                     <!-- Control buttons -->
                     <div class="btn-group width-full">
-                        @if (Service.ConnectionId == null) {
+                        @if (ServiceData.UserId == null) {
                             <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Login())">Login</button> 
                             <button class="btn text-bold-small hover-blue width-full" @onclick="(() => CreateUser())">Register</button>
                         } else {
@@ -128,7 +129,7 @@
 
     private async Task Login() {
         if (loginName == null || loginPassword == null) return; // Nothing to login to.
-        Data.ReturnInfo info = await Service.LoginUserAsync(loginName, loginPassword);
+        Data.ReturnInfo info = await Service.LoginUserAsync(ServiceData, loginName, loginPassword);
         if (!info.Success) { SetUserNotification("Login", info.Message, info.Type); return; }
         SetUserNotification("Login successful", null, "success");
         userName = info.Message;
@@ -137,7 +138,7 @@
 
     private async Task Logout() {
         if (userName == null) return; // Nothing to log out of.
-        Data.ReturnInfo info = await Service.LogoutUserAsync();
+        Data.ReturnInfo info = await Service.LogoutUserAsync(ServiceData);
         SetUserNotification("Logout", info.Message, info.Type);
         Navigation.NavigateTo("/");
         userName = "User";
@@ -150,7 +151,7 @@
     }
 
     private async Task ChangePassword() {
-        Data.ReturnInfo info = await Service.ChangeUserPassword(loginPassword, newPassword, confirmPassword);
+        Data.ReturnInfo info = await Service.ChangeUserPassword(ServiceData, loginPassword, newPassword, confirmPassword);
         SetUserNotification("Change Password", info.Message, info.Type);
     }
 
@@ -167,7 +168,7 @@
     }
 
     private async Task Initialize() {
-        userName = await Service.GetUserNameAsync();
+        userName = await Service.GetUserNameAsync(ServiceData);
     }
 
     protected override async Task OnInitializedAsync() {

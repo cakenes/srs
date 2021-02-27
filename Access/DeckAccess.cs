@@ -4,7 +4,10 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Srs{
+namespace Srs {
+
+    public partial class AccessData {
+    }
 
     public partial class Access {
 
@@ -47,7 +50,7 @@ namespace Srs{
             // Create Deck
             DeckList.Add(deck.Id, deck);
             InfoList.Add(deck.Id, NewInfo(deck));
-            string toJson = JsonConvert.SerializeObject(deck);
+            string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
             File.WriteAllText("decks/" + deck.Name, toJson);
             return CreateReturn(true, "Deck successfully created", "success");
         }
@@ -63,7 +66,7 @@ namespace Srs{
             // Success
             InfoList[deck.Id] = NewInfo(deck);
             DeckList[deck.Id] = deck;
-            string toJson = JsonConvert.SerializeObject(deck);
+            string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
             File.WriteAllText("decks/" + deck.Name, toJson);
             return CreateReturn(true, "Deck successfully modified", "success");
         }
@@ -96,6 +99,5 @@ namespace Srs{
             foreach (var item in DeckList) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
             return -1;
         }
-
     }
 }
