@@ -103,6 +103,7 @@
 	}
 
 	private void ReviewCardValidate() {
+		if (!reviewRunning) return;
 		string tempBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
 		string tempAnswer = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
 		if (reviewTypos) { tempBack = tempBack.ToLower(); tempAnswer = tempAnswer.ToLower(); }
@@ -115,6 +116,7 @@
 	private async void ReturnReviewDeck() {
 		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(ServiceData, reviewReturn);
 		cardFront = info.Message;
+		cardBack = "";
 		reviewRunning = false;
 	}
 
@@ -123,6 +125,7 @@
     }
 
 	private Task Initialize() {
+		if (ServiceData.Deck.Id == 0) Navigation.NavigateTo("/");
 		partialDeck = new Data.PartialDeck();
 		partialDeck.Cards = new SortedDictionary<int, Card>();
 		reviewReturn = new Dictionary<int, int>();

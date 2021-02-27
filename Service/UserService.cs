@@ -1,17 +1,16 @@
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Srs {
 
     public partial class ServiceData {
 
         public Guid? UserId;
-
+        
     }
 
     public partial class Service {
-
-		//public Guid? ConnectionId;
 
 		// User login
         public Task<Data.ReturnInfo> LoginUserAsync(ServiceData origin, string name, string password) {
@@ -26,7 +25,7 @@ namespace Srs {
 
         // User logout
         public Task<Data.ReturnInfo> LogoutUserAsync(ServiceData origin) {
-            origin.UserId = null;
+            origin.UserId = null; origin.Deck = new Data.DeckFull { Cards = new SortedDictionary<int, Data.Card>() };
             return Task.FromResult(CreateReturn(true, "Logout successful", "success"));
         }
 

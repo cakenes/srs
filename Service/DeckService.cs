@@ -80,8 +80,7 @@ namespace Srs {
             {
                 if (!reviewUser.Review[origin.Deck.Id].ContainsKey(card.Key)) reviewUser.Review[origin.Deck.Id].Add(card.Key, card.Value);
                 else reviewUser.Review[origin.Deck.Id][card.Key] += card.Value;
-                if (reviewUser.Review[origin.Deck.Id][card.Key] == 6) reviewUser.Review[origin.Deck.Id][card.Key] = 5;
-                if (reviewUser.Review[origin.Deck.Id][card.Key] == -1) reviewUser.Review[origin.Deck.Id][card.Key] = 0;
+                reviewUser.Review[origin.Deck.Id][card.Key] = Math.Clamp(reviewUser.Review[origin.Deck.Id][card.Key], 0, 5);
             }
 
             Access.Current.UpdateUser(origin.UserId);

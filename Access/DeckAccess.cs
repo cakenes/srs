@@ -51,7 +51,7 @@ namespace Srs {
             DeckList.Add(deck.Id, deck);
             InfoList.Add(deck.Id, NewInfo(deck));
             string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
-            File.WriteAllText("decks/" + deck.Name, toJson);
+            File.WriteAllText("decks/" + deck.Id + "-" + deck.Name, toJson);
             return CreateReturn(true, "Deck successfully created", "success");
         }
 
@@ -67,7 +67,7 @@ namespace Srs {
             InfoList[deck.Id] = NewInfo(deck);
             DeckList[deck.Id] = deck;
             string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
-            File.WriteAllText("decks/" + deck.Name, toJson);
+            File.WriteAllText("decks/" + deck.Id + "-" + deck.Name, toJson);
             return CreateReturn(true, "Deck successfully modified", "success");
         }
 

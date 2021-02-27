@@ -71,7 +71,7 @@ namespace Srs {
             // Create User
             UserList.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user, Formatting.Indented);
-            File.WriteAllText("users/" + user.Name, toJson);
+            File.WriteAllText("users/" + user.Id + "-" + user.Name, toJson);
             return CreateReturn(true, "User created successfully", "success");
         }
 
