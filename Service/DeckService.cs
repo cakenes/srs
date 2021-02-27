@@ -7,7 +7,8 @@ namespace Srs {
 
     public partial class ServiceData {
 
-        public Data.DeckFull Deck = new Data.DeckFull {Cards = new SortedDictionary<int, Data.Card>()};
+        public Data.DeckFull Review = new Data.DeckFull {Cards = new SortedDictionary<int, Data.Card>()};
+        public Data.DeckFull Create = new Data.DeckFull {Cards = new SortedDictionary<int, Data.Card>()};
 
     }
 
@@ -22,20 +23,20 @@ namespace Srs {
             Random random = new Random(DateTime.Now.Millisecond);
             int oldAmount = (int)MathF.Round(reviewAmount * ((100 - reviewPercent) / 100), 0);
 
-            if (reviewUser.Review.ContainsKey(origin.Deck.Id)) reviewOld = reviewUser.Review[origin.Deck.Id];
+            if (reviewUser.Review.ContainsKey(origin.Review.Id)) reviewOld = reviewUser.Review[origin.Review.Id];
             if (oldAmount > reviewOld.Count) oldAmount = reviewOld.Count;
 
             // Add old cards 
             for (int i = 0; i < oldAmount * 2; i++) {
                 var oldCard = reviewOld.ElementAt(random.Next(0, reviewOld.Count));
-                if (!partialDeck.Cards.ContainsKey(oldCard.Key)) partialDeck.Cards.Add(oldCard.Key, origin.Deck.Cards[oldCard.Key]);
+                if (!partialDeck.Cards.ContainsKey(oldCard.Key)) partialDeck.Cards.Add(oldCard.Key, origin.Review.Cards[oldCard.Key]);
                 if (partialDeck.Cards.Count >= oldAmount) break;
             }
 
             // Add new cards
             for (int i = 0; i < (reviewAmount - oldAmount) * 5; i++) {
-                var newCard = origin.Deck.Cards.ElementAt(random.Next(0, origin.Deck.Cards.Count));
-                if (!partialDeck.Cards.ContainsKey(newCard.Key)) partialDeck.Cards.Add(newCard.Key, origin.Deck.Cards[newCard.Key]);
+                var newCard = origin.Review.Cards.ElementAt(random.Next(0, origin.Review.Cards.Count));
+                if (!partialDeck.Cards.ContainsKey(newCard.Key)) partialDeck.Cards.Add(newCard.Key, origin.Review.Cards[newCard.Key]);
                 if (partialDeck.Cards.Count >= reviewAmount) break;
             }
 
@@ -44,15 +45,15 @@ namespace Srs {
 
         // Select deck
         public Task<Data.ReturnInfo> SelectReviewDeckAsync(ServiceData origin, int index) {
-            origin.Deck = Access.Current.GetDeckList(index);
-            if (origin.Deck.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
+            origin.Review = Access.Current.GetDeckList(index);
+            if (origin.Review.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
             return Task.FromResult(CreateReturn(true, "Success", "success"));
         }
 
         // Select modify deck
         public Task<Data.ReturnInfo> SelectModifyDeckAsync(ServiceData origin, int index) {
-            origin.Deck = Access.Current.GetDeckList(index);
-            if (origin.Deck.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
+            origin.Create = Access.Current.GetDeckList(index);
+            if (origin.Review.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
             return Task.FromResult(CreateReturn(true, "Success", "success"));
         }
 
@@ -74,13 +75,13 @@ namespace Srs {
             if (origin.UserId == null) return Task.FromResult(CreateReturn(false, "Review Done! \n Not logged in, progress wont be saved", "warning"));
             Data.User reviewUser = Access.Current.GetUser(origin.UserId);
 
-            if (!reviewUser.Review.ContainsKey(origin.Deck.Id)) reviewUser.Review[origin.Deck.Id] = new Dictionary<int, int>();
+            if (!reviewUser.Review.ContainsKey(origin.Review.Id)) reviewUser.Review[origin.Review.Id] = new Dictionary<int, int>();
 
             foreach (var card in reviewReturn)
             {
-                if (!reviewUser.Review[origin.Deck.Id].ContainsKey(card.Key)) reviewUser.Review[origin.Deck.Id].Add(card.Key, card.Value);
-                else reviewUser.Review[origin.Deck.Id][card.Key] += card.Value;
-                reviewUser.Review[origin.Deck.Id][card.Key] = Math.Clamp(reviewUser.Review[origin.Deck.Id][card.Key], 0, 5);
+                if (!reviewUser.Review[origin.Review.Id].ContainsKey(card.Key)) reviewUser.Review[origin.Review.Id].Add(card.Key, card.Value);
+                else reviewUser.Review[origin.Review.Id][card.Key] += card.Value;
+                reviewUser.Review[origin.Review.Id][card.Key] = Math.Clamp(reviewUser.Review[origin.Review.Id][card.Key], 0, 5);
             }
 
             Access.Current.UpdateUser(origin.UserId);

@@ -300,7 +300,7 @@
 
 	private Task Initialize() {
 		if (ServiceData.UserId == null) Navigation.NavigateTo("/");
-		newDeck = ServiceData.Deck;
+		newDeck = ServiceData.Create;
 		newCard = new Data.Card();
 		return Task.CompletedTask;
 	}

@@ -137,6 +137,13 @@
 				}
   			</tbody>
 		</table>
+
+		@if (sortedDeck.Count == 0) {
+			<div class="row">
+				<span class="text-light-medium width-full" align="center">You do not have any decks to modify, use the 'Create New' to add one.</span>
+			</div>
+		}
+
 	</div>
 </div>
 
@@ -169,7 +176,7 @@
 	}
 
 	public void CreateDeck() {
-		ServiceData.Deck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
+		ServiceData.Create = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		Navigation.NavigateTo("/Create");
 	}
 

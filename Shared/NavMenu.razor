@@ -1,5 +1,5 @@
 ﻿@inject Srs.Service Service
-@inject Srs.ServiceData ServiceData;
+@inject Srs.ServiceData ServiceData
 @inject NavigationManager Navigation
 
 <!-- Navigation Bar -->
@@ -146,12 +146,12 @@
 
     private async Task CreateUser() {
         Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
-        if (info.Success) { SetUserNotification("Register", info.Message, "success"); }
-        else { SetUserNotification("Register", info.Message, info.Type); }
+        SetUserNotification("Register", info.Message, info.Type);
     }
 
     private async Task ChangePassword() {
         Data.ReturnInfo info = await Service.ChangeUserPassword(ServiceData, loginPassword, newPassword, confirmPassword);
+        if (info.Success) { loginPassword = ""; newPassword = ""; confirmPassword = ""; }
         SetUserNotification("Change Password", info.Message, info.Type);
     }
 

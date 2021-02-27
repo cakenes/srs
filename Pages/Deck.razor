@@ -125,7 +125,7 @@
     }
 
 	private Task Initialize() {
-		if (ServiceData.Deck.Id == 0) Navigation.NavigateTo("/");
+		if (ServiceData.Review.Id == 0) Navigation.NavigateTo("/");
 		partialDeck = new Data.PartialDeck();
 		partialDeck.Cards = new SortedDictionary<int, Card>();
 		reviewReturn = new Dictionary<int, int>();

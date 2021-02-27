@@ -25,7 +25,7 @@ namespace Srs {
 
         // User logout
         public Task<Data.ReturnInfo> LogoutUserAsync(ServiceData origin) {
-            origin.UserId = null; origin.Deck = new Data.DeckFull { Cards = new SortedDictionary<int, Data.Card>() };
+            origin.UserId = null; origin.Review = new Data.DeckFull { Cards = new SortedDictionary<int, Data.Card>() };
             return Task.FromResult(CreateReturn(true, "Logout successful", "success"));
         }
 
