@@ -52,8 +52,8 @@ namespace Srs {
             if (!GuidList.ContainsKey(guid)) return false;
 
             // Success
-            string toJson = JsonConvert.SerializeObject(GuidList[guid]);
-            File.WriteAllText("users/" + GuidList[guid].Name, toJson);
+            string toJson = JsonConvert.SerializeObject(GuidList[guid], Formatting.Indented);
+            File.WriteAllText("users/" + GuidList[guid].Id + "-" + GuidList[guid].Name, toJson);
             return true;
         }
 
