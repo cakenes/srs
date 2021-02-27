@@ -53,7 +53,7 @@ namespace Srs {
         // Select modify deck
         public Task<Data.ReturnInfo> SelectModifyDeckAsync(ServiceData origin, int index) {
             origin.Create = Access.Current.GetDeckList(index);
-            if (origin.Review.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
+            if (origin.Create.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
             return Task.FromResult(CreateReturn(true, "Success", "success"));
         }
 
