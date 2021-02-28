@@ -5,6 +5,7 @@ namespace Srs.Data {
 
     public struct ReturnInfo {
         public bool Success;
+        public string Title;
         public string Message;
         public string Type;
     }

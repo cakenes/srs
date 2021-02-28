@@ -38,13 +38,13 @@ namespace Srs {
         public Data.ReturnInfo LoginUser(string name, string password) {
             // Error
             int index = FindUser(name);
-            if (index == -1) return CreateReturn(false, "Username does not exist", "danger"); //Name doesn't exist
-            else if (UserList[index].Password != password) return CreateReturn(false, "Incorrect password", "danger"); //Incorrect password
+            if (index == -1) return CreateReturn(false, "Login", "Username does not exist", "danger"); //Name doesn't exist
+            else if (UserList[index].Password != password) return CreateReturn(false, "Login", "Incorrect password", "danger"); //Incorrect password
             
             // Success
             Guid guid = Guid.NewGuid();
             GuidList.Add(guid, UserList[index]);
-            return CreateReturn(true, guid.ToString(), "success");
+            return CreateReturn(true, "Login", guid.ToString(), "success");
         }
 
         // Update user file
@@ -59,7 +59,7 @@ namespace Srs {
 
         // Create new user
         public Data.ReturnInfo CreateUser(string name, string password) {
-            if (FindUser(name) != -1) return CreateReturn(false, "Username is taken", "warning");
+            if (FindUser(name) != -1) return CreateReturn(false, "Register", "Username is taken", "warning");
             
             // Initialize user data
             Data.User user = new Data.User {Name = name, Password = password, Review = new Dictionary<int, Dictionary<int, int>>()};
@@ -72,18 +72,18 @@ namespace Srs {
             UserList.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user, Formatting.Indented);
             File.WriteAllText("users/" + user.Id + "-" + user.Name, toJson);
-            return CreateReturn(true, "User created successfully", "success");
+            return CreateReturn(true, "Register", "User created successfully", "success");
         }
 
         public Data.ReturnInfo ChangePassword(Guid? guid, string current, string password) {
-            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "User not found", "danger");
-            else if (GuidList[guid].Password != current) return CreateReturn(false, "Current password incorrect", "warning");
+            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "Change Password", "User not found", "danger");
+            else if (GuidList[guid].Password != current) return CreateReturn(false, "Change Password", "Current password incorrect", "warning");
             else { Data.User user = GuidList[guid]; user.Password = password; GuidList[guid] = user; UpdateUser(guid); }
-            return CreateReturn(true, "Password changed successfully", "success");
+            return CreateReturn(true, "Change Password", "Password changed successfully", "success");
         }
 
-        public Data.ReturnInfo CreateReturn(bool success, string message, string type) {
-            return new Data.ReturnInfo {Success = success, Message = message, Type = type};
+        public Data.ReturnInfo CreateReturn(bool success, string title, string message, string type) {
+            return new Data.ReturnInfo {Success = success, Title = title, Message = message, Type = type};
         }
 
         public Data.User GetUser (Guid? guid) {

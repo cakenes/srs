@@ -41,7 +41,7 @@ namespace Srs {
         // Create new deck
         public Data.ReturnInfo CreateDeck(Data.DeckFull deck) {
             int index = FindDeck(deck.Name);
-            if (index != -1) return CreateReturn(false, "Name is already in use", "warning"); // Name exists
+            if (index != -1) return CreateReturn(false, "Create Deck", "Name is already in use", "warning"); // Name exists
 
             // Success, set deck.Id
             if (DeckList.Count == 0) deck.Id = 1;
@@ -52,23 +52,23 @@ namespace Srs {
             InfoList.Add(deck.Id, NewInfo(deck));
             string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
             File.WriteAllText("decks/" + deck.Id + "-" + deck.Name, toJson);
-            return CreateReturn(true, "Deck successfully created", "success");
+            return CreateReturn(true,"Create Deck", "Deck successfully created", "success");
         }
 
         // Modify existing deck
         public Data.ReturnInfo ModifyDeck(Data.DeckFull deck, Guid? guid) {
             int index = FindDeck(deck.Name);
-            if (index == -1) return CreateReturn(false, "Deck not found", "warning"); // Deck not found
-            else if (index != deck.Id) return CreateReturn(false, "Deck ID doesnt match", "warning"); // Deck id doesnt match the list
-            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "User not found", "warning"); // User not in the list
-            else if (GuidList[guid].Name != deck.Author) return CreateReturn(false, "User not match the author", "warning"); // User does not match
+            if (index == -1) return CreateReturn(false, "Modify", "Deck not found", "warning"); // Deck not found
+            else if (index != deck.Id) return CreateReturn(false, "Modify", "Deck ID doesnt match", "warning"); // Deck id doesnt match the list
+            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "Modify", "User not found", "warning"); // User not in the list
+            else if (GuidList[guid].Name != deck.Author) return CreateReturn(false, "Modify", "User not match the author", "warning"); // User does not match
 
             // Success
             InfoList[deck.Id] = NewInfo(deck);
             DeckList[deck.Id] = deck;
             string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
             File.WriteAllText("decks/" + deck.Id + "-" + deck.Name, toJson);
-            return CreateReturn(true, "Deck successfully modified", "success");
+            return CreateReturn(true, "Modify", "Deck successfully modified", "success");
         }
 
         public Data.DeckFull GetDeckList(int index) {

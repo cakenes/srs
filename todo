@@ -1,9 +1,32 @@
-Deck page - 
-
-Yhteenveto korteista.
-Feedback pois input fieldistä.
-Manual override for wrong answer.
+Nav Page --------
 
 
-Create page - 
-Jos lista on tyhjä, näytä teksti joka opastaa
+Deck page --------
+- Show card info while reviewing, and when done
+- Move feedback away from input field
+- Manual override for wrong asnwers
+- Allow review from Back -> Front aswell
+
+
+Create page --------
+- Add fucntionality to have multiple right answers
+
+
+Modify page --------
+
+
+Information page --------
+- Explain what the site is, how it works etc
+
+
+User statistics page --------
+- Need to add
+
+
+List page --------
+- Add functionality to reviewed before icon
+
+
+Whole site --------
+- Add color ??
+- Add another theme ??

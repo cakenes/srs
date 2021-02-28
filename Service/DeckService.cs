@@ -46,19 +46,24 @@ namespace Srs {
         // Select deck
         public Task<Data.ReturnInfo> SelectReviewDeckAsync(ServiceData origin, int index) {
             origin.Review = Access.Current.GetDeckList(index);
-            if (origin.Review.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
-            return Task.FromResult(CreateReturn(true, "Success", "success"));
+            if (origin.Review.Id == 0) return Task.FromResult(CreateReturn(false, "Review", "Deck could not be found", "danger")); 
+            return Task.FromResult(CreateReturn(true, "Review", "Success", "success"));
         }
 
         // Select modify deck
         public Task<Data.ReturnInfo> SelectModifyDeckAsync(ServiceData origin, int index) {
             origin.Create = Access.Current.GetDeckList(index);
-            if (origin.Create.Id == 0) return Task.FromResult(CreateReturn(false, "Deck could not be found", "danger")); 
-            return Task.FromResult(CreateReturn(true, "Success", "success"));
+            if (origin.Create.Id == 0) return Task.FromResult(CreateReturn(false, "Modify", "Deck could not be found", "danger")); 
+            return Task.FromResult(CreateReturn(true, "Modify", "Success", "success"));
         }
 
         // Create deck
         public Task<Data.ReturnInfo> CreateDeckAsync(ServiceData origin, Data.DeckFull deck) {
+            if (deck.Name == null) return Task.FromResult(CreateReturn(false, "Create Deck", "Cannot create without a name", "danger"));
+            else if (deck.Name.Length < 5) return Task.FromResult(CreateReturn(false, "Create Deck", "Deck name too short, needs to be atleast 5 characters", "warning"));
+            else if (deck.Name.Length > 25) return Task.FromResult(CreateReturn(false, "Create Deck", "Deck name too long, needs to be under 25 characters", "warning"));
+            else if (deck.Cards.Count < 10) return Task.FromResult(CreateReturn(false, "Create Deck", "Deck needs to have atleast 10 cards", "warning"));
+            else if (deck.Cards.Count > 100) return Task.FromResult(CreateReturn(false, "Create Deck", "Deck cannot have over 100 cards", "warning"));
             deck.Author = Access.Current.GetUser(origin.UserId).Name;
             Data.ReturnInfo info = Access.Current.CreateDeck(deck);
             return Task.FromResult(info);
@@ -72,7 +77,7 @@ namespace Srs {
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(ServiceData origin, Dictionary<int,int> reviewReturn) {  
-            if (origin.UserId == null) return Task.FromResult(CreateReturn(false, "Review Done! \n Not logged in, progress wont be saved", "warning"));
+            if (origin.UserId == null) return Task.FromResult(CreateReturn(false, "Review Done", "Not logged in, progress wont be saved", "warning"));
             Data.User reviewUser = Access.Current.GetUser(origin.UserId);
 
             if (!reviewUser.Review.ContainsKey(origin.Review.Id)) reviewUser.Review[origin.Review.Id] = new Dictionary<int, int>();
@@ -85,7 +90,7 @@ namespace Srs {
             }
 
             Access.Current.UpdateUser(origin.UserId);
-            return Task.FromResult(CreateReturn(true, "Done! Progress saved", "success"));
+            return Task.FromResult(CreateReturn(true, "Review Done", "Progress saved", "success"));
         }
 
         // Load info
