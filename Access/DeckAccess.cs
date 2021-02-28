@@ -57,11 +57,12 @@ namespace Srs {
 
         // Modify existing deck
         public Data.ReturnInfo ModifyDeck(Data.DeckFull deck, Guid? guid) {
-            int index = FindDeck(deck.Name);
-            if (index == -1) return CreateReturn(false, "Modify", "Deck not found", "warning"); // Deck not found
-            else if (index != deck.Id) return CreateReturn(false, "Modify", "Deck ID doesnt match", "warning"); // Deck id doesnt match the list
-            if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "Modify", "User not found", "warning"); // User not in the list
+            if (!DeckList.ContainsKey(deck.Id)) return CreateReturn(false, "Modify", "Deck not found", "warning"); // Deck not found
+            else if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "Modify", "User not found", "warning"); // User not in the list
             else if (GuidList[guid].Name != deck.Author) return CreateReturn(false, "Modify", "User not match the author", "warning"); // User does not match
+
+            // Remove old file
+            File.Delete("decks/" + deck.Id + "-" + DeckList[deck.Id]);
 
             // Success
             InfoList[deck.Id] = NewInfo(deck);
