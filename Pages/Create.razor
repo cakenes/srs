@@ -43,8 +43,8 @@
 					<div class="dropdown">
 						<div class="dropdown-menu tooltip-left">
 							<span class="dropdown-item text-tooltip disabled">!! Currently disabled !!</span>
-							<span class="dropdown-item text-tooltip disabled">Seperate multiple users with comma</span>
-							<span class="dropdown-item text-tooltip disabled">(e.g. user1,user2)</span>
+							<span class="dropdown-item text-tooltip disabled">Seperate multiple users with |</span>
+							<span class="dropdown-item text-tooltip disabled">e.g. user1|user2</span>
 						</div>
 					</div>
 					<span class="dropdown bi bi-question-circle"></span>
@@ -71,9 +71,15 @@
 			</div>
 
 			<!-- Create -->
-			<div class="row justify-content-center">
-				@if (newDeck.Id == 0) { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => CreateDeck())">Create Deck</button> }
-				else { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ModifyDeck())">Modify Deck</button> } 
+			<div class="row justify-content-between">
+				@if (newDeck.Id == 0) { 
+					<button class="btn text-bold-medium hover-red" type="button" disabled>Clear Deck</button>
+					<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => CreateDeck())">Create Deck</button>
+					}
+				else {
+					<button class="btn text-bold-medium hover-red" type="button" disabled>Delete Deck</button>
+					<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ModifyDeck())">Modify Deck</button>
+					}
 			</div>
 		</div>
 
@@ -83,14 +89,13 @@
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm">
-				<textarea class="form-control text-light-small text-center rounded-right" maxlength="100" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
+				<textarea class="form-control text-light-small text-center rounded-right" maxlength="150" rows="3" placeholder="Front of the card" @bind="newCard.Front" @bind:event="oninput"></textarea>
 
 				<!-- Front tooltip -->
   				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
 						<div class="dropdown-menu tooltip-left">
-							<span class="dropdown-item text-tooltip disabled">Front of the card</span>
-							<span class="dropdown-item text-tooltip disabled">Limited currently to 100 characters</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 150 characters</span>
 						</div>
 					</div>
 					<span class="dropdown bi bi-question-circle"></span>
@@ -99,14 +104,15 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-light-small text-center rounded-right" maxlength="20" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
+				<textarea class="form-control text-light-small text-center rounded-right" maxlength="40" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
 
 				<!-- Back tooltip -->
   				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
 						<div class="dropdown-menu tooltip-left">
-							<span class="dropdown-item text-tooltip disabled">Back of the card</span>
-							<span class="dropdown-item text-tooltip disabled">Limited currently to 20 characters</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 40 characters</span>
+							<span class="dropdown-item text-tooltip disabled">Sepereate multiple answers with |</span>
+							<span class="dropdown-item text-tooltip disabled">e.g. Color|Colour</span>
 						</div>
 					</div>
 					<span class="dropdown bi bi-question-circle"></span>
@@ -114,7 +120,7 @@
 			</div>
 
 			<!-- Card action -->
-			<div class="row justify-content-center mb-5">
+			<div class="row justify-content-end mb-5">
 				<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => SaveCard())">Save Card</button>
 			</div>
 		</div>
@@ -123,7 +129,7 @@
 	<!-- Search -->
 	<div class="row">
 		<div class="input-group justify-content-center">
-			<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
+			<input type="search" class="form-control text-light-medium text-black" placeholder="Search: What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
 		</div>
 	</div>
 
@@ -180,7 +186,7 @@
 
 					<!-- Action -->
 					<th scope="col" class="text-center">
-						<span class="btn text-bold-medium no-wrap">Action</span>
+						<span class="btn text-bold-medium no-wrap disable">Edit / Delete</span>
 					</th>
 				</tr>
 			</thead>
@@ -199,25 +205,15 @@
 		    			<td class="text-light-small text-black text-left overflow-hidden">@item.Front</td>
       					<td class="text-light-small text-black text-left overflow-hidden">@item.Back</td>
      					<td class="text-right">
-							<div class="btn-group" role="group">
+							<div class="btn-group width-full" role="group">
 
 								<!-- Edit -->
-								<button class="btn btn-list dropdown" @onclick="(() => EditCard(item))" tabindex="-1"> 
-									<div class="dropdown">
-										<div class="dropdown-menu tooltip-left">
-											<span class="dropdown-item text-tooltip disabled">Edit</span>
-										</div>
-									</div>
+								<button class="btn btn-list width-fit" @onclick="(() => EditCard(item))" tabindex="-1"> 
 									<img src="svg/Edit.svg" alt="" width="16" height="16">
 								</button>
 
 								<!-- Delete -->
-								<button class="btn btn-list dropdown" @onclick="(() => DeleteCard(item))" tabindex="-1"> 
-									<div class="dropdown">
-										<div class="dropdown-menu tooltip-left">
-											<span class="dropdown-item text-tooltip disabled">Delete</span>
-										</div>
-									</div>
+								<button class="btn btn-list width-fit" @onclick="(() => DeleteCard(item))" tabindex="-1"> 
 									<img src="svg/Delete.svg" alt="" width="16" height="16">
 								</button>
 							</div>
@@ -269,6 +265,7 @@
 	}
 
 	private void EditCard(Data.Card card) {
+		Navigation.NavigateTo("/Create#");
 		editCard = card.Id;
 		newCard = card;
 		ToggleSort(-1);

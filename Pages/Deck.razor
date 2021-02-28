@@ -11,7 +11,8 @@
 
 		<!-- Review -->
 		<div class="col mr-3" align="center">
-			<span class="text-bold-large">Review</span>
+			@if (reviewRunning) { <span class="text-bold-large">Review: @(currentIndex+1) of @indexArray.Count()</span> }
+			else { <span class="text-bold-large">Review</span> }
 
 			<!-- Front -->
 			<div class="row">
@@ -20,15 +21,23 @@
 
 			<!-- Back -->
 			<div class="row">
-				<textarea class="form-control text-light-small @placeholderColor text-center mt-2" maxlength="50" rows="3" placeholder="@cardPlaceholder" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter" autofocus></textarea>				
+				<textarea class="form-control text-light-small text-center mt-2" maxlength="50" rows="3" placeholder="Answer" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter" autofocus></textarea>				
 			</div>
 
 			@if (reviewRunning) {
 				<!-- Enter -->
 				<div class="row justify-content-center">
+
 					<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())">
-                    	<span>Enter</span>
+                    	<span>Check</span>
                 	</button>
+
+					@if (deckMsgTitle != null) {
+						<div class="alert @deckMsgType text-light-small width-full alert-dismissible fade show" role="alert" align="center">
+	                    	<strong>@deckMsgTitle</strong><br>@deckMsg
+                    		<button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                		</div>
+					}
 				</div>
 			}
 		</div>
@@ -83,7 +92,8 @@
 	private int[] indexArray;
 	private float reviewAmount, reviewPercent;
 	private bool reviewTypos = true, reviewRunning;
-	private string cardFront, cardBack, cardPlaceholder, placeholderColor;
+	private string cardFront, cardBack;
+	private string deckMsgTitle, deckMsg, deckMsgType;
 	private Data.PartialDeck partialDeck;
 	private Dictionary<int, int> reviewReturn;
 
@@ -99,26 +109,45 @@
 	private void ReviewCardDisplay() {
 		if (currentIndex >= indexArray.Count()) { ReturnReviewDeck(); return; }
 		cardFront = partialDeck.Cards[indexArray[currentIndex]].Front;
-		cardBack = null;
+		cardBack = "";
 	}
 
 	private void ReviewCardValidate() {
 		if (!reviewRunning) return;
+		string[] tempAnswers = partialDeck.Cards[indexArray[currentIndex]].Back.Split('|');
 		string tempBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
-		string tempAnswer = new string(partialDeck.Cards[indexArray[currentIndex]].Back.Where(x => char.IsLetterOrDigit(x)).ToArray());
-		if (reviewTypos) { tempBack = tempBack.ToLower(); tempAnswer = tempAnswer.ToLower(); }
-		if (tempBack == tempAnswer) { placeholderColor = "placeholder-green"; cardPlaceholder = "Correct!"; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1); }
-		else { placeholderColor = "placeholder-red"; cardPlaceholder = "Incorrect! Answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back; reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1); }
+
+		foreach (string answer in tempAnswers)
+		{
+			string tempAnswer = new string(answer.Where(x => char.IsLetterOrDigit(x)).ToArray());
+			if (tempAnswer == tempBack) {
+
+				if (tempAnswers.Count() > 1) SetDeckNotification("Correct!", "Would of accepted any of: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "success");
+				else SetDeckNotification("Correct!", "Good job, keep it going", "success");
+				reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1);
+				currentIndex += 1; ReviewCardDisplay(); return;
+			}
+		}
+		
+		if (tempAnswers.Count() > 1) SetDeckNotification("Incorrect!", "Acceptable answers were: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "danger");
+		else SetDeckNotification("Incorrect!", "Correct answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back, "danger");
+		reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1);
 		currentIndex += 1;
 		ReviewCardDisplay();
 	}
 
 	private async void ReturnReviewDeck() {
 		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(ServiceData, reviewReturn);
-		cardFront = info.Message;
-		cardBack = "";
+		SetDeckNotification(info.Title, info.Message, info.Type);
 		reviewRunning = false;
+		cardBack = "";
 	}
+
+	private void SetDeckNotification(string title = null, string msg = null, string type = "warning") {
+        deckMsgTitle = title;
+        deckMsg = msg;
+        deckMsgType = "alert-" + type;
+    }
 
 	private void Enter(KeyboardEventArgs e) {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();

@@ -10,18 +10,20 @@
 	<!-- Search -->
 	<div class="row">
 		<div class="input-group justify-content-center">
-			<input type="search" class="form-control text-light-medium text-black" placeholder="What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
+			<input type="search" class="form-control text-light-medium text-black" placeholder="Search: What are you looking for?" @bind-value="deckSearch" @bind-value:event="oninput" aria-label="Search">
 		</div>
 	</div>
 
 	<!-- Select -->
 	<div class="row justify-content-between">
 		<div class="col" align="left">
-			<button class="btn text-bold-large disable" type="button">Select deck <i class="text-bold-medium bi bi-arrow-down-right-circle-fill"></i></button>
+			<button class="btn text-bold-large text-blue disable" type="button">
+				Select deck <i class="bi bi-arrow-down-right-circle-fill"></i>
+			</button>
 		</div>
 	</div>
 
-	<div class="divider"></div>
+	<div class="divider text-blue"></div>
 
 	<!-- Table -->
 	<div class="row justify-content-center">

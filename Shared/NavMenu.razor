@@ -27,7 +27,7 @@
                     <!-- Notification -->
                     @if (deckMsgTitle != null)
                     {
-                        <div class="alert @deckMsgType text-light-small alert-dismissible fade show" role="alert">
+                        <div class="alert @deckMsgType text-light-small alert-dismissible fade show" role="alert" align="center">
                             <span><strong>@deckMsgTitle</strong><br>@deckMsg</span>
                             <button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
                         </div>
@@ -40,7 +40,7 @@
 
                     <!-- Modify -->
                     @if (ServiceData.UserId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
-                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
+                    else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Create / Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
                 </li>
             </div>
         </div>
@@ -61,7 +61,7 @@
                     <!-- Notification -->
                     @if (userMsgTitle != null)
                     {
-                        <div class="alert @userMsgType text-light-small alert-dismissible fade show" role="alert">
+                        <div class="alert @userMsgType text-light-small alert-dismissible fade show" role="alert" align="center">
                             <span><strong>@userMsgTitle</strong><br>@userMsg</span>
                             <button type="button" class="close btn-sm" @onclick="(()=>SetUserNotification())" aria-label="Close">&times;</button>
                         </div>

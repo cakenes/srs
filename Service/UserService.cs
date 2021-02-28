@@ -31,10 +31,10 @@ namespace Srs {
         // Create user
         public Task<Data.ReturnInfo> CreateUserAsync(string name, string password) {
             if (name == null || password == null) return Task.FromResult(CreateReturn(false, "Register", "Username or password missing", "danger"));
-            else if (name.Length < 3) return Task.FromResult(CreateReturn(false, "Register", "Username is too short, must be over 3", "warning"));
-            else if (password.Length < 5) return Task.FromResult(CreateReturn(false, "Register", "Password too short, must be over 5", "warning"));
-            else if (name.Length > 16) return Task.FromResult(CreateReturn(false, "Register", "Username is too long, keep it under 16", "warning"));
-            else if (password.Length > 20) return Task.FromResult(CreateReturn(false, "Register", "Password too long, keep it under 20", "warning"));
+            else if (name.Length < 3) return Task.FromResult(CreateReturn(false, "Register", "Username is too short, must be over 3 characters", "warning"));
+            else if (password.Length < 5) return Task.FromResult(CreateReturn(false, "Register", "Password too short, must be over 5 characters", "warning"));
+            else if (name.Length > 16) return Task.FromResult(CreateReturn(false, "Register", "Username is too long, keep it under 16 characters", "warning"));
+            else if (password.Length > 20) return Task.FromResult(CreateReturn(false, "Register", "Password too long, keep it under 20 characters", "warning"));
 
             Data.ReturnInfo info = Access.Current.CreateUser(name,password);
             return Task.FromResult(info);
@@ -56,7 +56,7 @@ namespace Srs {
 
         // Create Return
         public Data.ReturnInfo CreateReturn(bool success, string title, string message, string type) {
-            return new Data.ReturnInfo {Success = success, Message = message, Type = type};
+            return new Data.ReturnInfo {Success = success, Title = title, Message = message, Type = type};
         }
     }
 }
