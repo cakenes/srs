@@ -104,13 +104,13 @@
 
 			<!-- Card back -->
 			<div class="input-group  input-group-sm mt-2">
-				<textarea class="form-control text-light-small text-center rounded-right" maxlength="40" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
+				<textarea class="form-control text-light-small text-center rounded-right" maxlength="60" rows="3" placeholder="Back of the card" @bind="newCard.Back" @bind:event="oninput" @onkeydown="Enter"></textarea>
 
 				<!-- Back tooltip -->
   				<button class="btn btn-list dropdown tooltip-inlay" tabindex="-1"> 
 					<div class="dropdown">
 						<div class="dropdown-menu tooltip-left">
-							<span class="dropdown-item text-tooltip disabled">Limited currently to 40 characters</span>
+							<span class="dropdown-item text-tooltip disabled">Limited currently to 60 characters</span>
 							<span class="dropdown-item text-tooltip disabled">Sepereate multiple answers with |</span>
 							<span class="dropdown-item text-tooltip disabled">e.g. Color|Colour</span>
 						</div>
@@ -260,7 +260,7 @@
 		if (newDeck.Cards.Count == 0) { newCard.Id = 1; newDeck.Cards.Add(newCard.Id, newCard); }
 		else if (newCard.Id == 0) { newCard.Id = newDeck.Cards.Keys.Last() + 1; newDeck.Cards.Add(newCard.Id, newCard); }
 		else { newDeck.Cards[editCard] = newCard; }
-		newCard = new Data.Card();
+		newCard = new Data.Card { Front ="", Back = "" };
 		ToggleSort(-1);
 	}
 
@@ -298,7 +298,7 @@
 	private Task Initialize() {
 		if (ServiceData.UserId == null) Navigation.NavigateTo("/");
 		newDeck = ServiceData.Create;
-		newCard = new Data.Card();
+		newCard = new Data.Card { Front = "", Back = "" };
 		return Task.CompletedTask;
 	}
 
