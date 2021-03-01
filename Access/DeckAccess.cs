@@ -6,12 +6,10 @@ using Newtonsoft.Json;
 
 namespace Srs {
 
-    public partial class AccessData {
-    }
-
     public partial class Access {
-
+        
         public static readonly Access Current = new Access();
+        private DeckPooler deckPooler = new DeckPooler();
 
         private SortedDictionary<int, Data.DeckInfo> InfoList;
         private SortedDictionary<int, Data.DeckFull> DeckList;
@@ -36,6 +34,24 @@ namespace Srs {
                 DeckList.Add(fromJson.Id, fromJson);
                 InfoList.Add(fromJson.Id, NewInfo(fromJson));
             }
+        }
+
+
+        // Create new deck
+        public Data.ReturnInfo CreateDeckNew(Data.DeckFull deck) {
+            int index = FindDeck(deck.Name);
+            if (index != -1) return CreateReturn(false, "Create Deck", "Name is already in use", "warning"); // Name exists
+
+            // Success, set deck.Id
+            if (DeckList.Count == 0) deck.Id = 1;
+            else deck.Id = DeckList.Keys.Last() + 1;
+
+            // Create Deck
+            DeckList.Add(deck.Id, deck);
+            InfoList.Add(deck.Id, NewInfo(deck));
+            string toJson = JsonConvert.SerializeObject(deck, Formatting.Indented);
+            File.WriteAllText("decks/" + deck.Id + "-" + deck.Name, toJson);
+            return CreateReturn(true,"Create Deck", "Deck successfully created", "success");
         }
 
         // Create new deck

@@ -24,22 +24,31 @@
 				<textarea class="form-control text-light-small text-center mt-2" maxlength="50" rows="3" placeholder="Answer" @bind="cardBack" @bind:event="oninput" @onkeyup="Enter" autofocus></textarea>				
 			</div>
 
-			@if (reviewRunning) {
-				<!-- Enter -->
+			<!-- Enter -->
+			<div class="row justify-content-center">
+				@if (reviewRunning) { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())">Check</button> }
+				else { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())" disabled>Check</button> }
+			</div>
+
+			@if (cardMsgTitle != null) {
 				<div class="row justify-content-center">
-
-					<button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())">
-                    	<span>Check</span>
-                	</button>
-
-					@if (deckMsgTitle != null) {
-						<div class="alert @deckMsgType text-light-small width-full alert-dismissible fade show" role="alert" align="center">
-	                    	<strong>@deckMsgTitle</strong><br>@deckMsg
-                    		<button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
-                		</div>
-					}
+					<div class="alert @cardMsgType text-light-small width-full alert-dismissible fade show" role="alert" align="center">
+			            <strong>@cardMsgTitle</strong><br>@cardMsg
+	                    <button type="button" class="close btn-sm" @onclick="(()=>SetCardNotification())" aria-label="Close">&times;</button>
+            		</div>
 				</div>
 			}
+
+			@if (deckMsgTitle != null) {
+				<div class="row justify-content-center">
+					<div class="alert @deckMsgType text-light-small width-full alert-dismissible fade show" role="alert" align="center">
+		                <strong>@deckMsgTitle</strong><br>@deckMsg
+                    	<button type="button" class="close btn-sm" @onclick="(()=>SetDeckNotification())" aria-label="Close">&times;</button>
+                	</div>
+				</div>
+			}
+
+
 		</div>
 
 		<!-- Options -->
@@ -88,11 +97,12 @@
 
 @code
 {
-	private int currentIndex;
+	private int currentIndex = 0;
 	private int[] indexArray;
-	private float reviewAmount, reviewPercent;
+	private float reviewAmount = 10, reviewPercent = 70;
 	private bool reviewTypos = true, reviewRunning;
 	private string cardFront, cardBack;
+	private string cardMsgTitle, cardMsg, cardMsgType;
 	private string deckMsgTitle, deckMsg, deckMsgType;
 	private Data.PartialDeck partialDeck;
 	private Dictionary<int, int> reviewReturn;
@@ -122,15 +132,15 @@
 			string tempAnswer = new string(answer.Where(x => char.IsLetterOrDigit(x)).ToArray());
 			if (tempAnswer == tempBack) {
 
-				if (tempAnswers.Count() > 1) SetDeckNotification("Correct!", "Would of accepted any of: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "success");
-				else SetDeckNotification("Correct!", "Good job, keep it going", "success");
+				if (tempAnswers.Count() > 1) SetCardNotification("Correct!", "Would of accepted any of: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "success");
+				else SetCardNotification("Correct!", "Good job, keep it going", "success");
 				reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1);
 				currentIndex += 1; ReviewCardDisplay(); return;
 			}
 		}
 		
-		if (tempAnswers.Count() > 1) SetDeckNotification("Incorrect!", "Acceptable answers were: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "danger");
-		else SetDeckNotification("Incorrect!", "Correct answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back, "danger");
+		if (tempAnswers.Count() > 1) SetCardNotification("Incorrect!", "Acceptable answers were: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "danger");
+		else SetCardNotification("Incorrect!", "Correct answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back, "danger");
 		reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1);
 		currentIndex += 1;
 		ReviewCardDisplay();
@@ -149,17 +159,21 @@
         deckMsgType = "alert-" + type;
     }
 
+	private void SetCardNotification(string title = null, string msg = null, string type = "warning") {
+        cardMsgTitle = title;
+        cardMsg = msg;
+        cardMsgType = "alert-" + type;
+	}
+
 	private void Enter(KeyboardEventArgs e) {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();
     }
 
 	private Task Initialize() {
 		if (ServiceData.Review.Id == 0) Navigation.NavigateTo("/");
-		partialDeck = new Data.PartialDeck();
-		partialDeck.Cards = new SortedDictionary<int, Card>();
+		if (ServiceData.UserId == null) SetDeckNotification("Progress", "Progress wont be saved without logging in", "warning");
+		partialDeck = new Data.PartialDeck { Cards = new SortedDictionary<int, Card>() };
 		reviewReturn = new Dictionary<int, int>();
-		reviewPercent = 50;
-		reviewAmount = 10;
 		return Task.CompletedTask;
 	}
 

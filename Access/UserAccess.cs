@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Srs {
-    
-    public partial class AccessData {
-    }
 
     public partial class Access {
+
+        private UserPooler userPooler = new UserPooler();
+        private Dictionary<Guid?, Data.User> guidList;
 
         private SortedDictionary<int, Data.User> UserList;
         private Dictionary<Guid?,Data.User> GuidList;
@@ -71,7 +71,7 @@ namespace Srs {
             // Create User
             UserList.Add(user.Id, user);
             string toJson = JsonConvert.SerializeObject(user, Formatting.Indented);
-            File.WriteAllText("users/" + user.Id + "-" + user.Name, toJson);
+            File.WriteAllText("users/" + user.Name, toJson);
             return CreateReturn(true, "Register", "User created successfully", "success");
         }
 

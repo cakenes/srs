@@ -10,7 +10,9 @@
 
 		<!-- Deck -->
 		<div class="col" align="center">
-			<span class="text-bold-large">Deck</span>
+
+			@if (newDeck.Cards.Count == 0)  { <span class="text-bold-large text-blue">Deck</span> }
+			else { <span class="text-bold-large text-blue">Deck: @newDeck.Cards.Count Card(s)</span> }
 
 			<!-- Notification -->
 			<div class="row justify-content-center">
@@ -85,7 +87,7 @@
 
 		<!-- Card -->
 		<div class="col" align="center">
-			<span class="text-bold-large">Card</span>
+			<span class="text-bold-large text-blue">Card</span>
 
 			<!-- Card front -->
 			<div class="input-group input-group-sm">
@@ -278,14 +280,14 @@
 
 	private async Task CreateDeck() {
 		Data.ReturnInfo info = await Service.CreateDeckAsync(ServiceData, newDeck);
-		SetCreateNotification("Create deck", info.Message, info.Type);
+		SetCreateNotification(info.Title, info.Message, info.Type);
 		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		ToggleSort(-1);
 	}
 
 	private async Task ModifyDeck() {
 		Data.ReturnInfo info = await Service.ModifyDeckAsync(ServiceData, newDeck);
-		SetCreateNotification("Modify deck", info.Message, info.Type);
+		SetCreateNotification(info.Title, info.Message, info.Type);
 		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		ToggleSort(-1);
 	}

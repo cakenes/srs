@@ -23,7 +23,7 @@
 		</div>
 		<!-- Create new -->
 		<div class="col" align="right">
-			<button class="btn text-bold-large hover-green" type="button" @onclick="(()=>CreateDeck())"><span class="bi bi-plus-circle-fill"> Create new</span></button>
+			<button class="btn text-bold-large text-green hover-gray" type="button" @onclick="(()=>CreateDeck())"><span class="bi bi-plus-circle-fill"> Create new</span></button>
 		</div>
 	</div>
 
@@ -115,19 +115,8 @@
     					<td>
 							<div class="btn-group btn-group-sm">
 
-							<!-- Reviewed -->
-								<button class="btn btn-list hover-blue dropdown" tabindex="-1"> 
-									<div class="dropdown">
-										<div class="dropdown-menu tooltip-center">
-											<span class="dropdown-item text-tooltip disabled">Reviewed before</span>
-										</div>
-									</div>
-									<img src="svg/Select.svg" alt="" width="16" height="16" class="align-center">
-								</button>
-
 							<!-- Select -->
 								<button class="btn btn-list" type="button" @onclick="(() => ModifyDeckSelect(item))">
-									@if (item.Password) { <img src="svg/Lock.svg" alt="" width="16" height="16"> }
 									<span class="text-light-small text-black">@item.Name</span>
 								</button>
 							</div>

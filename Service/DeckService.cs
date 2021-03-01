@@ -77,7 +77,7 @@ namespace Srs {
 
         // Return review deck
         public Task<Data.ReturnInfo> ReviewDeckReturnAsync(ServiceData origin, Dictionary<int,int> reviewReturn) {  
-            if (origin.UserId == null) return Task.FromResult(CreateReturn(false, "Review Done", "Not logged in, progress wont be saved", "warning"));
+            if (origin.UserId == null) return Task.FromResult(CreateReturn(false, "Review Done", "You got " + reviewReturn.Values.Where(x => x == 1).Count() + " correct", "success"));
             Data.User reviewUser = Access.Current.GetUser(origin.UserId);
 
             if (!reviewUser.Review.ContainsKey(origin.Review.Id)) reviewUser.Review[origin.Review.Id] = new Dictionary<int, int>();
@@ -90,7 +90,7 @@ namespace Srs {
             }
 
             Access.Current.UpdateUser(origin.UserId);
-            return Task.FromResult(CreateReturn(true, "Review Done", "Progress saved", "success"));
+            return Task.FromResult(CreateReturn(true, "Review Done", "Progress saved, you got " + reviewReturn.Values.Where(x => x == 1).Count() + " correct", "success"));
         }
 
         // Load info
