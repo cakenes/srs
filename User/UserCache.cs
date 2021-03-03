@@ -8,13 +8,15 @@ using Newtonsoft.Json;
 
 namespace Srs {
 
-    public class UserPooler {
+    public class UserCache {
 
-        public int PooledMax = 100;  // Hard cap to number of objects in Dictionary, will replace forcefully.
+        public static readonly UserCache Current = new UserCache();
+
+        public int PooledMax = 1000;  // Hard cap to number of objects in Dictionary, will replace forcefully.
         public double PooledExpiration = 1;  // Time in hours to remove pooled objects.
 
-        public Dictionary<string, Data.User> UserList;
-        private Dictionary<string, DateTime> ExpirationList;
+        public Dictionary<string, Data.User> UserList = new Dictionary<string, Data.User>();
+        private Dictionary<string, DateTime> ExpirationList = new Dictionary<string, DateTime>();
 
         public async Task<Data.User> LoadUser(string name = "") {
 
@@ -27,10 +29,8 @@ namespace Srs {
                 return userReturn;
             }
 
-            string[] filePaths = Directory.GetFiles("users/", name);
-
-            if (filePaths.Length >= 1) {
-                string fileRead = await File.ReadAllTextAsync(filePaths[0]);
+            if (File.Exists("Db/users/" + name)) {
+                string fileRead = await File.ReadAllTextAsync("Db/users/" + name);
                 userReturn =  JsonConvert.DeserializeObject<Data.User>(fileRead);
 
                 if (UserList.Count >= PooledMax) {
@@ -48,8 +48,18 @@ namespace Srs {
             return userReturn;
         }
 
-        public void CleanUp (int delay, CancellationToken token) {
+        public void RemoveUser(string name = "") {
+            if (ExpirationList.ContainsKey(name)) ExpirationList.Remove(name);
+            if (UserList.ContainsKey(name)) UserList.Remove(name);
+        }
 
+        public bool UserExists(string name = "") {
+            if (UserList.ContainsKey(name)) return true;
+            if (File.Exists("Db/users/" + name)) return true;
+            return false;
+        }
+
+        public void CleanUp (int delay, CancellationToken token) {
             Task.Run(async () => { 
                 while (!token.IsCancellationRequested) {
                     foreach (var item in ExpirationList.Where(x => x.Value <= DateTime.Now)) {

@@ -14,11 +14,6 @@ namespace Srs.Data {
         public int Id;
         public string Name;
         public string Password;
-        // Deck related
-        public List<int> Own;
-        public List<int> Opened;
-        public List<int> Favorites;
-        // Old reviews
         public Dictionary<int, Dictionary<int, int>> Review;
     }
 }

@@ -16,6 +16,7 @@ namespace Srs.Data {
 
     public struct PartialDeck {
         public int Id;
+        public string Name;
         public SortedDictionary<int, Card> Cards;
     }
 

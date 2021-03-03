@@ -279,14 +279,14 @@
 	}
 
 	private async Task CreateDeck() {
-		Data.ReturnInfo info = await Service.CreateDeckAsync(ServiceData, newDeck);
+		Data.ReturnInfo info = await Service.CreateDeckAsync(ServiceData);
 		SetCreateNotification(info.Title, info.Message, info.Type);
 		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		ToggleSort(-1);
 	}
 
 	private async Task ModifyDeck() {
-		Data.ReturnInfo info = await Service.ModifyDeckAsync(ServiceData, newDeck);
+		Data.ReturnInfo info = await Service.ModifyDeckAsync(ServiceData);
 		SetCreateNotification(info.Title, info.Message, info.Type);
 		if (info.Success) newDeck = new Data.DeckFull { Cards = new SortedDictionary<int, Card>() };
 		ToggleSort(-1);

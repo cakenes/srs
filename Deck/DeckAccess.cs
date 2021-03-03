@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Srs {
@@ -9,16 +10,61 @@ namespace Srs {
     public partial class Access {
         
         public static readonly Access Current = new Access();
-        private DeckPooler deckPooler = new DeckPooler();
 
-        private SortedDictionary<int, Data.DeckInfo> InfoList;
-        private SortedDictionary<int, Data.DeckFull> DeckList;
+        public Dictionary<string, Data.DeckInfo> InfoList;
 
-        public void InitializeDeck() {
-            DeckList = new SortedDictionary<int, Data.DeckFull>();
-            InfoList = new SortedDictionary<int, Data.DeckInfo>();
-            LoadDecks();
+        private Data.DeckInfo tempInfo;
+
+        // Populate InfoList
+        public async void InitializeInfo() {
+            if (!Directory.Exists("Db/decks/")) return;
+            InfoList = new Dictionary<string, Data.DeckInfo>();
+            string[] filePaths = Directory.GetFiles("Db/decks/", "*.*");
+
+            foreach (string path in filePaths)
+            {
+                string fromFile = await File.ReadAllTextAsync(path);
+                Data.DeckFull fromText = JsonConvert.DeserializeObject<Data.DeckFull>(fromFile);
+                InfoList.Add(fromText.Name, CreateDeckInfo(fromText));
+            }
         }
+
+        // Create new deck
+        public async Task<Data.ReturnInfo> CreateDeckAsync(ServiceData origin) {
+          if (!ValidateOrigin(origin)) { origin = new ServiceData { User = new Data.User { Name = "User" }}; return CreateReturn(false, "Create Deck", "Could not validate user", "danger"); }
+            string toFile = JsonConvert.SerializeObject(origin.Create, Formatting.Indented);
+            await File.WriteAllTextAsync("Db/decks/" + origin.Create.Name, toFile);
+            InfoList.Add(origin.Create.Name, CreateDeckInfo(origin.Create));
+            return CreateReturn(true,"Create Deck", "Deck successfully created", "success");
+        }
+
+        // Modify existing deck
+        public async Task<Data.ReturnInfo> ModifyDeck(ServiceData origin) {
+            if (!ValidateOrigin(origin)) { origin = new ServiceData { User = new Data.User { Name = "User" }}; return CreateReturn(false, "Create Deck", "Could not validate user", "danger"); } 
+            string toFile = JsonConvert.SerializeObject(origin.Create, Formatting.Indented);
+            await File.WriteAllTextAsync("Db/decks/" + origin.Create.Name, toFile);
+            InfoList.Add(origin.Create.Name, CreateDeckInfo(origin.Create));
+            // Remove Old
+            InfoList.Remove(origin.Old.Name);
+            DeckCache.Current.RemoveDeck(origin.Old.Name);
+            File.Delete("Db/decks/" + origin.Old.Name);
+            return CreateReturn(true, "Modify", "Deck successfully modified", "success");
+        }
+
+        // Generate modifyable list
+        public List<Data.DeckInfo> CreateModifyList(string name) {
+            List<Data.DeckInfo> returnList = InfoList.Values.Where(x => x.Author == name).ToList();
+            return returnList;
+        }
+
+        // Generate DeckInfo
+        public Data.DeckInfo CreateDeckInfo(Data.DeckFull deck) {
+            tempInfo = new Data.DeckInfo {Id = deck.Id, Popularity = 0, Name = deck.Name, Author = deck.Author, Cards = deck.Cards.Count};
+            if (deck.Password != null) tempInfo.Password = true;
+            return tempInfo;
+        }
+
+/*
 
         // Load decks to memory
         public void LoadDecks() {
@@ -35,7 +81,6 @@ namespace Srs {
                 InfoList.Add(fromJson.Id, NewInfo(fromJson));
             }
         }
-
 
         // Create new deck
         public Data.ReturnInfo CreateDeckNew(Data.DeckFull deck) {
@@ -56,8 +101,7 @@ namespace Srs {
 
         // Create new deck
         public Data.ReturnInfo CreateDeck(Data.DeckFull deck) {
-            int index = FindDeck(deck.Name);
-            if (index != -1) return CreateReturn(false, "Create Deck", "Name is already in use", "warning"); // Name exists
+            if (DeckExists(deck.Name)) return CreateReturn(false, "Create Deck", "Name is already in use", "warning"); // Name exists
 
             // Success, set deck.Id
             if (DeckList.Count == 0) deck.Id = 1;
@@ -72,7 +116,7 @@ namespace Srs {
         }
 
         // Modify existing deck
-        public Data.ReturnInfo ModifyDeck(Data.DeckFull deck, Guid? guid) {
+        public Data.ReturnInfo ModifyDeckd(Data.DeckFull deck, Guid? guid) {
             if (!DeckList.ContainsKey(deck.Id)) return CreateReturn(false, "Modify", "Deck not found", "warning"); // Deck not found
             else if (!GuidList.ContainsKey(guid)) return CreateReturn(false, "Modify", "User not found", "warning"); // User not in the list
             else if (GuidList[guid].Name != deck.Author) return CreateReturn(false, "Modify", "User not match the author", "warning"); // User does not match
@@ -116,5 +160,8 @@ namespace Srs {
             foreach (var item in DeckList) {  if (item.Value.Name.ToLower() == input.ToLower()) return item.Key; }
             return -1;
         }
+
+*/
+
     }
 }
