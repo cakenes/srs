@@ -30,19 +30,19 @@ namespace Srs {
         }
 
         // Create new deck
-        public async Task<Data.ReturnInfo> CreateDeckAsync(ServiceData origin) {
+        public Data.ReturnInfo CreateDeckAsync(ServiceData origin) {
           if (!ValidateOrigin(origin)) { origin = new ServiceData { User = new Data.User { Name = "User" }}; return CreateReturn(false, "Create Deck", "Could not validate user", "danger"); }
             string toFile = JsonConvert.SerializeObject(origin.Create, Formatting.Indented);
-            await File.WriteAllTextAsync("Db/decks/" + origin.Create.Name, toFile);
+            File.WriteAllText("Db/decks/" + origin.Create.Name, toFile);
             InfoList.Add(origin.Create.Name, CreateDeckInfo(origin.Create));
             return CreateReturn(true,"Create Deck", "Deck successfully created", "success");
         }
 
         // Modify existing deck
-        public async Task<Data.ReturnInfo> ModifyDeck(ServiceData origin) {
+        public Data.ReturnInfo ModifyDeck(ServiceData origin) {
             if (!ValidateOrigin(origin)) { origin = new ServiceData { User = new Data.User { Name = "User" }}; return CreateReturn(false, "Create Deck", "Could not validate user", "danger"); } 
             string toFile = JsonConvert.SerializeObject(origin.Create, Formatting.Indented);
-            await File.WriteAllTextAsync("Db/decks/" + origin.Create.Name, toFile);
+            File.WriteAllText("Db/decks/" + origin.Create.Name, toFile);
             InfoList.Add(origin.Create.Name, CreateDeckInfo(origin.Create));
             // Remove Old
             InfoList.Remove(origin.Old.Name);
@@ -52,8 +52,8 @@ namespace Srs {
         }
 
         // Generate modifyable list
-        public List<Data.DeckInfo> CreateModifyList(string name) {
-            List<Data.DeckInfo> returnList = InfoList.Values.Where(x => x.Author == name).ToList();
+        public List<Data.DeckInfo> CreateModifyList(ServiceData origin) {
+            List<Data.DeckInfo> returnList = InfoList.Values.Where(x => x.Author == origin.User.Name).ToList();
             return returnList;
         }
 

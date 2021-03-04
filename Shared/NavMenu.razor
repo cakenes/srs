@@ -52,7 +52,8 @@
             <div class="nav-item dropdown">
                 <button class="btn text-bold-large hover-blue grayscale" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
-                    <span>@ServiceData.User.Name</span>
+                    @if (ServiceData.UserId == null) { <span>User</span> }
+                    else { <span>@ServiceData.User.Name</span> }
                 </button>
 
                 <!-- User dropdown menu -->
@@ -124,26 +125,28 @@
 
 @code {
     private bool showSettings;
-    private string loginName, loginPassword, userName, newPassword, confirmPassword;
+    private string loginName, loginPassword, newPassword, confirmPassword;
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
     private async Task Login() {
-        if (loginName == null || loginPassword == null) return; // Nothing to log in to.
-        Data.ReturnInfo info = await Service.LoginUserAsync(ServiceData, loginName, loginPassword);
+        ServiceData.User.Name = loginName;
+        ServiceData.User.Password = loginPassword;
+        Data.ReturnInfo info = await Service.LoginUserAsync(ServiceData);
         SetUserNotification(info.Title, info.Message, info.Type);
-        if (info.Success) { loginPassword = ""; }
+        if (info.Success) { loginPassword = ""; loginName = ""; }
     }
 
     private async Task Logout() {
-        if (userName == null) return; // Nothing to log out of.
         Data.ReturnInfo info = await Service.LogoutUserAsync(ServiceData);
+        ServiceData = new ServiceData();
         SetUserNotification(info.Title, info.Message, info.Type);
         Navigation.NavigateTo("/");
-        userName = "User";
     }
 
     private async Task CreateUser() {
-        Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
+        ServiceData.User.Name = loginName;
+        ServiceData.User.Password = loginPassword;
+        Data.ReturnInfo info = await Service.CreateUserAsync(ServiceData);
         SetUserNotification(info.Title, info.Message, info.Type);
     }
 
@@ -153,7 +156,7 @@
         SetUserNotification(info.Title, info.Message, info.Type);
     }
 
-    async void Enter(KeyboardEventArgs e) {
+    private async void Enter(KeyboardEventArgs e) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") await Login();
     }
 

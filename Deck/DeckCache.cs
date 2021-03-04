@@ -18,7 +18,7 @@ namespace Srs {
         public Dictionary<string, Data.DeckFull> DeckList = new Dictionary<string, Data.DeckFull>();
         private Dictionary<string, DateTime> ExpirationList = new Dictionary<string, DateTime>();
 
-        public async Task<Data.DeckFull> LoadDeck(string name = "") {
+        public Data.DeckFull LoadDeck(string name = "") {
 
             Data.DeckFull deckReturn;
             DateTime deckExpire = DateTime.Now.AddHours(PooledExpiration);
@@ -30,7 +30,7 @@ namespace Srs {
             }
 
             if (File.Exists("Db/decks/" + name)) {
-                string fileRead = await File.ReadAllTextAsync("Db/decks/" + name);
+                string fileRead = File.ReadAllText("Db/decks/" + name);
                 deckReturn =  JsonConvert.DeserializeObject<Data.DeckFull>(fileRead);
 
                 if (DeckList.Count >= PooledMax) {

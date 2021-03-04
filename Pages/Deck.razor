@@ -108,12 +108,12 @@
 
 	private async Task ReviewDeckCreate() {
 		Data.ReturnInfo returnInfo = await Service.CreateReviewDeckAsync(ServiceData, reviewAmount, reviewPercent);
-		if (returnInfo.Success) { reviewRunning = true; currentIndex = 0; reviewReturn = new Dictionary<int, int>(); indexArray =  ServiceData.Review.Cards.Keys.ToArray();
-		}	
-			
-			
-			
-			ReviewCardDisplay();
+		if (!returnInfo.Success) SetDeckNotification(returnInfo.Title, returnInfo.Message, returnInfo.Type);
+		reviewRunning = true;
+		currentIndex = 0;
+		reviewReturn = new Dictionary<int, int>();
+		indexArray =  ServiceData.Review.Cards.Keys.ToArray();
+		ReviewCardDisplay();
 		await Task.CompletedTask;
 	}
 

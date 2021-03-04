@@ -20,43 +20,44 @@ namespace Srs {
 
         // Load modify list
         public Task<List<Data.DeckInfo>> LoadModifyListAsync(ServiceData origin) {
-            return Task.FromResult(Access.Current.CreateModifyList(origin.User.Name));
+            return Task.FromResult(Access.Current.CreateModifyList(origin));
         }
 
         // Create deck
-        public async Task<Data.ReturnInfo> CreateDeckAsync(ServiceData origin) {
-            if (origin.Create.Name.Length < 6 || origin.Create.Name.Length > 50) return CreateReturn(false, "Create Deck", "Name must be between 6 and 50 characters", "warning");
+        public Task<Data.ReturnInfo> CreateDeckAsync(ServiceData origin) {
+            if (!Access.Current.ValidateOrigin(origin)) { origin = new ServiceData(); return Task.FromResult(CreateReturn(false, "Modify", "Could not validate user", "danger")); } 
+            else if (origin.Create.Name.Length < 6 || origin.Create.Name.Length > 50) return Task.FromResult(CreateReturn(false, "Create Deck", "Name must be between 6 and 50 characters", "warning"));
+            else if (origin.Create.Cards.Count < 10) return Task.FromResult(CreateReturn(false, "Create Deck", "Must contain atleast 10 cards", "warning"));
 
-
-
-            if (!Access.Current.ValidateOrigin(origin)) { origin = new ServiceData(); return CreateReturn(false, "Modify", "Could not validate user", "danger"); } 
-            // VALIDATE EVERYTHING.
-
-            Data.ReturnInfo info = await Access.Current.CreateDeckAsync(origin);
-            return info;
+            Data.ReturnInfo returnInfo = Access.Current.CreateDeckAsync(origin);
+            return Task.FromResult(returnInfo);
         }
 
         // Select modify deck
-        public async Task<Data.ReturnInfo> SelectModifyDeckAsync(ServiceData origin, string name) {
-            if (!Access.Current.ValidateOrigin(origin)) { origin = new ServiceData(); return CreateReturn(false, "Modify", "Could not validate user", "danger"); }  
+        public Task<Data.ReturnInfo> SelectModifyDeckAsync(ServiceData origin, string name) {
+            if (!Access.Current.ValidateOrigin(origin)) { origin = new ServiceData(); return Task.FromResult(CreateReturn(false, "Modify", "Could not validate user", "danger")); }
 
-            origin.Create = await DeckCache.Current.LoadDeck(name);
-            origin.Old = origin.Create;
+            Data.DeckFull deckFull = DeckCache.Current.LoadDeck(name);
+            if (deckFull.Author != origin.User.Name) return Task.FromResult(CreateReturn(false, "Modify", "Could not validate user", "danger"));
+            else if (origin.Create.Name == "") return Task.FromResult(CreateReturn(false, "Modify", "Deck could not be found", "danger"));
 
-            if (origin.Create.Name == "") return CreateReturn(false, "Modify", "Deck could not be found", "danger");
-            return CreateReturn(true, "Modify", "Success", "success");
+            origin.Create = deckFull;
+            origin.Old = deckFull;
+
+            return Task.FromResult(CreateReturn(true, "Modify", "Success", "success"));
         }
 
-        public async Task<Data.ReturnInfo> ModifyDeckAsync(ServiceData origin) {
+        public Task<Data.ReturnInfo> ModifyDeckAsync(ServiceData origin) {
+            if (!Access.Current.ValidateOrigin(origin)) { origin = new ServiceData(); return Task.FromResult(CreateReturn(false, "Modify", "Could not validate user", "danger")); }
+            else if (origin.Create.Author != origin.User.Name) return Task.FromResult(CreateReturn(false, "Modify", "Could not validate user", "danger"));
+            else if (origin.Create.Name.Length < 6 || origin.Create.Name.Length > 50) return Task.FromResult(CreateReturn(false, "Create Deck", "Name must be between 6 and 50 characters", "warning"));
+            else if (origin.Create.Cards.Count < 10) return Task.FromResult(CreateReturn(false, "Create Deck", "Must contain atleast 10 cards", "warning"));
 
+            origin.Create = new Data.DeckFull();
+            origin.Old = new Data.DeckFull();
 
-
-            if (!Access.Current.ValidateOrigin(origin)) { origin = new ServiceData(); return CreateReturn(false, "Modify", "Could not validate user", "danger"); } 
-
-            // VALIDATE EVERYTHING.
-
-            Data.ReturnInfo info = await Access.Current.ModifyDeck(origin);
-            return info;
+            Data.ReturnInfo returnInfo = Access.Current.ModifyDeck(origin);
+            return Task.FromResult(returnInfo);
         }
 
         // Select deck for reviewing
@@ -66,14 +67,14 @@ namespace Srs {
         }
 
         // Create deck for reviewing
-        public async Task<Data.ReturnInfo> CreateReviewDeckAsync(ServiceData origin, float reviewAmount, float reviewPercent) {
+        public Task<Data.ReturnInfo> CreateReviewDeckAsync(ServiceData origin, float reviewAmount, float reviewPercent) {
 
-            Data.DeckFull fullDeck = await DeckCache.Current.LoadDeck(origin.Review.Name);
-            Data.User fullUser = await UserCache.Current.LoadUser(origin.Review.Name);
+            Data.DeckFull fullDeck = DeckCache.Current.LoadDeck(origin.Review.Name);
+            Data.User fullUser = UserCache.Current.LoadUser(origin.Review.Name);
 
             origin.Review = new Data.PartialDeck {Cards = new SortedDictionary<int, Data.Card>()};
 
-            if (fullDeck.Name == null) return CreateReturn(false, "Review", "Deck could not be found", "danger");
+            if (fullDeck.Name == null) return Task.FromResult(CreateReturn(false, "Review", "Deck could not be found", "danger"));
 
             Random random = new Random(DateTime.Now.Millisecond);
             int oldAmount = (int)MathF.Round(reviewAmount * ((100 - reviewPercent) / 100), 0);
@@ -96,12 +97,12 @@ namespace Srs {
                 if (origin.Review.Cards.Count >= reviewAmount) break;
             }
 
-            return CreateReturn(true, "Review", "Success", "success");
+            return Task.FromResult(CreateReturn(true, "Review", "Success", "success"));
         }
 
         // Return review deck
-        public async Task<Data.ReturnInfo> ReviewDeckReturnAsync(ServiceData origin, Dictionary<int,int> reviewReturn) {  
-            if (origin.UserId == null) return CreateReturn(false, "Review Done", "You got " + reviewReturn.Values.Where(x => x == 1).Count() + " correct", "success");
+        public Task<Data.ReturnInfo> ReviewDeckReturnAsync(ServiceData origin, Dictionary<int,int> reviewReturn) {  
+            if (origin.UserId == null) return Task.FromResult(CreateReturn(false, "Review Done", "You got " + reviewReturn.Values.Where(x => x == 1).Count() + " correct", "success"));
 
             if (!origin.User.Review.ContainsKey(origin.Review.Id)) origin.User.Review[origin.Review.Id] = new Dictionary<int, int>();
 
@@ -111,9 +112,9 @@ namespace Srs {
                 origin.User.Review[origin.Review.Id][card.Key] = Math.Clamp(origin.User.Review[origin.Review.Id][card.Key], 0, 5);
             }
 
-            Data.ReturnInfo returnInfo = await Access.Current.ReturnReviewDeck(origin);
-            if (returnInfo.Success) return CreateReturn(true, "Review Done", "Progress saved, you got " + reviewReturn.Values.Where(x => x == 1).Count() + " correct", "success");
-            return returnInfo;
+            Data.ReturnInfo returnInfo = Access.Current.ReturnReviewDeck(origin);
+            if (returnInfo.Success) return Task.FromResult(CreateReturn(true, "Review Done", "Progress saved, you got " + reviewReturn.Values.Where(x => x == 1).Count() + " correct", "success"));
+            return Task.FromResult(returnInfo);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Srs {
         public Dictionary<string, Data.User> UserList = new Dictionary<string, Data.User>();
         private Dictionary<string, DateTime> ExpirationList = new Dictionary<string, DateTime>();
 
-        public async Task<Data.User> LoadUser(string name = "") {
+        public Data.User LoadUser(string name = "") {
 
             Data.User userReturn;
             DateTime userExpire = DateTime.Now.AddHours(PooledExpiration);
@@ -30,7 +30,7 @@ namespace Srs {
             }
 
             if (File.Exists("Db/users/" + name)) {
-                string fileRead = await File.ReadAllTextAsync("Db/users/" + name);
+                string fileRead = File.ReadAllText("Db/users/" + name);
                 userReturn =  JsonConvert.DeserializeObject<Data.User>(fileRead);
 
                 if (UserList.Count >= PooledMax) {
