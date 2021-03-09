@@ -39,7 +39,7 @@
                     <div class="dropdown-divider"></div>
 
                     <!-- Modify -->
-                    @if (ServiceData.UserId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
+                    @if (ServiceData.User.Id != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
                     else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Create / Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
                 </li>
             </div>
@@ -52,7 +52,7 @@
             <div class="nav-item dropdown">
                 <button class="btn text-bold-large hover-blue grayscale" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
-                    @if (ServiceData.UserId == null) { <span>User</span> }
+                    @if (ServiceData.User.Id == null) { <span>User</span> }
                     else { <span>@ServiceData.User.Name</span> }
                 </button>
 
@@ -88,7 +88,7 @@
 
                     <!-- Control buttons -->
                     <div class="btn-group width-full">
-                        @if (ServiceData.UserId == null) {
+                        @if (ServiceData.User.Id == null) {
                             <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Login())">Login</button> 
                             <button class="btn text-bold-small hover-blue width-full" @onclick="(() => CreateUser())">Register</button>
                         } else {
@@ -138,7 +138,7 @@
 
     private async Task Logout() {
         Data.ReturnInfo info = await Service.LogoutUserAsync(ServiceData);
-        ServiceData = new ServiceData();
+        ServiceData.User = new Data.User();
         SetUserNotification(info.Title, info.Message, info.Type);
         Navigation.NavigateTo("/");
     }

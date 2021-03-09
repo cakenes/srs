@@ -12,8 +12,8 @@ namespace Srs {
 
         public static readonly UserCache Current = new UserCache();
 
-        public int PooledMax = 1000;  // Hard cap to number of objects in Dictionary, will replace forcefully.
-        public double PooledExpiration = 1;  // Time in hours to remove pooled objects.
+        public int CacheMax = 1000;  // Hard cap to number of objects in Dictionary, will replace forcefully.
+        public double CacheExp = 1;  // Time in hours to remove cached objects.
 
         public Dictionary<string, Data.User> UserList = new Dictionary<string, Data.User>();
         private Dictionary<string, DateTime> ExpirationList = new Dictionary<string, DateTime>();
@@ -21,7 +21,7 @@ namespace Srs {
         public Data.User LoadUser(string name = "") {
 
             Data.User userReturn;
-            DateTime userExpire = DateTime.Now.AddHours(PooledExpiration);
+            DateTime userExpire = DateTime.Now.AddHours(CacheExp);
 
             if (UserList.ContainsKey(name)) {
                 userReturn = UserList[name];
@@ -33,7 +33,7 @@ namespace Srs {
                 string fileRead = File.ReadAllText("Db/users/" + name);
                 userReturn =  JsonConvert.DeserializeObject<Data.User>(fileRead);
 
-                if (UserList.Count >= PooledMax) {
+                if (UserList.Count >= CacheMax) {
                     string removeName = ExpirationList.OrderBy(x => x.Value).FirstOrDefault().Key;
                     UserList.Remove(removeName);
                     ExpirationList.Remove(removeName);

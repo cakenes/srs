@@ -173,7 +173,7 @@
 
 	private Task Initialize() {
 		if (ServiceData.Review.Name == null) Navigation.NavigateTo("/");
-		if (ServiceData.UserId == null) SetDeckNotification("Progress", "Progress wont be saved without logging in", "warning");
+		if (ServiceData.User.Id == null) SetDeckNotification("Progress", "Progress wont be saved without logging in", "warning");
 		reviewReturn = new Dictionary<int, int>();
 		return Task.CompletedTask;
 	}

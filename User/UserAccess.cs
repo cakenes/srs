@@ -14,26 +14,32 @@ namespace Srs {
         // Validate user
         public bool ValidateOrigin (ServiceData origin) {
             if (!guidList.ContainsKey(origin.User.Name)) return false;
-            if (guidList[origin.User.Name] != origin.UserId) return false;
+            if (guidList[origin.User.Name] != origin.User.Id) return false;
             return true;
         }
 
-        // Login user
-        public Data.ReturnInfo LoginUser(ServiceData origin) {
+        // Validate login
+        public Data.ReturnInfo ValidateLogin (ServiceData origin) {
+            Data.ReturnInfo returnInfo;
             Data.User userLogin = UserCache.Current.LoadUser(origin.User.Name);
-            if (userLogin.Name == null) return CreateReturn(false, "Login", "User does not exist", "warning");
-            else if (userLogin.Password != origin.User.Password) return CreateReturn(false, "Login", "Incorrect password", "warning");
-            else if (guidList.ContainsKey(origin.User.Name)) guidList.Remove(origin.User.Name);
-            Guid guid = Guid.NewGuid();
-            origin.User = userLogin;
-            origin.UserId = guid;
-            guidList.Add(userLogin.Name, guid);
-            return CreateReturn(true, "Login", "Login successfull", "success");
+            if (userLogin.Name == "") returnInfo = CreateReturn(false, "Login", "Incorrect username or password", "warning");
+            else if (userLogin.Password != origin.User.Password) returnInfo =  CreateReturn(false, "Login", "Incorrect username or password", "warning");
+            else returnInfo = CreateReturn(true, "Login", "Login successfull", "success");
+            return returnInfo;
+        }
+
+        // Login user
+        public void LoginUser(ServiceData origin) {
+            if (guidList.ContainsKey(origin.User.Name)) guidList.Remove(origin.User.Name);
+            origin.User = UserCache.Current.LoadUser(origin.User.Name);
+            origin.User.Id = Guid.NewGuid();
+            guidList.Add(origin.User.Name, origin.User.Id);
         }
 
         // Logout user
         public Data.ReturnInfo LogoutUser(ServiceData origin) {
             if (guidList.ContainsKey(origin.User.Name)) guidList.Remove(origin.User.Name);
+            origin.ResetUser();
             return CreateReturn(true, "Logout",  "Logout successful", "success");
         }
 

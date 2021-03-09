@@ -12,8 +12,8 @@ namespace Srs {
 
         public static readonly DeckCache Current = new DeckCache();
 
-        public int PooledMax = 1000 ;  // Hard cap to number of objects in Dictionary, will replace forcefully.
-        public double PooledExpiration = 1;  // Time in hours to remove pooled objects.
+        public int CacheMax = 1000 ;  // Hard cap to number of objects in Dictionary, will replace forcefully.
+        public double CacheExp = 1;  // Time in hours to remove cached objects.
 
         public Dictionary<string, Data.DeckFull> DeckList = new Dictionary<string, Data.DeckFull>();
         private Dictionary<string, DateTime> ExpirationList = new Dictionary<string, DateTime>();
@@ -21,7 +21,7 @@ namespace Srs {
         public Data.DeckFull LoadDeck(string name = "") {
 
             Data.DeckFull deckReturn;
-            DateTime deckExpire = DateTime.Now.AddHours(PooledExpiration);
+            DateTime deckExpire = DateTime.Now.AddHours(CacheExp);
 
             if (DeckList.ContainsKey(name)) {
                 deckReturn = DeckList[name];
@@ -33,7 +33,7 @@ namespace Srs {
                 string fileRead = File.ReadAllText("Db/decks/" + name);
                 deckReturn =  JsonConvert.DeserializeObject<Data.DeckFull>(fileRead);
 
-                if (DeckList.Count >= PooledMax) {
+                if (DeckList.Count >= CacheMax) {
                     string removeName = ExpirationList.OrderBy(x => x.Value).FirstOrDefault().Key;
                     DeckList.Remove(removeName);
                     ExpirationList.Remove(removeName);

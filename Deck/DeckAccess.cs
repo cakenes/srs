@@ -32,6 +32,7 @@ namespace Srs {
         // Create new deck
         public Data.ReturnInfo CreateDeckAsync(ServiceData origin) {
           if (!ValidateOrigin(origin)) { origin = new ServiceData { User = new Data.User { Name = "User" }}; return CreateReturn(false, "Create Deck", "Could not validate user", "danger"); }
+            origin.Create.Author = origin.User.Name;
             string toFile = JsonConvert.SerializeObject(origin.Create, Formatting.Indented);
             File.WriteAllText("Db/decks/" + origin.Create.Name, toFile);
             InfoList.Add(origin.Create.Name, CreateDeckInfo(origin.Create));
@@ -45,9 +46,9 @@ namespace Srs {
             File.WriteAllText("Db/decks/" + origin.Create.Name, toFile);
             InfoList.Add(origin.Create.Name, CreateDeckInfo(origin.Create));
             // Remove Old
-            InfoList.Remove(origin.Old.Name);
-            DeckCache.Current.RemoveDeck(origin.Old.Name);
-            File.Delete("Db/decks/" + origin.Old.Name);
+            InfoList.Remove(origin.Create.Old);
+            DeckCache.Current.RemoveDeck(origin.Create.Old);
+            File.Delete("Db/decks/" + origin.Create.Old);
             return CreateReturn(true, "Modify", "Deck successfully modified", "success");
         }
 
@@ -60,7 +61,7 @@ namespace Srs {
         // Generate DeckInfo
         public Data.DeckInfo CreateDeckInfo(Data.DeckFull deck) {
             tempInfo = new Data.DeckInfo {Id = deck.Id, Popularity = 0, Name = deck.Name, Author = deck.Author, Cards = deck.Cards.Count};
-            if (deck.Password != null) tempInfo.Password = true;
+            if (deck.Password != "") tempInfo.Password = true;
             return tempInfo;
         }
 
