@@ -26,8 +26,8 @@
 
 			<!-- Enter -->
 			<div class="row justify-content-center">
-				@if (reviewRunning) { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())">Check</button> }
-				else { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ReviewCardValidate())" disabled>Check</button> }
+				@if (reviewRunning) { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ValidateReview())">Check</button> }
+				else { <button class="btn text-bold-medium hover-green" type="button" @onclick="(() => ValidateReview())" disabled>Check</button> }
 			</div>
 
 			@if (cardMsgTitle != null) {
@@ -47,8 +47,6 @@
                 	</div>
 				</div>
 			}
-
-
 		</div>
 
 		<!-- Options -->
@@ -104,27 +102,28 @@
 	private string cardFront, cardBack;
 	private string cardMsgTitle, cardMsg, cardMsgType;
 	private string deckMsgTitle, deckMsg, deckMsgType;
-	private Data.PartialDeck partialDeck;
 	private Dictionary<int, int> reviewReturn;
 
-	private async void ReviewDeckCreate() {
-		currentIndex = 0;
+	private async Task ReviewDeckCreate() {
+		Data.ReturnInfo returnInfo = await Service.CreateReviewDeckAsync(ServiceData, reviewAmount, reviewPercent);
+		SetDeckNotification(returnInfo.Title, returnInfo.Message, returnInfo.Type);
+		SetCardNotification();
 		reviewRunning = true;
+		currentIndex = 0;
 		reviewReturn = new Dictionary<int, int>();
-		partialDeck = await Service.CreateReviewDeckAsync(ServiceData, reviewAmount, reviewPercent);
-		indexArray = partialDeck.Cards.Keys.ToArray();
+		indexArray =  ServiceData.Review.Cards.Keys.ToArray();
 		ReviewCardDisplay();
+		await Task.CompletedTask;
 	}
 
 	private void ReviewCardDisplay() {
-		if (currentIndex >= indexArray.Count()) { ReturnReviewDeck(); return; }
-		cardFront = partialDeck.Cards[indexArray[currentIndex]].Front;
+		cardFront = ServiceData.Review.Cards[indexArray[currentIndex]].Front;
 		cardBack = "";
 	}
 
-	private void ReviewCardValidate() {
+	private void ValidateReview() {
 		if (!reviewRunning) return;
-		string[] tempAnswers = partialDeck.Cards[indexArray[currentIndex]].Back.Split('|');
+		string[] tempAnswers = ServiceData.Review.Cards[indexArray[currentIndex]].Back.Split('|');
 		string tempBack = new string(cardBack.Where(x => char.IsLetterOrDigit(x)).ToArray());
 
 		foreach (string answer in tempAnswers)
@@ -132,47 +131,49 @@
 			string tempAnswer = new string(answer.Where(x => char.IsLetterOrDigit(x)).ToArray());
 			if (tempAnswer == tempBack) {
 
-				if (tempAnswers.Count() > 1) SetCardNotification("Correct!", "Would of accepted any of: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "success");
+				if (tempAnswers.Count() > 1) SetCardNotification("Correct!", "Would of accepted any of: " + ServiceData.Review.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "success");
 				else SetCardNotification("Correct!", "Good job, keep it going", "success");
-				reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, 1);
-				currentIndex += 1; ReviewCardDisplay(); return;
+				reviewReturn.Add(ServiceData.Review.Cards[indexArray[currentIndex]].Id, 1);
+				currentIndex += 1; 
+				if (currentIndex >= indexArray.Length) ReturnReviewDeck();
+				else ReviewCardDisplay();
+				return;
 			}
 		}
 		
-		if (tempAnswers.Count() > 1) SetCardNotification("Incorrect!", "Acceptable answers were: " + partialDeck.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "danger");
-		else SetCardNotification("Incorrect!", "Correct answer was: " + partialDeck.Cards[indexArray[currentIndex]].Back, "danger");
-		reviewReturn.Add(partialDeck.Cards[indexArray[currentIndex]].Id, -1);
+		if (tempAnswers.Count() > 1) SetCardNotification("Incorrect!", "Acceptable answers were: " + ServiceData.Review.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "danger");
+		else SetCardNotification("Incorrect!", "Correct answer was: " + ServiceData.Review.Cards[indexArray[currentIndex]].Back, "danger");
+		
+		reviewReturn.Add(ServiceData.Review.Cards[indexArray[currentIndex]].Id, -1);
 		currentIndex += 1;
-		ReviewCardDisplay();
+		if (currentIndex >= indexArray.Length) ReturnReviewDeck();
+		else ReviewCardDisplay();
 	}
 
 	private async void ReturnReviewDeck() {
+		reviewRunning = false;
 		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(ServiceData, reviewReturn);
 		SetDeckNotification(info.Title, info.Message, info.Type);
-		reviewRunning = false;
 		cardBack = "";
 	}
 
 	private void SetDeckNotification(string title = null, string msg = null, string type = "warning") {
-        deckMsgTitle = title;
-        deckMsg = msg;
-        deckMsgType = "alert-" + type;
+		if (title == "Logout") ServiceData.Reset();
+        deckMsgTitle = title; deckMsg = msg; deckMsgType = "alert-" + type;
     }
 
 	private void SetCardNotification(string title = null, string msg = null, string type = "warning") {
-        cardMsgTitle = title;
-        cardMsg = msg;
-        cardMsgType = "alert-" + type;
+		if (title == "Logout") ServiceData.Reset();
+        cardMsgTitle = title; cardMsg = msg; cardMsgType = "alert-" + type;
 	}
 
 	private void Enter(KeyboardEventArgs e) {
-        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ReviewCardValidate();
+        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) ValidateReview();
     }
 
 	private Task Initialize() {
-		if (ServiceData.Review.Id == 0) Navigation.NavigateTo("/");
-		if (ServiceData.UserId == null) SetDeckNotification("Progress", "Progress wont be saved without logging in", "warning");
-		partialDeck = new Data.PartialDeck { Cards = new SortedDictionary<int, Card>() };
+		if (ServiceData.Review.Name == "") Navigation.NavigateTo("/");
+		if (ServiceData.User.Id == null) SetDeckNotification("Progress", "Progress wont be saved without logging in", "warning");
 		reviewReturn = new Dictionary<int, int>();
 		return Task.CompletedTask;
 	}

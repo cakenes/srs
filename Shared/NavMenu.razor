@@ -39,7 +39,7 @@
                     <div class="dropdown-divider"></div>
 
                     <!-- Modify -->
-                    @if (ServiceData.UserId != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
+                    @if (ServiceData.User.Id != null) { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>Navigation.NavigateTo("/Modify"))">Create / Modify</button> }
                     else { <button class="btn text-bold-small hover-blue width-full" type="button" @onclick="@(()=>SetDeckNotification("Create / Modify Deck", "Requires to be logged in", "danger"))">Create / Modify</button> }
                 </li>
             </div>
@@ -52,7 +52,8 @@
             <div class="nav-item dropdown">
                 <button class="btn text-bold-large hover-blue grayscale" type="button">
                     <img src="svg/User.svg" alt="" width="32" height="32" title="Decks" class="align-top">
-                    <span>@userName</span>
+                    @if (ServiceData.User.Id == null) { <span>User</span> }
+                    else { <span>@ServiceData.User.Name</span> }
                 </button>
 
                 <!-- User dropdown menu -->
@@ -87,7 +88,7 @@
 
                     <!-- Control buttons -->
                     <div class="btn-group width-full">
-                        @if (ServiceData.UserId == null) {
+                        @if (ServiceData.User.Id == null) {
                             <button class="btn text-bold-small hover-blue width-full" @onclick="(() => Login())">Login</button> 
                             <button class="btn text-bold-small hover-blue width-full" @onclick="(() => CreateUser())">Register</button>
                         } else {
@@ -124,36 +125,38 @@
 
 @code {
     private bool showSettings;
-    private string loginName, loginPassword, userName, newPassword, confirmPassword;
+    private string loginName, loginPassword, newPassword, confirmPassword;
     private string deckMsg, deckMsgType, deckMsgTitle, userMsg, userMsgType, userMsgTitle;
 
     private async Task Login() {
-        if (loginName == null || loginPassword == null) return; // Nothing to log in to.
-        Data.ReturnInfo info = await Service.LoginUserAsync(ServiceData, loginName, loginPassword);
+        ServiceData.User.Name = loginName;
+        ServiceData.User.Password = loginPassword;
+        Data.ReturnInfo info = await Service.LoginUserAsync(ServiceData);
         SetUserNotification(info.Title, info.Message, info.Type);
-        if (info.Success) { userName = await Service.GetUserNameAsync(ServiceData); loginPassword = ""; }
+        if (info.Success) { loginPassword = ""; loginName = ""; Navigation.NavigateTo("/"); }
     }
 
     private async Task Logout() {
-        if (userName == null) return; // Nothing to log out of.
         Data.ReturnInfo info = await Service.LogoutUserAsync(ServiceData);
+        ServiceData.User = new Data.User();
         SetUserNotification(info.Title, info.Message, info.Type);
         Navigation.NavigateTo("/");
-        userName = "User";
     }
 
     private async Task CreateUser() {
-        Data.ReturnInfo info = await Service.CreateUserAsync(loginName, loginPassword);
+        ServiceData.User.Name = loginName;
+        ServiceData.User.Password = loginPassword;
+        Data.ReturnInfo info = await Service.CreateUserAsync(ServiceData);
         SetUserNotification(info.Title, info.Message, info.Type);
     }
 
     private async Task ChangePassword() {
-        Data.ReturnInfo info = await Service.ChangeUserPassword(ServiceData, loginPassword, newPassword, confirmPassword);
+        Data.ReturnInfo info = await Service.ChangePasswordAsync(ServiceData, newPassword, confirmPassword);
         if (info.Success) { loginPassword = ""; newPassword = ""; confirmPassword = ""; }
         SetUserNotification(info.Title, info.Message, info.Type);
     }
 
-    async void Enter(KeyboardEventArgs e) {
+    private async void Enter(KeyboardEventArgs e) {
         if (e.Code == "Enter" || e.Code == "NumpadEnter") await Login();
     }
 
@@ -164,12 +167,4 @@
     private void SetUserNotification(string title = null, string msg = null, string type = "warning") {
         userMsgTitle = title; userMsg = msg; userMsgType = "alert-" + type;
     }
-
-    private async Task Initialize() {
-        userName = await Service.GetUserNameAsync(ServiceData);
-    }
-
-    protected override async Task OnInitializedAsync() {
-		await Initialize();
-	}
 }

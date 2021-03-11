@@ -130,7 +130,7 @@
 
 		@if (sortedDeck.Count == 0) {
 			<div class="row">
-				<span class="text-light-medium width-full" align="center">You do not have any decks to modify, use the 'Create New' to add one.</span>
+				<span class="text-light-medium width-full" align="center">You do not have any decks to modify, use 'Create New' to create one.</span>
 			</div>
 		}
 
@@ -142,7 +142,7 @@
 {
 	private int listSort;
 	private string deckSearch = "";
-	private List<DeckInfo> deckList;
+	private List<DeckInfo> deckList = new List<DeckInfo>();
 	private List<DeckInfo> sortedDeck;
 
 	private void ListSort(int input) {
@@ -171,14 +171,16 @@
 	}
 
 	public async void ModifyDeckSelect(DeckInfo item) {
-		ReturnInfo info = await Service.SelectModifyDeckAsync(ServiceData, item.Id);
+		ServiceData.Create.Name = item.Name;
+		ReturnInfo info = await Service.SelectModifyDeckAsync(ServiceData);
 		if (info.Success == true) Navigation.NavigateTo("/Create");
 	}
 
 	private async Task Initialize() {
-		if (ServiceData.UserId == null) Navigation.NavigateTo("/");
+		if (await Service.ValidateUserAsync(ServiceData) != true) ServiceData.Reset();
+		if (ServiceData.User.Id == null) Navigation.NavigateTo("/", true);
 		deckList = new List<DeckInfo>();
-		deckList = await Service.LoadModifyInfoAsync(ServiceData);
+		deckList = await Service.CreateModifyListAsync(ServiceData);
 	}
 
 	protected override async Task OnInitializedAsync() {
