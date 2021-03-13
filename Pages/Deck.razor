@@ -47,8 +47,6 @@
                 	</div>
 				</div>
 			}
-
-
 		</div>
 
 		<!-- Options -->
@@ -108,7 +106,8 @@
 
 	private async Task ReviewDeckCreate() {
 		Data.ReturnInfo returnInfo = await Service.CreateReviewDeckAsync(ServiceData, reviewAmount, reviewPercent);
-		if (!returnInfo.Success) SetDeckNotification(returnInfo.Title, returnInfo.Message, returnInfo.Type);
+		SetDeckNotification(returnInfo.Title, returnInfo.Message, returnInfo.Type);
+		SetCardNotification();
 		reviewRunning = true;
 		currentIndex = 0;
 		reviewReturn = new Dictionary<int, int>();
@@ -135,36 +134,37 @@
 				if (tempAnswers.Count() > 1) SetCardNotification("Correct!", "Would of accepted any of: " + ServiceData.Review.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "success");
 				else SetCardNotification("Correct!", "Good job, keep it going", "success");
 				reviewReturn.Add(ServiceData.Review.Cards[indexArray[currentIndex]].Id, 1);
-				currentIndex += 1; ReviewCardDisplay(); return;
+				currentIndex += 1; 
+				if (currentIndex >= indexArray.Length) ReturnReviewDeck();
+				else ReviewCardDisplay();
+				return;
 			}
 		}
 		
 		if (tempAnswers.Count() > 1) SetCardNotification("Incorrect!", "Acceptable answers were: " + ServiceData.Review.Cards[indexArray[currentIndex]].Back.Replace("|", ", "), "danger");
 		else SetCardNotification("Incorrect!", "Correct answer was: " + ServiceData.Review.Cards[indexArray[currentIndex]].Back, "danger");
+		
 		reviewReturn.Add(ServiceData.Review.Cards[indexArray[currentIndex]].Id, -1);
-
 		currentIndex += 1;
-
-		if (currentIndex < indexArray.Length) {  ReviewCardDisplay(); }
+		if (currentIndex >= indexArray.Length) ReturnReviewDeck();
+		else ReviewCardDisplay();
 	}
 
 	private async void ReturnReviewDeck() {
+		reviewRunning = false;
 		Data.ReturnInfo info = await Service.ReviewDeckReturnAsync(ServiceData, reviewReturn);
 		SetDeckNotification(info.Title, info.Message, info.Type);
-		reviewRunning = false;
 		cardBack = "";
 	}
 
 	private void SetDeckNotification(string title = null, string msg = null, string type = "warning") {
-        deckMsgTitle = title;
-        deckMsg = msg;
-        deckMsgType = "alert-" + type;
+		if (title == "Logout") ServiceData.Reset();
+        deckMsgTitle = title; deckMsg = msg; deckMsgType = "alert-" + type;
     }
 
 	private void SetCardNotification(string title = null, string msg = null, string type = "warning") {
-        cardMsgTitle = title;
-        cardMsg = msg;
-        cardMsgType = "alert-" + type;
+		if (title == "Logout") ServiceData.Reset();
+        cardMsgTitle = title; cardMsg = msg; cardMsgType = "alert-" + type;
 	}
 
 	private void Enter(KeyboardEventArgs e) {
@@ -172,7 +172,7 @@
     }
 
 	private Task Initialize() {
-		if (ServiceData.Review.Name == null) Navigation.NavigateTo("/");
+		if (ServiceData.Review.Name == "") Navigation.NavigateTo("/");
 		if (ServiceData.User.Id == null) SetDeckNotification("Progress", "Progress wont be saved without logging in", "warning");
 		reviewReturn = new Dictionary<int, int>();
 		return Task.CompletedTask;

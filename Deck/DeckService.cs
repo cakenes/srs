@@ -67,7 +67,7 @@ namespace Srs {
             Data.DeckFull fullDeck = DeckCache.Current.LoadDeck(origin.Review.Name);
             Data.User fullUser = UserCache.Current.LoadUser(origin.Review.Name);
 
-            origin.Review = new Data.PartialDeck {Cards = new SortedDictionary<int, Data.Card>()};
+            origin.Review.Cards.Clear();
 
             if (fullDeck.Name == "") return Task.FromResult(CreateReturn(false, "Review", "Deck could not be found", "danger"));
 
@@ -92,7 +92,7 @@ namespace Srs {
                 if (origin.Review.Cards.Count >= reviewAmount) break;
             }
 
-            return Task.FromResult(CreateReturn(true, "Review", "Success", "success"));
+            return Task.FromResult(CreateReturn(true));
         }
 
         // Return review deck

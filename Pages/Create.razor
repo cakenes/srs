@@ -252,12 +252,6 @@
 		}
 	}
 
-	private void SetCreateNotification(string title = null, string msg = null, string type = "warning") {
-        createMsgTitle = title;
-        createMsg = msg;
-        createMsgType = "alert-" + type;
-    }
-
 	private void SaveCard() {
 		if (newDeck.Cards.Count == 0) { newCard.Id = 1; newDeck.Cards.Add(newCard.Id, newCard); }
 		else if (newCard.Id == 0) { newCard.Id = newDeck.Cards.Keys.Last() + 1; newDeck.Cards.Add(newCard.Id, newCard); }
@@ -297,11 +291,16 @@
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && e.ShiftKey == false) SaveCard();
     }
 
-	private Task Initialize() {
-		if (ServiceData.User.Id == null) Navigation.NavigateTo("/");
+	private void SetCreateNotification(string title = null, string msg = null, string type = "warning") {
+		if (title == "Logout") ServiceData.Reset();
+        createMsgTitle = title; createMsg = msg; createMsgType = "alert-" + type;
+    }
+
+	private async Task Initialize() {
+		if (await Service.ValidateUserAsync(ServiceData) != true) ServiceData.Reset();
+		if (ServiceData.User.Id == null) Navigation.NavigateTo("/", true);
 		newDeck = ServiceData.Create;
 		newCard = new Data.Card { Front = "", Back = "" };
-		return Task.CompletedTask;
 	}
 
 	protected override async Task OnInitializedAsync() {

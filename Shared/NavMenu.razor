@@ -133,7 +133,7 @@
         ServiceData.User.Password = loginPassword;
         Data.ReturnInfo info = await Service.LoginUserAsync(ServiceData);
         SetUserNotification(info.Title, info.Message, info.Type);
-        if (info.Success) { loginPassword = ""; loginName = ""; }
+        if (info.Success) { loginPassword = ""; loginName = ""; Navigation.NavigateTo("/"); }
     }
 
     private async Task Logout() {

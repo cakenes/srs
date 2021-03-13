@@ -177,7 +177,8 @@
 	}
 
 	private async Task Initialize() {
-		if (ServiceData.User.Id == null) Navigation.NavigateTo("/");
+		if (await Service.ValidateUserAsync(ServiceData) != true) ServiceData.Reset();
+		if (ServiceData.User.Id == null) Navigation.NavigateTo("/", true);
 		deckList = new List<DeckInfo>();
 		deckList = await Service.CreateModifyListAsync(ServiceData);
 	}

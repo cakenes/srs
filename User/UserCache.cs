@@ -40,12 +40,16 @@ namespace Srs {
                 }
 
                 UserList.Add(userReturn.Name, userReturn);
-                ExpirationList.Add(userReturn.Name, userExpire);
+                ExpirationList.TryAdd(userReturn.Name, userExpire);
                 return userReturn;
             }
 
             userReturn = new Data.User { Review = new Dictionary<int, Dictionary<int, int>>() };
             return userReturn;
+        }
+
+        public void SetGuid(string name = "", Guid? guid = null) {
+            if (UserList.ContainsKey(name)) UserList[name].Id = guid; 
         }
 
         public void RemoveUser(string name = "") {
