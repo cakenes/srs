@@ -48,10 +48,6 @@ namespace Srs {
             return userReturn;
         }
 
-        public void SetGuid(string name = "", Guid? guid = null) {
-            if (UserList.ContainsKey(name)) UserList[name].Id = guid; 
-        }
-
         public void RemoveUser(string name = "") {
             if (ExpirationList.ContainsKey(name)) ExpirationList.Remove(name);
             if (UserList.ContainsKey(name)) UserList.Remove(name);

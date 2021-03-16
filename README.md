@@ -1,3 +1,3 @@
 # Srs
-Spaced repetiton system website for school
-Currently hosted at: http://www.cakenes.com
+Spaced repetiton system website for school\
+Currently hosted at: https://nes.ddns.net

@@ -21,7 +21,7 @@ namespace Srs {
             Data.User userLogin = UserCache.Current.LoadUser(origin.User.Name);
             if (userLogin.Name == "") returnInfo = CreateReturn(false, "Login", "Incorrect username or password", "warning");
             else if (userLogin.Password != origin.User.Password) returnInfo =  CreateReturn(false, "Login", "Incorrect username or password", "warning");
-            else returnInfo = CreateReturn(true, "Login", "Validate successfull", "success");
+            else returnInfo = CreateReturn(true, "Login", "Validation successfull", "success");
             return returnInfo;
         }
 
@@ -30,7 +30,7 @@ namespace Srs {
             if (UserCache.Current.UserList.ContainsKey(origin.User.Name)) UserCache.Current.UserList.Remove(origin.User.Name);
             origin.User = UserCache.Current.LoadUser(origin.User.Name);
             origin.User.Id = Guid.NewGuid();
-            UserCache.Current.SetGuid(origin.User.Name, origin.User.Id);
+            UserCache.Current.UserList[origin.User.Name].Id = origin.User.Id;
         }
 
         // Logout user
